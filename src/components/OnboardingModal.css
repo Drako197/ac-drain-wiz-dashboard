@@ -1,0 +1,139 @@
+.onboarding-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.onboarding-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.close-button:hover {
+  background-color: #f0f0f0;
+}
+
+.onboarding-content {
+  text-align: center;
+}
+
+.step-image {
+  margin-bottom: 20px;
+}
+
+.step-image img {
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.step-content h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.step-content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.step-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 25px;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ddd;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.indicator.active {
+  background-color: #3498db;
+}
+
+.step-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.step-actions .btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+}
+
+.btn-secondary {
+  background: #f8f9fa;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+  background: #e9ecef;
+}
+
+@media (max-width: 768px) {
+  .onboarding-modal {
+    padding: 20px;
+    margin: 20px;
+  }
+  
+  .step-actions {
+    flex-direction: column;
+  }
+  
+  .step-actions .btn {
+    width: 100%;
+  }
+} 
