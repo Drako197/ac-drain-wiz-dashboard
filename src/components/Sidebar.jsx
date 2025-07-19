@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './Sidebar.css';
 
 const Sidebar = ({ onPageChange }) => {
   const navigate = useNavigate();

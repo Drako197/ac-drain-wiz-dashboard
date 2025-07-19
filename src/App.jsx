@@ -11,7 +11,7 @@ import './App.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [showOnboarding, setShowOnboarding] = useState(false); // Don't show onboarding by default
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [toast, setToast] = useState(null);
 
   // Check if user has completed onboarding
@@ -49,19 +49,21 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <aside className="sidebar">
-          <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
-        </aside>
-        
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Dashboard onShowOnboarding={handleShowOnboarding} />} />
-            <Route path="/dashboard" element={<Dashboard onShowOnboarding={handleShowOnboarding} />} />
-            <Route path="/manage-clients" element={<ManageClients />} />
-            <Route path="/manage-employees" element={<ManageEmployees />} />
-            <Route path="/manage-service-calls" element={<ManageServiceCalls />} />
-          </Routes>
-        </main>
+        <div className="dashboard-container">
+          <aside className="sidebar">
+            <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
+          </aside>
+          
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<Dashboard onShowOnboarding={handleShowOnboarding} />} />
+              <Route path="/dashboard" element={<Dashboard onShowOnboarding={handleShowOnboarding} />} />
+              <Route path="/manage-clients" element={<ManageClients />} />
+              <Route path="/manage-employees" element={<ManageEmployees />} />
+              <Route path="/manage-service-calls" element={<ManageServiceCalls />} />
+            </Routes>
+          </main>
+        </div>
 
         {/* Onboarding Modal */}
         <OnboardingModal 
