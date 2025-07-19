@@ -451,8 +451,37 @@ body {
   z-index: 3;
 }
 
+.dashboard-card.attention .card-icon {
+  color: #FFFFFF;
+}
+
 .dashboard-card.attention .card-icon-wrapper {
-  /* Layered design - background handled by ::before pseudo-element */
+  background: #FEECEB;
+  border: none;
+}
+
+.dashboard-card.attention .card-icon-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  right: 7px;
+  bottom: 7px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.dashboard-card.attention .card-icon-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  background: #FEECEB;
+  border-radius: 50%;
+  z-index: 1;
 }
 
 .dashboard-card.active .card-icon-wrapper {
