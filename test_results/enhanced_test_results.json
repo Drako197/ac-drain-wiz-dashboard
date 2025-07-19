@@ -1,0 +1,586 @@
+{
+  "timestamp": "2025-07-17T15:15:44.872274",
+  "base_url": "https://acdw.luislopezdesign.com",
+  "pages_tested": [
+    {
+      "name": "Initial Page",
+      "url": "https://acdw.luislopezdesign.com/",
+      "title": "Vite + React",
+      "timestamp": "2025-07-17T15:15:53.355410",
+      "body_text": "Setup Steps\nHere's what we'll help you set up:\nSTEP 1:\nCreate a Contractor\nSTEP 2:\nAdd your employees\nSTEP 3:\nAdd your client data\nSTEP 4:\nCreate your first service call\nSTEP 5:\nSetup Complete\nWelcome to AC Drain Wiz sensor monitoring\nOlivia\nBefore you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything\u2014and sets you up for smarter service and smoother installs.\nGet Started",
+      "buttons": [
+        {
+          "text": "Get Started",
+          "classes": "btn-next",
+          "id": ""
+        }
+      ],
+      "links": [],
+      "forms": [],
+      "css_classes": [
+        "content-image",
+        "step-item",
+        "onboarding-steps",
+        "logo-img",
+        "preview-mode",
+        "step-icon",
+        "App",
+        "onboarding-content",
+        "disabled",
+        "onboarding-left",
+        "onboarding-modal",
+        "content-description",
+        "content-actions",
+        "step-container",
+        "step-connector",
+        "onboarding-logo",
+        "onboarding-illustration",
+        "step-number",
+        "step-content",
+        "btn-next",
+        "content-header",
+        "onboarding-overlay",
+        "steps-preview-header",
+        "disabled-preview",
+        "step-title",
+        "modal-open",
+        "onboarding-right",
+        "toast-container"
+      ]
+    }
+  ],
+  "onboarding_flow": {},
+  "navigation_flow": {
+    "Home": {
+      "name": "Home",
+      "url": "https://acdw.luislopezdesign.com/",
+      "title": "Vite + React",
+      "timestamp": "2025-07-17T15:17:00.087400",
+      "body_text": "Setup Steps\nHere's what we'll help you set up:\nSTEP 1:\nCreate a Contractor\nSTEP 2:\nAdd your employees\nSTEP 3:\nAdd your client data\nSTEP 4:\nCreate your first service call\nSTEP 5:\nSetup Complete\nWelcome to AC Drain Wiz sensor monitoring\nPaul\nBefore you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything\u2014and sets you up for smarter service and smoother installs.\nGet Started",
+      "buttons": [
+        {
+          "text": "Get Started",
+          "classes": "btn-next",
+          "id": ""
+        }
+      ],
+      "links": [],
+      "forms": [],
+      "css_classes": [
+        "content-image",
+        "step-item",
+        "onboarding-steps",
+        "logo-img",
+        "preview-mode",
+        "step-icon",
+        "App",
+        "onboarding-content",
+        "disabled",
+        "onboarding-left",
+        "onboarding-modal",
+        "content-description",
+        "content-actions",
+        "step-container",
+        "step-connector",
+        "onboarding-logo",
+        "onboarding-illustration",
+        "step-number",
+        "step-content",
+        "btn-next",
+        "content-header",
+        "onboarding-overlay",
+        "steps-preview-header",
+        "disabled-preview",
+        "step-title",
+        "modal-open",
+        "onboarding-right",
+        "toast-container"
+      ]
+    },
+    "Dashboard": {
+      "name": "Dashboard",
+      "url": "https://acdw.luislopezdesign.com/dashboard",
+      "title": "Vite + React",
+      "timestamp": "2025-07-17T15:17:26.630621",
+      "body_text": "Setup Steps\nHere's what we'll help you set up:\nSTEP 1:\nCreate a Contractor\nSTEP 2:\nAdd your employees\nSTEP 3:\nAdd your client data\nSTEP 4:\nCreate your first service call\nSTEP 5:\nSetup Complete\nWelcome to AC Drain Wiz sensor monitoring\nCasey\nBefore you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything\u2014and sets you up for smarter service and smoother installs.\nGet Started",
+      "buttons": [
+        {
+          "text": "Get Started",
+          "classes": "btn-next",
+          "id": ""
+        }
+      ],
+      "links": [],
+      "forms": [],
+      "css_classes": [
+        "content-image",
+        "step-item",
+        "onboarding-steps",
+        "logo-img",
+        "preview-mode",
+        "step-icon",
+        "App",
+        "onboarding-content",
+        "disabled",
+        "onboarding-left",
+        "onboarding-modal",
+        "content-description",
+        "content-actions",
+        "step-container",
+        "step-connector",
+        "onboarding-logo",
+        "onboarding-illustration",
+        "step-number",
+        "step-content",
+        "btn-next",
+        "content-header",
+        "onboarding-overlay",
+        "steps-preview-header",
+        "disabled-preview",
+        "step-title",
+        "modal-open",
+        "onboarding-right",
+        "toast-container"
+      ]
+    },
+    "Clients": {
+      "name": "Clients",
+      "url": "https://acdw.luislopezdesign.com/clients",
+      "title": "Vite + React",
+      "timestamp": "2025-07-17T15:17:52.997778",
+      "body_text": "Setup Steps\nHere's what we'll help you set up:\nSTEP 1:\nCreate a Contractor\nSTEP 2:\nAdd your employees\nSTEP 3:\nAdd your client data\nSTEP 4:\nCreate your first service call\nSTEP 5:\nSetup Complete\nWelcome to AC Drain Wiz sensor monitoring\nJamie\nBefore you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything\u2014and sets you up for smarter service and smoother installs.\nGet Started",
+      "buttons": [
+        {
+          "text": "Get Started",
+          "classes": "btn-next",
+          "id": ""
+        }
+      ],
+      "links": [],
+      "forms": [],
+      "css_classes": [
+        "content-image",
+        "step-item",
+        "onboarding-steps",
+        "logo-img",
+        "preview-mode",
+        "step-icon",
+        "App",
+        "onboarding-content",
+        "disabled",
+        "onboarding-left",
+        "onboarding-modal",
+        "content-description",
+        "content-actions",
+        "step-container",
+        "step-connector",
+        "onboarding-logo",
+        "onboarding-illustration",
+        "step-number",
+        "step-content",
+        "btn-next",
+        "content-header",
+        "onboarding-overlay",
+        "steps-preview-header",
+        "disabled-preview",
+        "step-title",
+        "modal-open",
+        "onboarding-right",
+        "toast-container"
+      ]
+    },
+    "Employees": {
+      "name": "Employees",
+      "url": "https://acdw.luislopezdesign.com/employees",
+      "title": "Vite + React",
+      "timestamp": "2025-07-17T15:18:19.406100",
+      "body_text": "Setup Steps\nHere's what we'll help you set up:\nSTEP 1:\nCreate a Contractor\nSTEP 2:\nAdd your employees\nSTEP 3:\nAdd your client data\nSTEP 4:\nCreate your first service call\nSTEP 5:\nSetup Complete\nWelcome to AC Drain Wiz sensor monitoring\nVale\nBefore you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything\u2014and sets you up for smarter service and smoother installs.\nGet Started",
+      "buttons": [
+        {
+          "text": "Get Started",
+          "classes": "btn-next",
+          "id": ""
+        }
+      ],
+      "links": [],
+      "forms": [
+        {
+          "action": "https://acdw.luislopezdesign.com/employees",
+          "method": "get",
+          "inputs": [
+            {
+              "type": "text",
+              "name": "contractorName",
+              "placeholder": "Contractor Name"
+            },
+            {
+              "type": "email",
+              "name": "contractorEmail",
+              "placeholder": "name@domain.com"
+            },
+            {
+              "type": "text",
+              "name": "address1",
+              "placeholder": "123 Main Street"
+            },
+            {
+              "type": "text",
+              "name": "address2",
+              "placeholder": ""
+            },
+            {
+              "type": "text",
+              "name": "city",
+              "placeholder": ""
+            },
+            {
+              "type": "text",
+              "name": "zipCode",
+              "placeholder": "Zip/Postal Code"
+            },
+            {
+              "type": "file",
+              "name": "",
+              "placeholder": ""
+            }
+          ]
+        }
+      ],
+      "css_classes": [
+        "assistive-text-inline",
+        "upload-text",
+        "optional",
+        "file-upload-area",
+        "step-item",
+        "onboarding-steps",
+        "progress-dot",
+        "current",
+        "logo-img",
+        "progress-indicators",
+        "step-icon",
+        "App",
+        "onboarding-content",
+        "upload-formats",
+        "form-group",
+        "onboarding-left",
+        "contractor-form",
+        "onboarding-modal",
+        "full-width",
+        "content-actions",
+        "active",
+        "step-container",
+        "form-container",
+        "help-icon",
+        "form-input",
+        "three-col",
+        "step-connector",
+        "onboarding-logo",
+        "onboarding-illustration",
+        "upload-link",
+        "step-number",
+        "step-content",
+        "upload-icon",
+        "btn-next",
+        "content-header",
+        "onboarding-overlay",
+        "form-select",
+        "form-row",
+        "half-width",
+        "step-title",
+        "modal-open",
+        "onboarding-right",
+        "toast-container"
+      ]
+    },
+    "Service Calls": {
+      "name": "Service Calls",
+      "url": "https://acdw.luislopezdesign.com/service-calls",
+      "title": "Vite + React",
+      "timestamp": "2025-07-17T15:18:36.072303",
+      "body_text": "Setup Steps\nHere's what we'll help you set up:\nSTEP 1:\nCreate a Contractor\nSTEP 2:\nAdd your employees\nSTEP 3:\nAdd your client data\nSTEP 4:\nCreate your first service call\nSTEP 5:\nSetup Complete\nWelcome to AC Drain Wiz sensor monitoring\nOlivia\nBefore you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything\u2014and sets you up for smarter service and smoother installs.\nGet Started",
+      "buttons": [
+        {
+          "text": "Get Started",
+          "classes": "btn-next",
+          "id": ""
+        }
+      ],
+      "links": [],
+      "forms": [],
+      "css_classes": [
+        "content-image",
+        "step-item",
+        "onboarding-steps",
+        "logo-img",
+        "preview-mode",
+        "step-icon",
+        "App",
+        "onboarding-content",
+        "disabled",
+        "onboarding-left",
+        "onboarding-modal",
+        "content-description",
+        "content-actions",
+        "step-container",
+        "step-connector",
+        "onboarding-logo",
+        "onboarding-illustration",
+        "step-number",
+        "step-content",
+        "btn-next",
+        "content-header",
+        "onboarding-overlay",
+        "steps-preview-header",
+        "disabled-preview",
+        "step-title",
+        "modal-open",
+        "onboarding-right",
+        "toast-container"
+      ]
+    },
+    "Settings": {
+      "name": "Settings",
+      "url": "https://acdw.luislopezdesign.com/settings",
+      "title": "Vite + React",
+      "timestamp": "2025-07-17T15:19:02.447975",
+      "body_text": "Setup Steps\nHere's what we'll help you set up:\nSTEP 1:\nCreate a Contractor\nSTEP 2:\nAdd your employees\nSTEP 3:\nAdd your client data\nSTEP 4:\nCreate your first service call\nSTEP 5:\nSetup Complete\nWelcome to AC Drain Wiz sensor monitoring\nBella\nBefore you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything\u2014and sets you up for smarter service and smoother installs.\nGet Started",
+      "buttons": [
+        {
+          "text": "Get Started",
+          "classes": "btn-next",
+          "id": ""
+        }
+      ],
+      "links": [],
+      "forms": [],
+      "css_classes": [
+        "content-image",
+        "step-item",
+        "onboarding-steps",
+        "logo-img",
+        "preview-mode",
+        "step-icon",
+        "App",
+        "onboarding-content",
+        "disabled",
+        "onboarding-left",
+        "onboarding-modal",
+        "content-description",
+        "content-actions",
+        "step-container",
+        "step-connector",
+        "onboarding-logo",
+        "onboarding-illustration",
+        "step-number",
+        "step-content",
+        "btn-next",
+        "content-header",
+        "onboarding-overlay",
+        "steps-preview-header",
+        "disabled-preview",
+        "step-title",
+        "modal-open",
+        "onboarding-right",
+        "toast-container"
+      ]
+    },
+    "Support": {
+      "name": "Support",
+      "url": "https://acdw.luislopezdesign.com/support",
+      "title": "Vite + React",
+      "timestamp": "2025-07-17T15:19:28.835407",
+      "body_text": "Setup Steps\nHere's what we'll help you set up:\nSTEP 1:\nCreate a Contractor\nSTEP 2:\nAdd your employees\nSTEP 3:\nAdd your client data\nSTEP 4:\nCreate your first service call\nSTEP 5:\nSetup Complete\nWelcome to AC Drain Wiz sensor monitoring\nAdam\nBefore you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything\u2014and sets you up for smarter service and smoother installs.\nGet Started",
+      "buttons": [
+        {
+          "text": "Get Started",
+          "classes": "btn-next",
+          "id": ""
+        }
+      ],
+      "links": [],
+      "forms": [],
+      "css_classes": [
+        "content-image",
+        "step-item",
+        "onboarding-steps",
+        "logo-img",
+        "preview-mode",
+        "step-icon",
+        "App",
+        "onboarding-content",
+        "disabled",
+        "onboarding-left",
+        "onboarding-modal",
+        "content-description",
+        "content-actions",
+        "step-container",
+        "step-connector",
+        "onboarding-logo",
+        "onboarding-illustration",
+        "step-number",
+        "step-content",
+        "btn-next",
+        "content-header",
+        "onboarding-overlay",
+        "steps-preview-header",
+        "disabled-preview",
+        "step-title",
+        "modal-open",
+        "onboarding-right",
+        "toast-container"
+      ]
+    }
+  },
+  "interactions": [
+    {
+      "type": "button_click",
+      "text": "Get Started",
+      "button_index": 1,
+      "timestamp": "2025-07-17T15:19:55.169013"
+    },
+    {
+      "type": "form_input",
+      "input_type": "text",
+      "form_index": 1,
+      "input_index": 1,
+      "timestamp": "2025-07-17T15:19:56.849197"
+    },
+    {
+      "type": "form_input",
+      "input_type": "email",
+      "form_index": 1,
+      "input_index": 2,
+      "timestamp": "2025-07-17T15:19:58.235624"
+    },
+    {
+      "type": "form_input",
+      "input_type": "text",
+      "form_index": 1,
+      "input_index": 3,
+      "timestamp": "2025-07-17T15:19:59.648686"
+    }
+  ],
+  "errors": [],
+  "screenshots_taken": [
+    {
+      "name": "01_initial_page",
+      "filename": "01_initial_page_20250717_151553.png",
+      "timestamp": "20250717_151553"
+    },
+    {
+      "name": "02_onboarding_trigger_Welcome",
+      "filename": "02_onboarding_trigger_Welcome_20250717_151617.png",
+      "timestamp": "20250717_151617"
+    },
+    {
+      "name": "05_home",
+      "filename": "05_home_20250717_151659.png",
+      "timestamp": "20250717_151659"
+    },
+    {
+      "name": "06_home_after_load",
+      "filename": "06_home_after_load_20250717_151723.png",
+      "timestamp": "20250717_151723"
+    },
+    {
+      "name": "05_dashboard",
+      "filename": "05_dashboard_20250717_151726.png",
+      "timestamp": "20250717_151726"
+    },
+    {
+      "name": "06_dashboard_after_load",
+      "filename": "06_dashboard_after_load_20250717_151750.png",
+      "timestamp": "20250717_151750"
+    },
+    {
+      "name": "05_clients",
+      "filename": "05_clients_20250717_151752.png",
+      "timestamp": "20250717_151752"
+    },
+    {
+      "name": "06_clients_after_load",
+      "filename": "06_clients_after_load_20250717_151816.png",
+      "timestamp": "20250717_151816"
+    },
+    {
+      "name": "05_employees",
+      "filename": "05_employees_20250717_151819.png",
+      "timestamp": "20250717_151819"
+    },
+    {
+      "name": "06_employees_after_load",
+      "filename": "06_employees_after_load_20250717_151833.png",
+      "timestamp": "20250717_151833"
+    },
+    {
+      "name": "05_service_calls",
+      "filename": "05_service_calls_20250717_151835.png",
+      "timestamp": "20250717_151835"
+    },
+    {
+      "name": "06_service_calls_after_load",
+      "filename": "06_service_calls_after_load_20250717_151859.png",
+      "timestamp": "20250717_151859"
+    },
+    {
+      "name": "05_settings",
+      "filename": "05_settings_20250717_151902.png",
+      "timestamp": "20250717_151902"
+    },
+    {
+      "name": "06_settings_after_load",
+      "filename": "06_settings_after_load_20250717_151926.png",
+      "timestamp": "20250717_151926"
+    },
+    {
+      "name": "05_support",
+      "filename": "05_support_20250717_151928.png",
+      "timestamp": "20250717_151928"
+    },
+    {
+      "name": "06_support_after_load",
+      "filename": "06_support_after_load_20250717_151952.png",
+      "timestamp": "20250717_151952"
+    },
+    {
+      "name": "07_before_button_1",
+      "filename": "07_before_button_1_20250717_151952.png",
+      "timestamp": "20250717_151952"
+    },
+    {
+      "name": "08_after_button_1",
+      "filename": "08_after_button_1_20250717_151954.png",
+      "timestamp": "20250717_151954"
+    },
+    {
+      "name": "09_before_input_1_1",
+      "filename": "09_before_input_1_1_20250717_151955.png",
+      "timestamp": "20250717_151955"
+    },
+    {
+      "name": "10_after_input_1_1",
+      "filename": "10_after_input_1_1_20250717_151956.png",
+      "timestamp": "20250717_151956"
+    },
+    {
+      "name": "09_before_input_1_2",
+      "filename": "09_before_input_1_2_20250717_151956.png",
+      "timestamp": "20250717_151956"
+    },
+    {
+      "name": "10_after_input_1_2",
+      "filename": "10_after_input_1_2_20250717_151958.png",
+      "timestamp": "20250717_151958"
+    },
+    {
+      "name": "09_before_input_1_3",
+      "filename": "09_before_input_1_3_20250717_151958.png",
+      "timestamp": "20250717_151958"
+    },
+    {
+      "name": "10_after_input_1_3",
+      "filename": "10_after_input_1_3_20250717_151959.png",
+      "timestamp": "20250717_151959"
+    }
+  ]
+}

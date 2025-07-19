@@ -1,66 +1,105 @@
-import React, { useState } from 'react'
-import './App.css'
-import './styles.css'
-import Sidebar from './components/Sidebar'
-import Dashboard from './pages/Dashboard'
-import ManageClients from './pages/ManageClients'
-import ManageEmployees from './pages/ManageEmployees'
-import ManageServiceCalls from './pages/ManageServiceCalls'
-import OnboardingModal from './components/OnboardingModal'
-import Toast from './components/Toast'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import Dashboard from './pages/Dashboard';
+import ManageClients from './pages/ManageClients';
+import ManageEmployees from './pages/ManageEmployees';
+import ManageServiceCalls from './pages/ManageServiceCalls';
+import OnboardingModal from './components/OnboardingModal';
+import Toast from './components/Toast';
+import './App.css';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard')
-  const [showOnboarding, setShowOnboarding] = useState(false)
-  const [toasts, setToasts] = useState([])
+  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [showOnboarding, setShowOnboarding] = useState(false); // Don't show onboarding by default
+  const [toast, setToast] = useState(null);
 
-  const addToast = (message, type = 'info') => {
-    const id = Date.now()
-    setToasts(prev => [...prev, { id, message, type }])
-    setTimeout(() => {
-      setToasts(prev => prev.filter(toast => toast.id !== id))
-    }, 3000)
-  }
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <Dashboard />
-      case 'manage-clients':
-        return <ManageClients />
-      case 'manage-employees':
-        return <ManageEmployees />
-      case 'manage-service-calls':
-        return <ManageServiceCalls />
-      default:
-        return <Dashboard />
+  // Check if user has completed onboarding
+  useEffect(() => {
+    const hasCompletedOnboarding = localStorage.getItem('acdrainwiz_onboarding_completed');
+    if (hasCompletedOnboarding === 'true') {
+      setShowOnboarding(false);
     }
-  }
+  }, []);
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('acdrainwiz_onboarding_completed', 'true');
+    showToastMessage('🎉 Welcome to AC Drain Wiz! Your setup is complete.');
+  };
+
+  const handleOnboardingClose = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('acdrainwiz_onboarding_completed', 'true');
+  };
+
+  const handleShowOnboarding = () => {
+    setShowOnboarding(true);
+  };
+
+  const showToastMessage = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
-    <div className="app">
-      <Sidebar 
-        currentPage={currentPage} 
-        setCurrentPage={setCurrentPage}
-        onShowOnboarding={() => setShowOnboarding(true)}
-      />
-      <main className="main-content">
-        {renderPage()}
-      </main>
-      
-      {showOnboarding && (
+    <Router>
+      <div className="App">
+        <aside className="sidebar">
+          <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
+        </aside>
+        
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard onShowOnboarding={handleShowOnboarding} />} />
+            <Route path="/dashboard" element={<Dashboard onShowOnboarding={handleShowOnboarding} />} />
+            <Route path="/manage-clients" element={<ManageClients />} />
+            <Route path="/manage-employees" element={<ManageEmployees />} />
+            <Route path="/manage-service-calls" element={<ManageServiceCalls />} />
+          </Routes>
+        </main>
+
+        {/* Onboarding Modal */}
         <OnboardingModal 
-          onClose={() => setShowOnboarding(false)}
-          onComplete={() => {
-            setShowOnboarding(false)
-            addToast('Onboarding completed successfully!', 'success')
-          }}
+          isOpen={showOnboarding}
+          onClose={handleOnboardingClose}
+          onComplete={handleOnboardingComplete}
         />
-      )}
-      
-      <Toast toasts={toasts} />
-    </div>
-  )
+
+        {/* Toast Notifications */}
+        {toast && (
+          <Toast 
+            message={toast.message} 
+            type={toast.type} 
+            onClose={() => setToast(null)}
+          />
+        )}
+
+        {/* Onboarding Trigger Button */}
+        <button 
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            padding: '12px 24px',
+            background: 'rgb(59, 130, 246)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            zIndex: 999
+          }}
+          onClick={handleShowOnboarding}
+        >
+          Show Onboarding
+        </button>
+      </div>
+    </Router>
+  );
 }
 
-export default App 
+export default App; 

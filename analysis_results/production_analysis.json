@@ -1,0 +1,434 @@
+{
+  "timestamp": "2025-07-17T15:08:24.284006",
+  "base_url": "https://acdw.luislopezdesign.com",
+  "pages_analyzed": [
+    {
+      "url": "https://acdw.luislopezdesign.com/",
+      "status_code": 200,
+      "title": "Vite + React",
+      "meta_description": null,
+      "headings": [],
+      "buttons": [],
+      "forms": [],
+      "navigation_links": [],
+      "assets": [
+        {
+          "type": "link",
+          "src": "/vite.svg",
+          "alt": null,
+          "rel": [
+            "icon"
+          ]
+        },
+        {
+          "type": "link",
+          "src": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        },
+        {
+          "type": "script",
+          "src": "/assets/index-DPkCpuhf.js",
+          "alt": null,
+          "rel": null
+        },
+        {
+          "type": "link",
+          "src": "/assets/index-StKs65Av.css",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        }
+      ],
+      "css_classes": "set()",
+      "javascript_code": [],
+      "onboarding_elements": []
+    },
+    {
+      "url": "https://acdw.luislopezdesign.com/",
+      "status_code": 200,
+      "title": "Vite + React",
+      "meta_description": null,
+      "headings": [],
+      "buttons": [],
+      "forms": [],
+      "navigation_links": [],
+      "assets": [
+        {
+          "type": "link",
+          "src": "/vite.svg",
+          "alt": null,
+          "rel": [
+            "icon"
+          ]
+        },
+        {
+          "type": "link",
+          "src": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        },
+        {
+          "type": "script",
+          "src": "/assets/index-DPkCpuhf.js",
+          "alt": null,
+          "rel": null
+        },
+        {
+          "type": "link",
+          "src": "/assets/index-StKs65Av.css",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        }
+      ],
+      "css_classes": "set()",
+      "javascript_code": [],
+      "onboarding_elements": []
+    },
+    {
+      "url": "https://acdw.luislopezdesign.com/dashboard",
+      "status_code": 200,
+      "title": "Vite + React",
+      "meta_description": null,
+      "headings": [],
+      "buttons": [],
+      "forms": [],
+      "navigation_links": [],
+      "assets": [
+        {
+          "type": "link",
+          "src": "/vite.svg",
+          "alt": null,
+          "rel": [
+            "icon"
+          ]
+        },
+        {
+          "type": "link",
+          "src": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        },
+        {
+          "type": "script",
+          "src": "/assets/index-DPkCpuhf.js",
+          "alt": null,
+          "rel": null
+        },
+        {
+          "type": "link",
+          "src": "/assets/index-StKs65Av.css",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        }
+      ],
+      "css_classes": "set()",
+      "javascript_code": [],
+      "onboarding_elements": []
+    },
+    {
+      "url": "https://acdw.luislopezdesign.com/clients",
+      "status_code": 200,
+      "title": "Vite + React",
+      "meta_description": null,
+      "headings": [],
+      "buttons": [],
+      "forms": [],
+      "navigation_links": [],
+      "assets": [
+        {
+          "type": "link",
+          "src": "/vite.svg",
+          "alt": null,
+          "rel": [
+            "icon"
+          ]
+        },
+        {
+          "type": "link",
+          "src": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        },
+        {
+          "type": "script",
+          "src": "/assets/index-DPkCpuhf.js",
+          "alt": null,
+          "rel": null
+        },
+        {
+          "type": "link",
+          "src": "/assets/index-StKs65Av.css",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        }
+      ],
+      "css_classes": "set()",
+      "javascript_code": [],
+      "onboarding_elements": []
+    },
+    {
+      "url": "https://acdw.luislopezdesign.com/employees",
+      "status_code": 200,
+      "title": "Vite + React",
+      "meta_description": null,
+      "headings": [],
+      "buttons": [],
+      "forms": [],
+      "navigation_links": [],
+      "assets": [
+        {
+          "type": "link",
+          "src": "/vite.svg",
+          "alt": null,
+          "rel": [
+            "icon"
+          ]
+        },
+        {
+          "type": "link",
+          "src": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        },
+        {
+          "type": "script",
+          "src": "/assets/index-DPkCpuhf.js",
+          "alt": null,
+          "rel": null
+        },
+        {
+          "type": "link",
+          "src": "/assets/index-StKs65Av.css",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        }
+      ],
+      "css_classes": "set()",
+      "javascript_code": [],
+      "onboarding_elements": []
+    },
+    {
+      "url": "https://acdw.luislopezdesign.com/service-calls",
+      "status_code": 200,
+      "title": "Vite + React",
+      "meta_description": null,
+      "headings": [],
+      "buttons": [],
+      "forms": [],
+      "navigation_links": [],
+      "assets": [
+        {
+          "type": "link",
+          "src": "/vite.svg",
+          "alt": null,
+          "rel": [
+            "icon"
+          ]
+        },
+        {
+          "type": "link",
+          "src": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        },
+        {
+          "type": "script",
+          "src": "/assets/index-DPkCpuhf.js",
+          "alt": null,
+          "rel": null
+        },
+        {
+          "type": "link",
+          "src": "/assets/index-StKs65Av.css",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        }
+      ],
+      "css_classes": "set()",
+      "javascript_code": [],
+      "onboarding_elements": []
+    },
+    {
+      "url": "https://acdw.luislopezdesign.com/settings",
+      "status_code": 200,
+      "title": "Vite + React",
+      "meta_description": null,
+      "headings": [],
+      "buttons": [],
+      "forms": [],
+      "navigation_links": [],
+      "assets": [
+        {
+          "type": "link",
+          "src": "/vite.svg",
+          "alt": null,
+          "rel": [
+            "icon"
+          ]
+        },
+        {
+          "type": "link",
+          "src": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        },
+        {
+          "type": "script",
+          "src": "/assets/index-DPkCpuhf.js",
+          "alt": null,
+          "rel": null
+        },
+        {
+          "type": "link",
+          "src": "/assets/index-StKs65Av.css",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        }
+      ],
+      "css_classes": "set()",
+      "javascript_code": [],
+      "onboarding_elements": []
+    },
+    {
+      "url": "https://acdw.luislopezdesign.com/support",
+      "status_code": 200,
+      "title": "Vite + React",
+      "meta_description": null,
+      "headings": [],
+      "buttons": [],
+      "forms": [],
+      "navigation_links": [],
+      "assets": [
+        {
+          "type": "link",
+          "src": "/vite.svg",
+          "alt": null,
+          "rel": [
+            "icon"
+          ]
+        },
+        {
+          "type": "link",
+          "src": "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        },
+        {
+          "type": "script",
+          "src": "/assets/index-DPkCpuhf.js",
+          "alt": null,
+          "rel": null
+        },
+        {
+          "type": "link",
+          "src": "/assets/index-StKs65Av.css",
+          "alt": null,
+          "rel": [
+            "stylesheet"
+          ]
+        }
+      ],
+      "css_classes": "set()",
+      "javascript_code": [],
+      "onboarding_elements": []
+    }
+  ],
+  "onboarding_flow": {
+    "triggers": [],
+    "modal_elements": []
+  },
+  "navigation_structure": {
+    "/": {
+      "path": "/",
+      "title": "Vite + React",
+      "main_content": [],
+      "actions_available": [],
+      "forms_present": 0,
+      "assets_count": 4
+    },
+    "/dashboard": {
+      "path": "/dashboard",
+      "title": "Vite + React",
+      "main_content": [],
+      "actions_available": [],
+      "forms_present": 0,
+      "assets_count": 4
+    },
+    "/clients": {
+      "path": "/clients",
+      "title": "Vite + React",
+      "main_content": [],
+      "actions_available": [],
+      "forms_present": 0,
+      "assets_count": 4
+    },
+    "/employees": {
+      "path": "/employees",
+      "title": "Vite + React",
+      "main_content": [],
+      "actions_available": [],
+      "forms_present": 0,
+      "assets_count": 4
+    },
+    "/service-calls": {
+      "path": "/service-calls",
+      "title": "Vite + React",
+      "main_content": [],
+      "actions_available": [],
+      "forms_present": 0,
+      "assets_count": 4
+    },
+    "/settings": {
+      "path": "/settings",
+      "title": "Vite + React",
+      "main_content": [],
+      "actions_available": [],
+      "forms_present": 0,
+      "assets_count": 4
+    },
+    "/support": {
+      "path": "/support",
+      "title": "Vite + React",
+      "main_content": [],
+      "actions_available": [],
+      "forms_present": 0,
+      "assets_count": 4
+    }
+  },
+  "assets_found": [],
+  "interactions_detected": [],
+  "css_classes": "set()",
+  "javascript_functions": "set()",
+  "forms_detected": [],
+  "data_structures": {}
+}

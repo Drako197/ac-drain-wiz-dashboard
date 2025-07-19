@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AC Drain Wiz Dashboard</title>
+    <title>Vite + React</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
-    <script type="module" crossorigin src="/assets/index-DFr6UVrW.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-VIiJ1FtN.css">
+    <script type="module" crossorigin src="/assets/index-DPkCpuhf.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-StKs65Av.css">
   </head>
   <body>
     <div id="root"></div>
   </body>
-</html> 
+</html>
