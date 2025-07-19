@@ -417,7 +417,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20px;
+  margin-right: 0px;
 }
 
 .dashboard-card.attention .card-icon-wrapper {
