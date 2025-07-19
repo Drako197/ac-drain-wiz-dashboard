@@ -478,7 +478,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 32px;
+  padding: 24px 0px;
   border-bottom: 1px solid #e5e7eb;
 }
 
