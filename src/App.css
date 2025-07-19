@@ -467,27 +467,9 @@ body {
   /* Layered design - background handled by ::before pseudo-element */
 }
 
-.card-icon,
-.material-symbols-outlined.card-icon {
-  font-size: 2rem;
-  color: #8f3fff;
-}
 
-.dashboard-card.attention .card-icon {
-  color: #8f3fff;
-}
 
-.dashboard-card.active .card-icon {
-  color: #8f3fff;
-}
 
-.dashboard-card.clients .card-icon {
-  color: #8f3fff;
-}
-
-.dashboard-card.sensors .card-icon {
-  color: #8f3fff;
-}
 
 .card-content {
   display: flex;
