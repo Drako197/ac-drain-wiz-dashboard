@@ -330,7 +330,7 @@ body {
 
 .dashboard-contact {
   flex-shrink: 0;
-  min-width: 60px;
+  min-width: 250px;
 }
 
 .contact-card {
@@ -340,8 +340,8 @@ body {
   padding: 12px 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
-  min-width: 60px;
-  max-width: 120px;
+  min-width: 250px;
+  max-width: 300px;
   flex-shrink: 0;
   box-sizing: border-box;
   overflow: hidden;
