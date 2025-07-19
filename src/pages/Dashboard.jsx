@@ -115,7 +115,9 @@ const Dashboard = ({ onShowOnboarding }) => {
             </div>
             <div className="dashboard-card sensors">
               <div className="card-icon-wrapper">
-                <span className="material-symbols-outlined card-icon">sensors</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="card-icon">
+                  <path d="M8.66634 7.33333H11.8663C12.6131 7.33333 12.9864 7.33333 13.2717 7.47866C13.5225 7.60649 13.7265 7.81046 13.8544 8.06135C13.9997 8.34656 13.9997 8.71993 13.9997 9.46667V14M8.66634 14V4.13333C8.66634 3.3866 8.66634 3.01323 8.52102 2.72801C8.39319 2.47713 8.18921 2.27316 7.93833 2.14532C7.65311 2 7.27974 2 6.53301 2H4.13301C3.38627 2 3.0129 2 2.72769 2.14532C2.4768 2.27316 2.27283 2.47713 2.145 2.72801C1.99967 3.01323 1.99967 3.3866 1.99967 4.13333V14M14.6663 14H1.33301M4.33301 4.66667H6.33301M4.33301 7.33333H6.33301M4.33301 10H6.33301" stroke="#344054" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </div>
               <div className="card-content">
                 <div className="card-value">1,345</div>
