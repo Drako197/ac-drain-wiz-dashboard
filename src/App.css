@@ -410,8 +410,7 @@ body {
   min-width: 66px;
   min-height: 66px;
   border-radius: 50%;
-  background: #E9E1FF;
-  border: 1px solid rgba(237, 231, 246, 0.6);
+  background: #F9F5FF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -426,7 +425,7 @@ body {
   left: 7px;
   right: 7px;
   bottom: 7px;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 50%;
   z-index: 1;
 }
@@ -438,7 +437,7 @@ body {
   left: 14px;
   right: 14px;
   bottom: 14px;
-  background: #ede7f6;
+  background: #F4EBFF;
   border-radius: 50%;
   z-index: 1;
 }
