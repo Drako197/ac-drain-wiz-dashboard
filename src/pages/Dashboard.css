@@ -114,28 +114,11 @@
   align-items: center;
   gap: 20px;
   transition: all 0.3s ease;
-  border-left: 4px solid;
 }
 
 .dashboard-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-}
-
-.dashboard-card.attention {
-  border-left-color: #ef4444;
-}
-
-.dashboard-card.active {
-  border-left-color: #667eea;
-}
-
-.dashboard-card.clients {
-  border-left-color: #10b981;
-}
-
-.dashboard-card.sensors {
-  border-left-color: #f59e0b;
 }
 
 .card-icon-wrapper {
