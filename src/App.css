@@ -338,8 +338,11 @@ body {
   border-radius: 12px;
   padding: 12px 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 60px;
-  min-width: 60px;
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .contact-title {
