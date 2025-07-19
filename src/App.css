@@ -533,7 +533,7 @@ body {
 }
 
 .dashboard-table th {
-  padding: 16px;
+  padding: 14px 12px;
   text-align: left;
   font-weight: 600;
   color: #374151;
@@ -542,7 +542,7 @@ body {
 }
 
 .dashboard-table td {
-  padding: 16px;
+  padding: 14px 12px;
   border-bottom: 1px solid #f1f5f9;
   color: #374151;
   font-size: 14px;
