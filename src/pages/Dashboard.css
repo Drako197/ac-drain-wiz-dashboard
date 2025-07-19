@@ -120,11 +120,36 @@
 
 .card-icon-wrapper {
   flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(237, 231, 246, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.card-icon-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: #ede7f6;
+  border-radius: 50%;
+  z-index: 1;
 }
 
 .card-icon {
   font-size: 32px;
   color: #667085;
+  position: relative;
+  z-index: 2;
 }
 
 .dashboard-card.attention .card-icon {
