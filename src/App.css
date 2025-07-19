@@ -356,6 +356,7 @@ body {
   font-weight: 700;
   margin-bottom: 12px;
   color: #222222;
+  padding-left: 0;
 }
 
 .contact-logo {
@@ -367,6 +368,8 @@ body {
   font-size: 12px;
   margin-bottom: 4px;
   color: #6b7280;
+  padding-left: 0;
+  text-align: left;
 }
 
 .contact-label {
