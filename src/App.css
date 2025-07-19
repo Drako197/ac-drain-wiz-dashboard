@@ -20,14 +20,14 @@ body {
   background: #f6f7fb;
 }
 
-/* Main Dashboard Container - Centered with 1440px max-width */
+/* Main Dashboard Container - Centered with 1600px max-width */
 .dashboard-container {
   display: flex;
-  max-width: 1440px;
+  max-width: 1600px;
   margin: 0 auto;
   min-height: 100vh;
   background: #f6f7fb;
-  padding: 0 24px;
+  padding: 0 16px;
   box-sizing: border-box;
 }
 
@@ -259,7 +259,7 @@ body {
 .main-content {
   flex: 1;
   background: #f6f7fb;
-  padding: 24px;
+  padding: 16px;
   overflow-y: auto;
   min-height: 100vh;
   box-sizing: border-box;
