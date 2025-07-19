@@ -78,7 +78,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
     height: 32px;
     border-radius: 8px;
     background: linear-gradient(135deg,#7b61ff,#3ecbff);
