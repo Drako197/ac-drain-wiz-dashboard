@@ -125,7 +125,7 @@
   min-width: 56px;
   min-height: 56px;
   border-radius: 50%;
-  background: #ffffff;
+  background: #E9E1FF;
   border: 1px solid rgba(237, 231, 246, 0.6);
   display: flex;
   align-items: center;
@@ -136,10 +136,22 @@
 .card-icon-wrapper::before {
   content: '';
   position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  background: #ffffff;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.card-icon-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
   background: #ede7f6;
   border-radius: 50%;
   z-index: 1;
@@ -149,7 +161,7 @@
   font-size: 32px;
   color: #667085;
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 .dashboard-card.attention .card-icon {
