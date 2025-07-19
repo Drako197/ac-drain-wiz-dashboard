@@ -75,7 +75,11 @@ const Dashboard = ({ onShowOnboarding }) => {
           <div className="dashboard-cards">
             <div className="dashboard-card attention">
               <div className="card-icon-wrapper">
-                <span className="material-symbols-outlined card-icon">warning</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="card-icon">
+                  <path d="M10.29 3.86L1.82 18A2 2 0 0 0 3.54 21H20.46A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z" fill="#8b5cf6" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 9V13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="12" cy="17" r="1" fill="white"/>
+                </svg>
               </div>
               <div className="card-content">
                 <div className="card-value">25</div>
@@ -84,7 +88,10 @@ const Dashboard = ({ onShowOnboarding }) => {
             </div>
             <div className="dashboard-card active">
               <div className="card-icon-wrapper">
-                <span className="material-symbols-outlined card-icon">calendar_month</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="card-icon">
+                  <path d="M8 2V5M16 2V5M3.5 4H20.5C21.3284 4 22 4.67157 22 5.5V19.5C22 20.3284 21.3284 21 20.5 21H3.5C2.67157 21 2 20.3284 2 19.5V5.5C2 4.67157 2.67157 4 3.5 4Z" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 9H22" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
               <div className="card-content">
                 <div className="card-value">456</div>
@@ -93,7 +100,12 @@ const Dashboard = ({ onShowOnboarding }) => {
             </div>
             <div className="dashboard-card clients">
               <div className="card-icon-wrapper">
-                <span className="material-symbols-outlined card-icon">group</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="card-icon">
+                  <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
               <div className="card-content">
                 <div className="card-value">1,243</div>
@@ -102,7 +114,11 @@ const Dashboard = ({ onShowOnboarding }) => {
             </div>
             <div className="dashboard-card sensors">
               <div className="card-icon-wrapper">
-                <span className="material-symbols-outlined card-icon">sensors</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="card-icon">
+                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 17L12 22L22 17" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 12L12 17L22 12" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
               <div className="card-content">
                 <div className="card-value">1,345</div>

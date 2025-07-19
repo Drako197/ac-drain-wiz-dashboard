@@ -371,69 +371,98 @@ body {
 }
 
 .dashboard-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  color: #222;
+  border-radius: 16px;
+  padding: 18px 20px;
+  min-width: 0;
+  max-width: 220px;
+  flex: 1 1 0;
+  box-shadow: 0 8px 24px #8f3fff26,0 4px 12px #0000001a;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 16px;
+  justify-content: flex-start;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
 }
 
 .dashboard-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 32px #8f3fff33,0 6px 16px #00000026;
 }
 
 .card-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: 50%;
+  background: #ede7f6;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  margin-right: 20px;
 }
 
 .dashboard-card.attention .card-icon-wrapper {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  background: #ede7f6;
 }
 
 .dashboard-card.active .card-icon-wrapper {
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  background: #ede7f6;
 }
 
 .dashboard-card.clients .card-icon-wrapper {
-  background: linear-gradient(135deg, #10b981, #34d399);
+  background: #ede7f6;
 }
 
 .dashboard-card.sensors .card-icon-wrapper {
-  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  background: #ede7f6;
 }
 
-.card-icon {
-  font-size: 24px;
-  color: white;
+.card-icon,
+.material-symbols-outlined.card-icon {
+  font-size: 2rem;
+  color: #8f3fff;
+}
+
+.dashboard-card.attention .card-icon {
+  color: #8f3fff;
+}
+
+.dashboard-card.active .card-icon {
+  color: #8f3fff;
+}
+
+.dashboard-card.clients .card-icon {
+  color: #8f3fff;
+}
+
+.dashboard-card.sensors .card-icon {
+  color: #8f3fff;
 }
 
 .card-content {
-  flex: 1;
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .card-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 4px;
-  line-height: 1;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 6px;
+  color: #222;
+  text-align: left;
 }
 
 .card-label {
-  font-size: 0.875rem;
+  font-size: .8rem;
   color: #6b7280;
   font-weight: 500;
+  text-align: left;
 }
 
 /* Dashboard Table Section */
