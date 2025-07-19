@@ -445,8 +445,8 @@ body {
 
 .card-icon,
 .material-symbols-outlined.card-icon {
-  font-size: 1.75rem;
-  color: #8f3fff;
+  font-size: 1.5rem;
+  color: #344054;
   position: relative;
   z-index: 3;
 }
