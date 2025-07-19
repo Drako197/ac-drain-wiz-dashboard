@@ -259,7 +259,8 @@ body {
 /* Main Content Area */
 .main-content {
   flex: 1;
-  width: 100%;
+  width: 1160px;
+  min-width: 1160px;
   background: #f6f7fb;
   padding: 16px;
   overflow-y: auto;
@@ -627,7 +628,7 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 1440px) {
   .dashboard-container {
     flex-direction: column;
   }
@@ -643,6 +644,7 @@ body {
   .main-content {
     padding: 20px;
     width: 100%;
+    min-width: auto;
   }
   
   .dashboard-welcome {
