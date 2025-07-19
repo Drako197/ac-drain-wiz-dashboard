@@ -34,7 +34,6 @@ body {
   width: 280px;
   min-width: 280px;
   background: #f6f7fb;
-  border-right: 1.5px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   height: 100vh;
