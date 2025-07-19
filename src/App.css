@@ -405,10 +405,10 @@ body {
 }
 
 .card-icon-wrapper {
-  width: 56px;
-  height: 56px;
-  min-width: 56px;
-  min-height: 56px;
+  width: 66px;
+  height: 66px;
+  min-width: 66px;
+  min-height: 66px;
   border-radius: 50%;
   background: #E9E1FF;
   border: 1px solid rgba(237, 231, 246, 0.6);
@@ -422,10 +422,10 @@ body {
 .card-icon-wrapper::before {
   content: '';
   position: absolute;
-  top: 6px;
-  left: 6px;
-  right: 6px;
-  bottom: 6px;
+  top: 7px;
+  left: 7px;
+  right: 7px;
+  bottom: 7px;
   background: #ffffff;
   border-radius: 50%;
   z-index: 1;
@@ -434,10 +434,10 @@ body {
 .card-icon-wrapper::after {
   content: '';
   position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
   background: #ede7f6;
   border-radius: 50%;
   z-index: 1;
@@ -445,7 +445,7 @@ body {
 
 .card-icon,
 .material-symbols-outlined.card-icon {
-  font-size: 2rem;
+  font-size: 2.25rem;
   color: #8f3fff;
   position: relative;
   z-index: 3;
