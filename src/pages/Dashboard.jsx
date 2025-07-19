@@ -75,10 +75,8 @@ const Dashboard = ({ onShowOnboarding }) => {
           <div className="dashboard-cards">
             <div className="dashboard-card attention">
               <div className="card-icon-wrapper">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="card-icon">
-                  <path d="M10.29 3.86L1.82 18A2 2 0 0 0 3.54 21H20.46A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z" fill="#8b5cf6" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M12 9V13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="12" cy="17" r="1" fill="white"/>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="card-icon">
+                  <path d="M10.0005 12.6667C10.0005 13.7713 9.10506 14.6667 8.00049 14.6667C6.89592 14.6667 6.00049 13.7713 6.00049 12.6667M9.19816 4.15908C9.48849 3.85913 9.66716 3.45045 9.66716 3.00004C9.66716 2.07957 8.92097 1.33337 8.00049 1.33337C7.08002 1.33337 6.33382 2.07957 6.33382 3.00004C6.33382 3.45045 6.51249 3.85913 6.80282 4.15908M1.69837 5.54868C1.68881 4.58112 2.21046 3.67758 3.05318 3.20208M14.3026 5.54868C14.3122 4.58112 13.7905 3.67758 12.9478 3.20208M12.0005 7.46671C12.0005 6.54729 11.5791 5.66553 10.8289 5.0154C10.0788 4.36528 9.06136 4.00004 8.00049 4.00004C6.93963 4.00004 5.92221 4.36528 5.17206 5.0154C4.42192 5.66553 4.00049 6.54729 4.00049 7.46671C4.00049 8.98791 3.62325 10.1004 3.15253 10.8965C2.61605 11.8038 2.34781 12.2574 2.3584 12.3658C2.37052 12.4898 2.39284 12.5289 2.49338 12.6024C2.58127 12.6667 3.02283 12.6667 3.90595 12.6667H12.095C12.9782 12.6667 13.4197 12.6667 13.5076 12.6024C13.6081 12.5289 13.6305 12.4898 13.6426 12.3658C13.6532 12.2574 13.3849 11.8038 12.8484 10.8965C12.3777 10.1004 12.0005 8.98791 12.0005 7.46671Z" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
               <div className="card-content">
