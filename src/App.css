@@ -545,7 +545,8 @@ body {
   padding: 14px 12px;
   border-bottom: 1px solid #f1f5f9;
   color: #374151;
-  font-size: 14px;
+  font-size: 0.75em;
+  text-align: left;
 }
 
 .dashboard-table tbody tr:hover {
