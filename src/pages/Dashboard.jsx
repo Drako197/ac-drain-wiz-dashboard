@@ -8,10 +8,11 @@ const Dashboard = ({ onShowOnboarding }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
+  const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  // Mock data for demonstration
+  // Expanded mock data for demonstration (100 entries for 10 pages)
   const clientAddresses = [
     { id: 1, address: '123 Main Street, Miami Beach, Florida 33181', clientName: 'Steven Segal' },
     { id: 2, address: '456 Ocean Drive, Fort Lauderdale, Florida 33301', clientName: 'Martin Short' },
@@ -23,6 +24,96 @@ const Dashboard = ({ onShowOnboarding }) => {
     { id: 8, address: '5050 Collins Avenue, Miami Beach, Florida 33140', clientName: 'John Snow' },
     { id: 9, address: '6060 Lincoln Road, Miami Beach, Florida 33139', clientName: 'Michael Johnson' },
     { id: 10, address: '7070 Washington Avenue, Miami Beach, Florida 33139', clientName: 'David Wilson' },
+    { id: 11, address: '8080 Alton Road, Miami Beach, Florida 33139', clientName: 'Sarah Martinez' },
+    { id: 12, address: '9090 Meridian Avenue, Miami Beach, Florida 33139', clientName: 'Carlos Rodriguez' },
+    { id: 13, address: '1111 Venetian Causeway, Miami, Florida 33139', clientName: 'Maria Garcia' },
+    { id: 14, address: '2222 MacArthur Causeway, Miami, Florida 33139', clientName: 'James Brown' },
+    { id: 15, address: '3333 Julia Tuttle Causeway, Miami, Florida 33139', clientName: 'Lisa Anderson' },
+    { id: 16, address: '4444 Rickenbacker Causeway, Miami, Florida 33139', clientName: 'Robert Taylor' },
+    { id: 17, address: '5555 William Lehman Causeway, Miami, Florida 33139', clientName: 'Jennifer Davis' },
+    { id: 18, address: '6666 Broad Causeway, Miami, Florida 33139', clientName: 'Christopher Wilson' },
+    { id: 19, address: '7777 79th Street Causeway, Miami, Florida 33139', clientName: 'Amanda Thompson' },
+    { id: 20, address: '8888 163rd Street, North Miami Beach, Florida 33162', clientName: 'Daniel Moore' },
+    { id: 21, address: '9999 167th Street, North Miami Beach, Florida 33162', clientName: 'Jessica Lee' },
+    { id: 22, address: '11111 183rd Street, Aventura, Florida 33180', clientName: 'Matthew White' },
+    { id: 23, address: '22222 195th Street, Aventura, Florida 33180', clientName: 'Nicole Harris' },
+    { id: 24, address: '33333 199th Street, Aventura, Florida 33180', clientName: 'Andrew Clark' },
+    { id: 25, address: '44444 203rd Street, Aventura, Florida 33180', clientName: 'Stephanie Lewis' },
+    { id: 26, address: '55555 207th Street, Aventura, Florida 33180', clientName: 'Kevin Hall' },
+    { id: 27, address: '66666 211th Street, Aventura, Florida 33180', clientName: 'Rachel Young' },
+    { id: 28, address: '77777 215th Street, Aventura, Florida 33180', clientName: 'Brandon King' },
+    { id: 29, address: '88888 219th Street, Aventura, Florida 33180', clientName: 'Lauren Scott' },
+    { id: 30, address: '99999 223rd Street, Aventura, Florida 33180', clientName: 'Ryan Green' },
+    { id: 31, address: '111111 227th Street, Aventura, Florida 33180', clientName: 'Megan Baker' },
+    { id: 32, address: '222222 231st Street, Aventura, Florida 33180', clientName: 'Tyler Adams' },
+    { id: 33, address: '333333 235th Street, Aventura, Florida 33180', clientName: 'Ashley Nelson' },
+    { id: 34, address: '444444 239th Street, Aventura, Florida 33180', clientName: 'Joshua Carter' },
+    { id: 35, address: '555555 243rd Street, Aventura, Florida 33180', clientName: 'Brittany Mitchell' },
+    { id: 36, address: '666666 247th Street, Aventura, Florida 33180', clientName: 'Nathan Perez' },
+    { id: 37, address: '777777 251st Street, Aventura, Florida 33180', clientName: 'Samantha Roberts' },
+    { id: 38, address: '888888 255th Street, Aventura, Florida 33180', clientName: 'Jonathan Turner' },
+    { id: 39, address: '999999 259th Street, Aventura, Florida 33180', clientName: 'Victoria Phillips' },
+    { id: 40, address: '1111111 263rd Street, Aventura, Florida 33180', clientName: 'Derek Campbell' },
+    { id: 41, address: '2222222 267th Street, Aventura, Florida 33180', clientName: 'Hannah Parker' },
+    { id: 42, address: '3333333 271st Street, Aventura, Florida 33180', clientName: 'Corey Evans' },
+    { id: 43, address: '4444444 275th Street, Aventura, Florida 33180', clientName: 'Amber Edwards' },
+    { id: 44, address: '5555555 279th Street, Aventura, Florida 33180', clientName: 'Travis Collins' },
+    { id: 45, address: '6666666 283rd Street, Aventura, Florida 33180', clientName: 'Melissa Stewart' },
+    { id: 46, address: '7777777 287th Street, Aventura, Florida 33180', clientName: 'Marcus Morris' },
+    { id: 47, address: '8888888 291st Street, Aventura, Florida 33180', clientName: 'Crystal Rogers' },
+    { id: 48, address: '9999999 295th Street, Aventura, Florida 33180', clientName: 'Dustin Reed' },
+    { id: 49, address: '11111111 299th Street, Aventura, Florida 33180', clientName: 'Tiffany Cook' },
+    { id: 50, address: '22222222 303rd Street, Aventura, Florida 33180', clientName: 'Brent Morgan' },
+    { id: 51, address: '33333333 307th Street, Aventura, Florida 33180', clientName: 'Danielle Bell' },
+    { id: 52, address: '44444444 311th Street, Aventura, Florida 33180', clientName: 'Gregory Murphy' },
+    { id: 53, address: '55555555 315th Street, Aventura, Florida 33180', clientName: 'Lindsey Bailey' },
+    { id: 54, address: '66666666 319th Street, Aventura, Florida 33180', clientName: 'Troy Rivera' },
+    { id: 55, address: '77777777 323rd Street, Aventura, Florida 33180', clientName: 'Monica Cooper' },
+    { id: 56, address: '88888888 327th Street, Aventura, Florida 33180', clientName: 'Derrick Richardson' },
+    { id: 57, address: '99999999 331st Street, Aventura, Florida 33180', clientName: 'Stacy Cox' },
+    { id: 58, address: '111111111 335th Street, Aventura, Florida 33180', clientName: 'Lance Howard' },
+    { id: 59, address: '222222222 339th Street, Aventura, Florida 33180', clientName: 'Tracy Ward' },
+    { id: 60, address: '333333333 343rd Street, Aventura, Florida 33180', clientName: 'Wesley Torres' },
+    { id: 61, address: '444444444 347th Street, Aventura, Florida 33180', clientName: 'Tamara Peterson' },
+    { id: 62, address: '555555555 351st Street, Aventura, Florida 33180', clientName: 'Mario Gray' },
+    { id: 63, address: '666666666 355th Street, Aventura, Florida 33180', clientName: 'Latoya James' },
+    { id: 64, address: '777777777 359th Street, Aventura, Florida 33180', clientName: 'Ramon Watson' },
+    { id: 65, address: '888888888 363rd Street, Aventura, Florida 33180', clientName: 'Yolanda Brooks' },
+    { id: 66, address: '999999999 367th Street, Aventura, Florida 33180', clientName: 'Hector Kelly' },
+    { id: 67, address: '1111111111 371st Street, Aventura, Florida 33180', clientName: 'Felicia Sanders' },
+    { id: 68, address: '2222222222 375th Street, Aventura, Florida 33180', clientName: 'Ricardo Price' },
+    { id: 69, address: '3333333333 379th Street, Aventura, Florida 33180', clientName: 'Gina Bennett' },
+    { id: 70, address: '4444444444 383rd Street, Aventura, Florida 33180', clientName: 'Oscar Wood' },
+    { id: 71, address: '5555555555 387th Street, Aventura, Florida 33180', clientName: 'Tanya Barnes' },
+    { id: 72, address: '6666666666 391st Street, Aventura, Florida 33180', clientName: 'Fernando Ross' },
+    { id: 73, address: '7777777777 395th Street, Aventura, Florida 33180', clientName: 'Dawn Henderson' },
+    { id: 74, address: '8888888888 399th Street, Aventura, Florida 33180', clientName: 'Maurice Coleman' },
+    { id: 75, address: '9999999999 403rd Street, Aventura, Florida 33180', clientName: 'Tasha Jenkins' },
+    { id: 76, address: '11111111111 407th Street, Aventura, Florida 33180', clientName: 'Lorenzo Perry' },
+    { id: 77, address: '22222222222 411th Street, Aventura, Florida 33180', clientName: 'Keisha Powell' },
+    { id: 78, address: '33333333333 415th Street, Aventura, Florida 33180', clientName: 'Darnell Long' },
+    { id: 79, address: '44444444444 419th Street, Aventura, Florida 33180', clientName: 'Shanice Patterson' },
+    { id: 80, address: '55555555555 423rd Street, Aventura, Florida 33180', clientName: 'Malik Hughes' },
+    { id: 81, address: '66666666666 427th Street, Aventura, Florida 33180', clientName: 'Ebony Flores' },
+    { id: 82, address: '77777777777 431st Street, Aventura, Florida 33180', clientName: 'Tyrone Washington' },
+    { id: 83, address: '88888888888 435th Street, Aventura, Florida 33180', clientName: 'Aisha Butler' },
+    { id: 84, address: '99999999999 439th Street, Aventura, Florida 33180', clientName: 'Dante Simmons' },
+    { id: 85, address: '111111111111 443rd Street, Aventura, Florida 33180', clientName: 'Imani Foster' },
+    { id: 86, address: '222222222222 447th Street, Aventura, Florida 33180', clientName: 'Kendrick Gonzales' },
+    { id: 87, address: '333333333333 451st Street, Aventura, Florida 33180', clientName: 'Nia Bryant' },
+    { id: 88, address: '444444444444 455th Street, Aventura, Florida 33180', clientName: 'DeAndre Alexander' },
+    { id: 89, address: '555555555555 459th Street, Aventura, Florida 33180', clientName: 'Jade Russell' },
+    { id: 90, address: '666666666666 463rd Street, Aventura, Florida 33180', clientName: 'Marquis Griffin' },
+    { id: 91, address: '777777777777 467th Street, Aventura, Florida 33180', clientName: 'Destiny Diaz' },
+    { id: 92, address: '888888888888 471st Street, Aventura, Florida 33180', clientName: 'Khalil Hayes' },
+    { id: 93, address: '999999999999 475th Street, Aventura, Florida 33180', clientName: 'Aaliyah Myers' },
+    { id: 94, address: '1111111111111 479th Street, Aventura, Florida 33180', clientName: 'Javon Ford' },
+    { id: 95, address: '2222222222222 483rd Street, Aventura, Florida 33180', clientName: 'Zara Hamilton' },
+    { id: 96, address: '3333333333333 487th Street, Aventura, Florida 33180', clientName: 'Rashad Graham' },
+    { id: 97, address: '4444444444444 491st Street, Aventura, Florida 33180', clientName: 'Nyla Sullivan' },
+    { id: 98, address: '5555555555555 495th Street, Aventura, Florida 33180', clientName: 'Trevon Wallace' },
+    { id: 99, address: '6666666666666 499th Street, Aventura, Florida 33180', clientName: 'Maya Cole' },
+    { id: 100, address: '7777777777777 503rd Street, Aventura, Florida 33180', clientName: 'Darius West' },
   ];
 
   const filteredAddresses = clientAddresses.filter(item =>
@@ -95,6 +186,15 @@ const Dashboard = ({ onShowOnboarding }) => {
     setSelectedSuggestion(-1);
     searchInputRef.current?.focus();
   };
+
+  // Simulate data loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // Simulate 1.5 second loading time
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -260,30 +360,39 @@ const Dashboard = ({ onShowOnboarding }) => {
           </div>
         </div>
         <div style={{ position: 'relative' }}>
-          <table className="dashboard-table">
-            <thead>
-              <tr>
-                <th>Client Addresses</th>
-                <th>Client Name</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentAddresses.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.address}</td>
-                  <td>{item.clientName}</td>
-                  <td>
-                    <div className="icon-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
-                        <path d="M13.0261 6.3595C12.6961 6.02948 12.5311 5.86447 12.4693 5.6742C12.4149 5.50683 12.4149 5.32654 12.4693 5.15917C12.5311 4.9689 12.6961 4.80389 13.0261 4.47388L15.3914 2.10857C14.7638 1.82471 14.067 1.66669 13.3333 1.66669C10.5719 1.66669 8.33333 3.90526 8.33333 6.66669C8.33333 7.07589 8.38248 7.47361 8.47521 7.85426C8.57451 8.26189 8.62416 8.4657 8.61535 8.59446C8.60612 8.72926 8.58602 8.80098 8.52386 8.92095C8.46448 9.03554 8.35071 9.14931 8.12318 9.37684L2.91666 14.5834C2.22631 15.2737 2.22631 16.393 2.91666 17.0834C3.60702 17.7737 4.72631 17.7737 5.41666 17.0834L10.6232 11.8768C10.8507 11.6493 10.9645 11.5355 11.0791 11.4762C11.199 11.414 11.2708 11.3939 11.4056 11.3847C11.5343 11.3759 11.7381 11.4255 12.1458 11.5248C12.5264 11.6175 12.9241 11.6667 13.3333 11.6667C16.0948 11.6667 18.3333 9.42811 18.3333 6.66669C18.3333 5.93301 18.1753 5.23625 17.8914 4.60857L15.5261 6.97388C15.1961 7.30389 15.0311 7.4689 14.8408 7.53072C14.6735 7.5851 14.4932 7.5851 14.3258 7.53072C14.1355 7.4689 13.9705 7.30389 13.6405 6.97388L13.0261 6.3595Z" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"></path>
-                      </svg>
-                    </div>
-                  </td>
+          {isLoading ? (
+            <div className="loading-overlay">
+              <div className="loading-spinner">
+                <div className="spinner"></div>
+              </div>
+              <div className="loading-text">Loading client data...</div>
+            </div>
+          ) : (
+            <table className="dashboard-table">
+              <thead>
+                <tr>
+                  <th>Client Addresses</th>
+                  <th>Client Name</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentAddresses.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.address}</td>
+                    <td>{item.clientName}</td>
+                    <td>
+                      <div className="icon-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
+                          <path d="M13.0261 6.3595C12.6961 6.02948 12.5311 5.86447 12.4693 5.6742C12.4149 5.50683 12.4149 5.32654 12.4693 5.15917C12.5311 4.9689 12.6961 4.80389 13.0261 4.47388L15.3914 2.10857C14.7638 1.82471 14.067 1.66669 13.3333 1.66669C10.5719 1.66669 8.33333 3.90526 8.33333 6.66669C8.33333 7.07589 8.38248 7.47361 8.47521 7.85426C8.57451 8.26189 8.62416 8.4657 8.61535 8.59446C8.60612 8.72926 8.58602 8.80098 8.52386 8.92095C8.46448 9.03554 8.35071 9.14931 8.12318 9.37684L2.91666 14.5834C2.22631 15.2737 2.22631 16.393 2.91666 17.0834C3.60702 17.7737 4.72631 17.7737 5.41666 17.0834L10.6232 11.8768C10.8507 11.6493 10.9645 11.5355 11.0791 11.4762C11.199 11.414 11.2708 11.3939 11.4056 11.3847C11.5343 11.3759 11.7381 11.4255 12.1458 11.5248C12.5264 11.6175 12.9241 11.6667 13.3333 11.6667C16.0948 11.6667 18.3333 9.42811 18.3333 6.66669C18.3333 5.93301 18.1753 5.23625 17.8914 4.60857L15.5261 6.97388C15.1961 7.30389 15.0311 7.4689 14.8408 7.53072C14.6735 7.5851 14.4932 7.5851 14.3258 7.53072C14.1355 7.4689 13.9705 7.30389 13.6405 6.97388L13.0261 6.3595Z" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"></path>
+                        </svg>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
         <div className="pagination-container">
           <div className="pagination-info">
