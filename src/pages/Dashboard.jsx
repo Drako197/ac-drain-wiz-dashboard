@@ -9,6 +9,7 @@ const Dashboard = ({ onShowOnboarding }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const searchInputRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -176,6 +177,7 @@ const Dashboard = ({ onShowOnboarding }) => {
   const handleSuggestionClick = (suggestion) => {
     setSearchTerm(suggestion.address);
     setShowSuggestions(false);
+    setCurrentPage(1); // Reset to first page when selecting suggestion
     searchInputRef.current?.focus();
   };
 
@@ -184,6 +186,7 @@ const Dashboard = ({ onShowOnboarding }) => {
     setSearchTerm('');
     setShowSuggestions(false);
     setSelectedSuggestion(-1);
+    setCurrentPage(1); // Reset to first page when clearing search
     searchInputRef.current?.focus();
   };
 
@@ -213,6 +216,14 @@ const Dashboard = ({ onShowOnboarding }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentAddresses = filteredAddresses.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage) => {
+    setIsPageLoading(true);
+    setTimeout(() => {
+      setCurrentPage(newPage);
+      setIsPageLoading(false);
+    }, 800); // 0.8 second loading time for page changes
+  };
 
   const handleOnboardingClick = () => {
     if (onShowOnboarding) {
@@ -325,7 +336,10 @@ const Dashboard = ({ onShowOnboarding }) => {
                   aria-label="Search Address" 
                   type="text" 
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // Reset to first page when typing
+                  }}
                   onKeyDown={handleKeyDown}
                   onFocus={() => searchTerm.trim() !== '' && setShowSuggestions(true)}
                 />
@@ -360,12 +374,14 @@ const Dashboard = ({ onShowOnboarding }) => {
           </div>
         </div>
         <div style={{ position: 'relative' }}>
-          {isLoading ? (
+          {(isLoading || isPageLoading) ? (
             <div className="loading-overlay">
               <div className="loading-spinner">
                 <div className="spinner"></div>
               </div>
-              <div className="loading-text">Loading client data...</div>
+              <div className="loading-text">
+                {isLoading ? 'Loading client data...' : 'Loading page...'}
+              </div>
             </div>
           ) : (
             <table className="dashboard-table">
@@ -401,8 +417,8 @@ const Dashboard = ({ onShowOnboarding }) => {
           <div className="pagination">
             <button 
               className="pagination-btn" 
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1 || isPageLoading}
+              onClick={() => handlePageChange(currentPage - 1)}
             >
               ← Previous
             </button>
@@ -410,15 +426,16 @@ const Dashboard = ({ onShowOnboarding }) => {
               <button
                 key={page}
                 className={`pagination-btn ${page === currentPage ? 'active' : ''}`}
-                onClick={() => setCurrentPage(page)}
+                disabled={isPageLoading}
+                onClick={() => handlePageChange(page)}
               >
                 {page}
               </button>
             ))}
             <button 
               className="pagination-btn" 
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === totalPages || isPageLoading}
+              onClick={() => handlePageChange(currentPage + 1)}
             >
               Next →
             </button>
