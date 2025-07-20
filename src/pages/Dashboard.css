@@ -229,8 +229,16 @@
   position: relative;
 }
 
+/* Search Input Container */
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .search-input {
   padding: 12px 16px;
+  padding-right: 40px;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
   font-size: 14px;
@@ -247,6 +255,82 @@
 
 .search-input::placeholder {
   color: #9ca3af;
+}
+
+/* Clear Button */
+.search-clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #6B7280;
+}
+
+.search-clear-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.search-clear-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Search Suggestions */
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+
+.suggestion-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+  transition: all 0.2s ease;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: #f9fafb;
+}
+
+.suggestion-item.selected {
+  background: #eff6ff;
+  border-left: 3px solid #3b82f6;
+}
+
+.suggestion-address {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+
+.suggestion-client {
+  font-size: 12px;
+  color: #6b7280;
 }
 
 /* Dashboard Table */
@@ -302,12 +386,12 @@
   align-items: center;
   margin-top: 24px;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 16px;
 }
 
 .pagination-info {
   font-size: 14px;
-  color: #64748b;
+  color: #6b7280;
 }
 
 .pagination {
@@ -322,12 +406,13 @@
   background: white;
   color: #374151;
   border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
+  font-size: 14px;
   transition: all 0.2s ease;
   min-width: 40px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -336,9 +421,9 @@
 }
 
 .pagination-btn.active {
-  background: #667eea;
+  background: #3b82f6;
   color: white;
-  border-color: #667eea;
+  border-color: #2563eb;
 }
 
 .pagination-btn:disabled {
@@ -349,35 +434,39 @@
 /* Onboarding Trigger */
 .onboarding-trigger {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  bottom: 24px;
+  right: 24px;
+  background: #ff5733;
   color: white;
   border: none;
-  border-radius: 50px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 500;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 87, 51, 0.3);
   transition: all 0.3s ease;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .onboarding-trigger:hover {
+  background: #e04527;
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(255, 87, 51, 0.4);
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
   .dashboard-welcome {
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
   }
   
   .contact-card {
-    align-self: flex-start;
+    max-width: none;
   }
   
   .dashboard-cards {
@@ -400,21 +489,24 @@
   }
   
   .dashboard-card {
-    padding: 20px;
+    padding: 16px;
   }
   
   .table-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 16px;
   }
   
   .search-input {
     width: 100%;
+    min-width: 200px;
   }
   
   .pagination-container {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
   }
   
   .pagination {
@@ -428,13 +520,11 @@
   }
   
   .dashboard-card {
-    flex-direction: column;
-    text-align: center;
-    gap: 12px;
+    padding: 12px;
   }
   
   .card-value {
-    font-size: 28px;
+    font-size: 24px;
   }
   
   .dashboard-table-section {
@@ -443,7 +533,7 @@
   
   .dashboard-table th,
   .dashboard-table td {
-    padding: 12px 8px;
-    font-size: 12px;
+    padding: 12px;
+    font-size: 13px;
   }
 } 

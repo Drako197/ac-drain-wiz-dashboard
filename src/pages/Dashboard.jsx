@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Dashboard.css';
 
 const Dashboard = ({ onShowOnboarding }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
+  const searchInputRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   // Mock data for demonstration
   const clientAddresses = [
@@ -24,6 +29,85 @@ const Dashboard = ({ onShowOnboarding }) => {
     item.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.clientName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Generate suggestions based on search term
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const searchLower = searchTerm.toLowerCase();
+    const filtered = clientAddresses.filter(item =>
+      item.address.toLowerCase().includes(searchLower) ||
+      item.clientName.toLowerCase().includes(searchLower)
+    );
+
+    setSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
+    setShowSuggestions(filtered.length > 0);
+    setSelectedSuggestion(-1);
+  }, [searchTerm]);
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e) => {
+    if (!showSuggestions) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedSuggestion(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedSuggestion(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedSuggestion >= 0 && suggestions[selectedSuggestion]) {
+          const selected = suggestions[selectedSuggestion];
+          setSearchTerm(selected.address);
+          setShowSuggestions(false);
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        searchInputRef.current?.blur();
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Handle suggestion click
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion.address);
+    setShowSuggestions(false);
+    searchInputRef.current?.focus();
+  };
+
+  // Handle clear search
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    setShowSuggestions(false);
+    setSelectedSuggestion(-1);
+    searchInputRef.current?.focus();
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+          searchInputRef.current && !searchInputRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const totalPages = Math.ceil(filteredAddresses.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -132,15 +216,46 @@ const Dashboard = ({ onShowOnboarding }) => {
         <div className="table-header">
           <h2>Client Addresses Managed</h2>
           <div className="search-wrapper">
-            <div className="typeahead-wrapper">
-              <input 
-                className="search-input" 
-                placeholder="Search Address" 
-                aria-label="Search Address" 
-                type="text" 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <div className="typeahead-wrapper" ref={dropdownRef}>
+              <div className="search-input-container">
+                <input 
+                  ref={searchInputRef}
+                  className="search-input" 
+                  placeholder="Search Address" 
+                  aria-label="Search Address" 
+                  type="text" 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => searchTerm.trim() !== '' && setShowSuggestions(true)}
+                />
+                {searchTerm && (
+                  <button 
+                    className="search-clear-btn"
+                    onClick={handleClearSearch}
+                    type="button"
+                    aria-label="Clear search"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 4L4 12M4 4L12 12" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                )}
+              </div>
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="search-suggestions">
+                  {suggestions.map((suggestion, index) => (
+                    <div
+                      key={suggestion.id}
+                      className={`suggestion-item ${index === selectedSuggestion ? 'selected' : ''}`}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                    >
+                      <div className="suggestion-address">{suggestion.address}</div>
+                      <div className="suggestion-client">{suggestion.clientName}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
