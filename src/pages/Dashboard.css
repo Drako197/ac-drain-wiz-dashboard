@@ -350,7 +350,7 @@
 
 .dashboard-table th {
   background: #f8fafc;
-  padding: 16px;
+  padding: 11px 16px;
   text-align: left;
   font-weight: 600;
   color: #374151;
@@ -359,7 +359,7 @@
 }
 
 .dashboard-table td {
-  padding: 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid #f1f5f9;
   color: #374151;
   font-size: 14px;
