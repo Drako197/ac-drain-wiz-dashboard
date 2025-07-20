@@ -297,7 +297,7 @@ body {
 .dashboard-header {
   background: #9747ff;
   background: linear-gradient(to bottom, #9747ff, #00b8f5, #fff);
-  border-radius: 16px;
+  border-radius: 24px;
   padding: 32px;
   color: white;
   position: relative;
