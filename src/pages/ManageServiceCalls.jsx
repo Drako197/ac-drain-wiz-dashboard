@@ -566,7 +566,7 @@ const ManageServiceCalls = () => {
           </div>
         </div>
 
-        <div style={{ position: 'relative' }}>
+        <div className="table-container" style={{ position: 'relative' }}>
           <table className="dashboard-table">
             <thead>
               <tr>
