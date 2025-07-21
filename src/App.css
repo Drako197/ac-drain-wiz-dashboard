@@ -260,9 +260,8 @@ body {
 
 /* Main Content Area */
 .main-content {
-  flex: 1;
-  max-width: 1520px;
-  width: 100%;
+  width: 1168px;
+  max-width: 1168px;
   background: #f6f7fb;
   padding: 16px;
   overflow-y: auto;
@@ -691,8 +690,8 @@ body {
   }
   
   .main-content {
-    max-width: 1520px;
-    width: 100%;
+    width: 1168px;
+    max-width: 1168px;
   }
 }
 
@@ -714,7 +713,7 @@ body {
     padding: 20px;
     width: 100%;
     min-width: auto;
-    max-width: 1520px;
+    max-width: 1168px;
   }
   
   .dashboard-welcome {
