@@ -1499,37 +1499,38 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                               </div>
                             </div>
                             
-                            <div className="form-group">
-                              <label className="form-label">
-                                Address 1
-                                <span className="required">*</span>
-                              </label>
-                              <input
-                                type="text"
-                                name="address1"
-                                className={`form-input ${showErrors && errors.address1 ? 'error' : ''}`}
-                                value={formData.address1 || ''}
-                                onChange={(e) => handleInputChange('address1', e.target.value)}
-                                placeholder="123 Main Street"
-                              />
-                              {showErrors && errors.address1 && (
-                                <div className="form-error">{errors.address1}</div>
-                              )}
-                            </div>
-                            
-                            <div className="form-group">
-                              <label className="form-label">
-                                Address 2
-                                <span className="optional">(Optional)</span>
-                              </label>
-                              <input
-                                type="text"
-                                name="address2"
-                                className="form-input"
-                                value={formData.address2 || ''}
-                                onChange={(e) => handleInputChange('address2', e.target.value)}
-                                placeholder=""
-                              />
+                            <div className="form-row">
+                              <div className="form-group half-width">
+                                <label className="form-label">
+                                  Address 1
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="address1"
+                                  className={`form-input ${showErrors && errors.address1 ? 'error' : ''}`}
+                                  value={formData.address1 || ''}
+                                  onChange={(e) => handleInputChange('address1', e.target.value)}
+                                  placeholder="123 Main Street"
+                                />
+                                {showErrors && errors.address1 && (
+                                  <div className="form-error">{errors.address1}</div>
+                                )}
+                              </div>
+                              <div className="form-group half-width">
+                                <label className="form-label">
+                                  Address 2
+                                  <span className="optional">(Optional)</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="address2"
+                                  className="form-input"
+                                  value={formData.address2 || ''}
+                                  onChange={(e) => handleInputChange('address2', e.target.value)}
+                                  placeholder=""
+                                />
+                              </div>
                             </div>
                             
                             <div className="form-row three-col">
