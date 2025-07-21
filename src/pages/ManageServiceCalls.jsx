@@ -455,48 +455,43 @@ const ManageServiceCalls = () => {
   const [serviceCallHistory] = useState([
     {
       id: 1,
-      address: '123 Main Street, Miami Beach, Florida 33181',
-      clientName: 'Steven Segal',
-      contactNumber: '(555) 123-4567',
-      assignedSensor: 'Sensor #12346',
-      date: '2024-01-15',
-      technician: 'John Smith'
+      address: '6666 30th Street, Miami Beach, Florida 33140',
+      clientName: 'Christopher Davis',
+      contactNumber: '(555) 218-1280',
+      assignedSensor: 'Sensor #12362',
+      priority: 'Closed'
     },
     {
       id: 2,
-      address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
-      clientName: 'Martin Short',
-      contactNumber: '(555) 234-5678',
-      assignedSensor: 'Sensor #12347',
-      date: '2024-01-14',
-      technician: 'Mike Johnson'
+      address: '7777 35th Street, Miami Beach, Florida 33140',
+      clientName: 'Jennifer Wilson',
+      contactNumber: '(555) 345-6789',
+      assignedSensor: 'Sensor #12363',
+      priority: 'Closed'
     },
     {
       id: 3,
-      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
-      clientName: 'Thomas Aguilar',
-      contactNumber: '(555) 345-6789',
-      assignedSensor: 'Sensor #12348',
-      date: '2024-01-13',
-      technician: 'Sarah Wilson'
+      address: '8888 40th Street, Miami Beach, Florida 33140',
+      clientName: 'Michael Brown',
+      contactNumber: '(555) 456-7890',
+      assignedSensor: 'Sensor #12364',
+      priority: 'Closed'
     },
     {
       id: 4,
-      address: '1010 Sunset Boulevard, Miami, Florida 33133',
-      clientName: 'Jake Smith',
-      contactNumber: '(555) 456-7890',
-      assignedSensor: 'Sensor #12349',
-      date: '2024-01-12',
-      technician: 'David Brown'
+      address: '9999 45th Street, Miami Beach, Florida 33140',
+      clientName: 'Sarah Johnson',
+      contactNumber: '(555) 567-8901',
+      assignedSensor: 'Sensor #12365',
+      priority: 'Closed'
     },
     {
       id: 5,
-      address: '2020 Sunrise Boulevard, Fort Lauderdale, Florida 33304',
-      clientName: 'Robert Black',
-      contactNumber: '(555) 567-8901',
-      assignedSensor: 'Sensor #12350',
-      date: '2024-01-11',
-      technician: 'Lisa Davis'
+      address: '1111 50th Street, Miami Beach, Florida 33140',
+      clientName: 'David Miller',
+      contactNumber: '(555) 678-9012',
+      assignedSensor: 'Sensor #12366',
+      priority: 'Closed'
     }
   ])
 
@@ -811,8 +806,17 @@ const ManageServiceCalls = () => {
                     </div>
                   </th>
                 )}
-                {activeTab === 'history' && <th>Date</th>}
-                {activeTab === 'history' && <th>Technician</th>}
+                {activeTab === 'history' && <th>Priority</th>}
+                {activeTab === 'history' && (
+                  <th>
+                    Assigned Sensor
+                    <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
+                      <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
+                        <path d="M6.56 6C6.71673 5.55445 7.0261 5.17874 7.4333 4.93942C7.8405 4.70011 8.31926 4.61263 8.78478 4.69248C9.2503 4.77233 9.67254 5.01435 9.97671 5.37569C10.2809 5.73702 10.4474 6.19435 10.4467 6.66667C10.4467 8 8.44666 8.66667 8.44666 8.66667M8.5 11.3333H8.50666M15.1667 8C15.1667 11.6819 12.1819 14.6667 8.5 14.6667C4.8181 14.6667 1.83333 11.6819 1.83333 8C1.83333 4.3181 4.8181 1.33334 8.5 1.33334C12.1819 1.33334 15.1667 4.3181 15.1667 8Z" stroke="#98A2B3" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"></path>
+                      </svg>
+                    </div>
+                  </th>
+                )}
                 {activeTab === 'cancelled' && <th>Date</th>}
                 {activeTab === 'cancelled' && <th>Reason</th>}
                 {activeTab === 'cancelled' && <th>Cancelled By</th>}
@@ -849,14 +853,14 @@ const ManageServiceCalls = () => {
                       </td>
                     )}
                     {activeTab === 'history' && (
-                      <>
-                        <td>
-                          <div className="skeleton-placeholder skeleton-date"></div>
-                        </td>
-                        <td>
-                          <div className="skeleton-placeholder skeleton-technician"></div>
-                        </td>
-                      </>
+                      <td>
+                        <div className="skeleton-placeholder skeleton-priority"></div>
+                      </td>
+                    )}
+                    {activeTab === 'history' && (
+                      <td>
+                        <div className="skeleton-placeholder skeleton-sensor"></div>
+                      </td>
                     )}
                     {activeTab === 'cancelled' && (
                       <>
@@ -892,8 +896,14 @@ const ManageServiceCalls = () => {
                     <td>{call.contactNumber}</td>
                     {activeTab === 'required' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'my-calls' && <td>{call.assignedSensor}</td>}
-                    {activeTab === 'history' && <td>{call.date}</td>}
-                    {activeTab === 'history' && <td>{call.technician}</td>}
+                    {activeTab === 'history' && (
+                      <td>
+                        <span className={`priority-badge priority-${call.priority.toLowerCase()}`}>
+                          {call.priority}
+                        </span>
+                      </td>
+                    )}
+                    {activeTab === 'history' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'cancelled' && <td>{call.date}</td>}
                     {activeTab === 'cancelled' && <td>{call.reason}</td>}
                     {activeTab === 'cancelled' && <td>{call.cancelledBy}</td>}
@@ -902,6 +912,10 @@ const ManageServiceCalls = () => {
                         {activeTab === 'my-calls' ? (
                           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
                             <path d="M13.0261 6.3595C12.6961 6.02948 12.5311 5.86447 12.4693 5.6742C12.4149 5.50683 12.4149 5.32654 12.4693 5.15917C12.5311 4.9689 12.6961 4.80389 13.0261 4.47388L15.3914 2.10857C14.7638 1.82471 14.067 1.66669 13.3333 1.66669C10.5719 1.66669 8.33333 3.90526 8.33333 6.66669C8.33333 7.07589 8.38248 7.47361 8.47521 7.85426C8.57451 8.26189 8.62416 8.4657 8.61535 8.59446C8.60612 8.72926 8.58602 8.80098 8.52386 8.92095C8.46448 9.03554 8.35071 9.14931 8.12318 9.37684L2.91666 14.5834C2.22631 15.2737 2.22631 16.393 2.91666 17.0834C3.60702 17.7737 4.72631 17.7737 5.41666 17.0834L10.6232 11.8768C10.8507 11.6493 10.9645 11.5355 11.0791 11.4762C11.199 11.414 11.2708 11.3939 11.4056 11.3847C11.5343 11.3759 11.7381 11.4255 12.1458 11.5248C12.5264 11.6175 12.9241 11.6667 13.3333 11.6667C16.0948 11.6667 18.3333 9.42811 18.3333 6.66669C18.3333 5.93301 18.1753 5.23625 17.8914 4.60857L15.5261 6.97388C15.1961 7.30389 15.0311 7.4689 14.8408 7.53072C14.6735 7.5851 14.4932 7.5851 14.3258 7.53072C14.1355 7.4689 13.9705 7.30389 13.6405 6.97388L13.0261 6.3595Z" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"></path>
+                          </svg>
+                        ) : activeTab === 'history' ? (
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
+                            <path d="M15 5L5 15M5 5L15 15" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"></path>
                           </svg>
                         ) : (
                           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">

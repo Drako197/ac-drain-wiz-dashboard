@@ -596,6 +596,11 @@
   color: #d97706;
 }
 
+.priority-badge.priority-closed {
+  background: #d1fae5;
+  color: #059669;
+}
+
 /* Status Badge Styles (keeping for backward compatibility) */
 .status-badge {
   display: inline-flex;
