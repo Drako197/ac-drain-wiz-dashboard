@@ -769,8 +769,8 @@ const ManageServiceCalls = () => {
               <tr>
                 <th>Address</th>
                 {(activeTab === 'my-calls' || activeTab === 'history') && <th>Priority</th>}
-                <th>Client Name</th>
-                <th>Contact Number</th>
+                {activeTab !== 'cancelled' && <th>Client Name</th>}
+                {activeTab !== 'cancelled' && <th>Contact Number</th>}
                 {(activeTab === 'required' || activeTab === 'my-calls' || activeTab === 'history') && (
                   <th>
                     Assigned Sensor
@@ -800,12 +800,16 @@ const ManageServiceCalls = () => {
                         <div className="skeleton-placeholder skeleton-priority"></div>
                       </td>
                     )}
-                    <td>
-                      <div className="skeleton-placeholder skeleton-name"></div>
-                    </td>
-                    <td>
-                      <div className="skeleton-placeholder skeleton-phone"></div>
-                    </td>
+                    {activeTab !== 'cancelled' && (
+                      <td>
+                        <div className="skeleton-placeholder skeleton-name"></div>
+                      </td>
+                    )}
+                    {activeTab !== 'cancelled' && (
+                      <td>
+                        <div className="skeleton-placeholder skeleton-phone"></div>
+                      </td>
+                    )}
                     {(activeTab === 'required' || activeTab === 'my-calls' || activeTab === 'history') && (
                       <td>
                         <div className="skeleton-placeholder skeleton-sensor"></div>
@@ -841,8 +845,8 @@ const ManageServiceCalls = () => {
                         </span>
                       </td>
                     )}
-                    <td>{call.clientName}</td>
-                    <td>{call.contactNumber}</td>
+                    {activeTab !== 'cancelled' && <td>{call.clientName}</td>}
+                    {activeTab !== 'cancelled' && <td>{call.contactNumber}</td>}
                     {(activeTab === 'required' || activeTab === 'my-calls' || activeTab === 'history') && <td>{call.assignedSensor}</td>}
                     {activeTab === 'cancelled' && <td>{call.cancellationDate}</td>}
                     {activeTab === 'cancelled' && <td>{call.reason}</td>}
