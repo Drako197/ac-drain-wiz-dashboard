@@ -719,15 +719,7 @@ const CancelledServiceCalls = () => {
         </div>
 
         <div className="table-container" style={{ position: 'relative' }}>
-          {/* Standardized Table Loading Indicator */}
-          {isPageLoading && (
-            <div className="table-loading-indicator">
-              <div className="table-loading-spinner">
-                <div className="table-spinner"></div>
-              </div>
-              <div className="table-loading-text">Loading new page...</div>
-            </div>
-          )}
+
           <table className="dashboard-table">
             <thead>
               <tr>
@@ -800,6 +792,14 @@ const CancelledServiceCalls = () => {
               )}
             </tbody>
           </table>
+          {isPageLoading && (
+            <div className="loading-overlay">
+              <div className="loading-spinner">
+                <div className="spinner"></div>
+              </div>
+              <div className="loading-text">Loading page...</div>
+            </div>
+          )}
 
         </div>
 
