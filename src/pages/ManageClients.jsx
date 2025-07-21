@@ -236,6 +236,8 @@ const ManageClients = () => {
       </nav>
       
       <div className="dashboard-table-section">
+        <h1>Manage Clients</h1>
+        
         <div className="table-header">
           <h2>Client Management</h2>
           <div className="search-wrapper">
