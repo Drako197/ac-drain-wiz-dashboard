@@ -239,7 +239,7 @@ const ManageClients = () => {
         <h1>Manage Clients</h1>
         
         <div className="table-header">
-          <h2>Client Management</h2>
+          <h2>Clients</h2>
           <div className="search-wrapper">
             <div className="typeahead-wrapper" ref={dropdownRef}>
               <div className="search-input-container">
