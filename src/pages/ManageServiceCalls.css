@@ -249,6 +249,8 @@
   position: relative;
   min-height: 400px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Dashboard Table */
@@ -259,7 +261,8 @@
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #e2e8f0;
-  min-height: auto;
+  min-height: 400px;
+  flex: 1;
 }
 
 .dashboard-table th {
@@ -457,6 +460,8 @@
   border-radius: 8px;
   margin: 0;
   padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .loading-spinner {
