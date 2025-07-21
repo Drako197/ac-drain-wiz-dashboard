@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
-import './ManageServiceCalls.css'
+import './MyServiceCalls.css'
 
-const ManageServiceCalls = () => {
-  const [activeTab, setActiveTab] = useState('required')
+const MyServiceCalls = () => {
+  const [activeTab, setActiveTab] = useState('my-calls')
   const [searchTerm, setSearchTerm] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -13,357 +13,407 @@ const ManageServiceCalls = () => {
   const searchInputRef = useRef(null)
   const dropdownRef = useRef(null)
 
-  // Expanded service calls data (50 entries for 5 pages)
-  const [serviceCalls] = useState([
+  // My Service Calls data (50 entries for 5 pages)
+  const [myServiceCalls] = useState([
     {
       id: 1,
-      address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
-      clientName: 'Dennis Roberts',
-      contactNumber: '(555) 104-3778',
-      assignedSensor: 'Sensor #12346'
+      address: '123 Main Street, Miami Beach, Florida 33181',
+      clientName: 'Steven Segal',
+      contactNumber: '(555) 123-4567',
+      assignedSensor: 'Sensor #12346',
+      status: 'In Progress'
     },
     {
       id: 2,
-      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
-      clientName: 'Jason Clark',
-      contactNumber: '(555) 151-9853',
-      assignedSensor: 'Sensor #12347'
+      address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
+      clientName: 'Martin Short',
+      contactNumber: '(555) 234-5678',
+      assignedSensor: 'Sensor #12347',
+      status: 'Scheduled'
     },
     {
       id: 3,
-      address: '1010 Sunset Boulevard, Miami, Florida 33133',
-      clientName: 'Mark Martinez',
-      contactNumber: '(555) 630-7774',
-      assignedSensor: 'Sensor #12348'
+      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
+      clientName: 'Thomas Aguilar',
+      contactNumber: '(555) 345-6789',
+      assignedSensor: 'Sensor #12348',
+      status: 'Completed'
     },
     {
       id: 4,
-      address: '5050 Collins Avenue, Miami Beach, Florida 33140',
-      clientName: 'Matthew Garcia',
-      contactNumber: '(555) 373-2216',
-      assignedSensor: 'Sensor #12352'
+      address: '1010 Sunset Boulevard, Miami, Florida 33133',
+      clientName: 'Jake Smith',
+      contactNumber: '(555) 456-7890',
+      assignedSensor: 'Sensor #12349',
+      status: 'In Progress'
     },
     {
       id: 5,
-      address: '4444 20th Street, Miami Beach, Florida 33139',
-      clientName: 'Roy Perez',
-      contactNumber: '(555) 809-5172',
-      assignedSensor: 'Sensor #12360'
+      address: '2020 Sunrise Boulevard, Fort Lauderdale, Florida 33304',
+      clientName: 'Robert Black',
+      contactNumber: '(555) 567-8901',
+      assignedSensor: 'Sensor #12350',
+      status: 'Scheduled'
     },
     {
       id: 6,
-      address: '5555 25th Street, Miami Beach, Florida 33140',
-      clientName: 'Jake Smith',
-      contactNumber: '(555) 131-5135',
-      assignedSensor: 'Sensor #12361'
+      address: '3030 Coral Way, Coral Gables, Florida 33134',
+      clientName: 'Mauricio Cicone',
+      contactNumber: '(555) 678-9012',
+      assignedSensor: 'Sensor #12351',
+      status: 'Completed'
     },
     {
       id: 7,
-      address: '6666 30th Street, Miami Beach, Florida 33140',
-      clientName: 'Joshua White',
-      contactNumber: '(555) 954-6303',
-      assignedSensor: 'Sensor #12362'
+      address: '4040 Biscayne Boulevard, Miami, Florida 33137',
+      clientName: 'Brad Agustini',
+      contactNumber: '(555) 789-0123',
+      assignedSensor: 'Sensor #12352',
+      status: 'In Progress'
     },
     {
       id: 8,
-      address: '7777 35th Street, Miami Beach, Florida 33140',
-      clientName: 'Jake Smith',
-      contactNumber: '(555) 904-5354',
-      assignedSensor: 'Sensor #12363'
+      address: '5050 Collins Avenue, Miami Beach, Florida 33140',
+      clientName: 'John Snow',
+      contactNumber: '(555) 890-1234',
+      assignedSensor: 'Sensor #12353',
+      status: 'Scheduled'
     },
     {
       id: 9,
-      address: '123 Main Street, Miami Beach, Florida 33181',
-      clientName: 'George Garcia',
-      contactNumber: '(555) 306-8401',
-      assignedSensor: 'Sensor #12365'
+      address: '6060 Lincoln Road, Miami Beach, Florida 33139',
+      clientName: 'Michael Johnson',
+      contactNumber: '(555) 901-2345',
+      assignedSensor: 'Sensor #12354',
+      status: 'Completed'
     },
     {
       id: 10,
-      address: '3030 Coral Way, Coral Gables, Florida 33134',
-      clientName: 'Nicholas Allen',
-      contactNumber: '(555) 286-7511',
-      assignedSensor: 'Sensor #12370'
+      address: '7070 Washington Avenue, Miami Beach, Florida 33139',
+      clientName: 'David Wilson',
+      contactNumber: '(555) 012-3456',
+      assignedSensor: 'Sensor #12355',
+      status: 'In Progress'
     },
     {
       id: 11,
-      address: '4040 Biscayne Boulevard, Miami, Florida 33137',
-      clientName: 'Brad Agustini',
-      contactNumber: '(555) 456-7890',
-      assignedSensor: 'Sensor #12371'
+      address: '8080 Alton Road, Miami Beach, Florida 33139',
+      clientName: 'Sarah Martinez',
+      contactNumber: '(555) 123-4567',
+      assignedSensor: 'Sensor #12356',
+      status: 'Scheduled'
     },
     {
       id: 12,
-      address: '6060 Lincoln Road, Miami Beach, Florida 33139',
-      clientName: 'Michael Johnson',
+      address: '9090 Meridian Avenue, Miami Beach, Florida 33139',
+      clientName: 'Carlos Rodriguez',
       contactNumber: '(555) 234-5678',
-      assignedSensor: 'Sensor #12372'
+      assignedSensor: 'Sensor #12357',
+      status: 'Completed'
     },
     {
       id: 13,
-      address: '7070 Washington Avenue, Miami Beach, Florida 33139',
-      clientName: 'David Wilson',
+      address: '1111 Venetian Causeway, Miami, Florida 33139',
+      clientName: 'Maria Garcia',
       contactNumber: '(555) 345-6789',
-      assignedSensor: 'Sensor #12373'
+      assignedSensor: 'Sensor #12358',
+      status: 'In Progress'
     },
     {
       id: 14,
-      address: '8080 Alton Road, Miami Beach, Florida 33139',
-      clientName: 'Sarah Martinez',
+      address: '2222 MacArthur Causeway, Miami, Florida 33139',
+      clientName: 'James Brown',
       contactNumber: '(555) 456-7890',
-      assignedSensor: 'Sensor #12374'
+      assignedSensor: 'Sensor #12359',
+      status: 'Scheduled'
     },
     {
       id: 15,
-      address: '9090 Meridian Avenue, Miami Beach, Florida 33139',
-      clientName: 'Carlos Rodriguez',
+      address: '3333 Julia Tuttle Causeway, Miami, Florida 33139',
+      clientName: 'Lisa Anderson',
       contactNumber: '(555) 567-8901',
-      assignedSensor: 'Sensor #12375'
+      assignedSensor: 'Sensor #12360',
+      status: 'Completed'
     },
     {
       id: 16,
-      address: '1111 Venetian Causeway, Miami, Florida 33139',
-      clientName: 'Maria Garcia',
+      address: '4444 Rickenbacker Causeway, Miami, Florida 33139',
+      clientName: 'Robert Taylor',
       contactNumber: '(555) 678-9012',
-      assignedSensor: 'Sensor #12376'
+      assignedSensor: 'Sensor #12361',
+      status: 'In Progress'
     },
     {
       id: 17,
-      address: '2222 MacArthur Causeway, Miami, Florida 33139',
-      clientName: 'James Brown',
+      address: '5555 William Lehman Causeway, Miami, Florida 33139',
+      clientName: 'Jennifer Davis',
       contactNumber: '(555) 789-0123',
-      assignedSensor: 'Sensor #12377'
+      assignedSensor: 'Sensor #12362',
+      status: 'Scheduled'
     },
     {
       id: 18,
-      address: '3333 Julia Tuttle Causeway, Miami, Florida 33139',
-      clientName: 'Lisa Anderson',
+      address: '6666 Broad Causeway, Miami, Florida 33139',
+      clientName: 'Christopher Wilson',
       contactNumber: '(555) 890-1234',
-      assignedSensor: 'Sensor #12378'
+      assignedSensor: 'Sensor #12363',
+      status: 'Completed'
     },
     {
       id: 19,
-      address: '4444 Rickenbacker Causeway, Miami, Florida 33139',
-      clientName: 'Robert Taylor',
+      address: '7777 79th Street Causeway, Miami, Florida 33139',
+      clientName: 'Amanda Thompson',
       contactNumber: '(555) 901-2345',
-      assignedSensor: 'Sensor #12379'
+      assignedSensor: 'Sensor #12364',
+      status: 'In Progress'
     },
     {
       id: 20,
-      address: '5555 William Lehman Causeway, Miami, Florida 33139',
-      clientName: 'Jennifer Davis',
+      address: '8888 163rd Street, North Miami Beach, Florida 33162',
+      clientName: 'Daniel Moore',
       contactNumber: '(555) 012-3456',
-      assignedSensor: 'Sensor #12380'
+      assignedSensor: 'Sensor #12365',
+      status: 'Scheduled'
     },
     {
       id: 21,
-      address: '6666 Broad Causeway, Miami, Florida 33139',
-      clientName: 'Christopher Wilson',
+      address: '9999 167th Street, North Miami Beach, Florida 33162',
+      clientName: 'Jessica Lee',
       contactNumber: '(555) 123-4567',
-      assignedSensor: 'Sensor #12381'
+      assignedSensor: 'Sensor #12366',
+      status: 'Completed'
     },
     {
       id: 22,
-      address: '7777 79th Street Causeway, Miami, Florida 33139',
-      clientName: 'Amanda Thompson',
+      address: '11111 183rd Street, Aventura, Florida 33180',
+      clientName: 'Matthew White',
       contactNumber: '(555) 234-5678',
-      assignedSensor: 'Sensor #12382'
+      assignedSensor: 'Sensor #12367',
+      status: 'In Progress'
     },
     {
       id: 23,
-      address: '8888 163rd Street, North Miami Beach, Florida 33162',
-      clientName: 'Daniel Moore',
+      address: '22222 195th Street, Aventura, Florida 33180',
+      clientName: 'Nicole Harris',
       contactNumber: '(555) 345-6789',
-      assignedSensor: 'Sensor #12383'
+      assignedSensor: 'Sensor #12368',
+      status: 'Scheduled'
     },
     {
       id: 24,
-      address: '9999 167th Street, North Miami Beach, Florida 33162',
-      clientName: 'Jessica Lee',
+      address: '33333 199th Street, Aventura, Florida 33180',
+      clientName: 'Andrew Clark',
       contactNumber: '(555) 456-7890',
-      assignedSensor: 'Sensor #12384'
+      assignedSensor: 'Sensor #12369',
+      status: 'Completed'
     },
     {
       id: 25,
-      address: '11111 183rd Street, Aventura, Florida 33180',
-      clientName: 'Matthew White',
+      address: '44444 203rd Street, Aventura, Florida 33180',
+      clientName: 'Stephanie Lewis',
       contactNumber: '(555) 567-8901',
-      assignedSensor: 'Sensor #12385'
+      assignedSensor: 'Sensor #12370',
+      status: 'In Progress'
     },
     {
       id: 26,
-      address: '22222 195th Street, Aventura, Florida 33180',
-      clientName: 'Nicole Harris',
+      address: '55555 207th Street, Aventura, Florida 33180',
+      clientName: 'Kevin Hall',
       contactNumber: '(555) 678-9012',
-      assignedSensor: 'Sensor #12386'
+      assignedSensor: 'Sensor #12371',
+      status: 'Scheduled'
     },
     {
       id: 27,
-      address: '33333 199th Street, Aventura, Florida 33180',
-      clientName: 'Andrew Clark',
+      address: '66666 211th Street, Aventura, Florida 33180',
+      clientName: 'Rachel Young',
       contactNumber: '(555) 789-0123',
-      assignedSensor: 'Sensor #12387'
+      assignedSensor: 'Sensor #12372',
+      status: 'Completed'
     },
     {
       id: 28,
-      address: '44444 203rd Street, Aventura, Florida 33180',
-      clientName: 'Stephanie Lewis',
+      address: '77777 215th Street, Aventura, Florida 33180',
+      clientName: 'Brandon King',
       contactNumber: '(555) 890-1234',
-      assignedSensor: 'Sensor #12388'
+      assignedSensor: 'Sensor #12373',
+      status: 'In Progress'
     },
     {
       id: 29,
-      address: '55555 207th Street, Aventura, Florida 33180',
-      clientName: 'Kevin Hall',
+      address: '88888 219th Street, Aventura, Florida 33180',
+      clientName: 'Lauren Scott',
       contactNumber: '(555) 901-2345',
-      assignedSensor: 'Sensor #12389'
+      assignedSensor: 'Sensor #12374',
+      status: 'Scheduled'
     },
     {
       id: 30,
-      address: '66666 211th Street, Aventura, Florida 33180',
-      clientName: 'Rachel Young',
+      address: '99999 223rd Street, Aventura, Florida 33180',
+      clientName: 'Ryan Green',
       contactNumber: '(555) 012-3456',
-      assignedSensor: 'Sensor #12390'
+      assignedSensor: 'Sensor #12375',
+      status: 'Completed'
     },
     {
       id: 31,
-      address: '77777 215th Street, Aventura, Florida 33180',
-      clientName: 'Brandon King',
+      address: '111111 227th Street, Aventura, Florida 33180',
+      clientName: 'Megan Baker',
       contactNumber: '(555) 123-4567',
-      assignedSensor: 'Sensor #12391'
+      assignedSensor: 'Sensor #12376',
+      status: 'In Progress'
     },
     {
       id: 32,
-      address: '88888 219th Street, Aventura, Florida 33180',
-      clientName: 'Lauren Scott',
+      address: '222222 231st Street, Aventura, Florida 33180',
+      clientName: 'Tyler Adams',
       contactNumber: '(555) 234-5678',
-      assignedSensor: 'Sensor #12392'
+      assignedSensor: 'Sensor #12377',
+      status: 'Scheduled'
     },
     {
       id: 33,
-      address: '99999 223rd Street, Aventura, Florida 33180',
-      clientName: 'Ryan Green',
+      address: '333333 235th Street, Aventura, Florida 33180',
+      clientName: 'Ashley Nelson',
       contactNumber: '(555) 345-6789',
-      assignedSensor: 'Sensor #12393'
+      assignedSensor: 'Sensor #12378',
+      status: 'Completed'
     },
     {
       id: 34,
-      address: '111111 227th Street, Aventura, Florida 33180',
-      clientName: 'Megan Baker',
+      address: '444444 239th Street, Aventura, Florida 33180',
+      clientName: 'Joshua Carter',
       contactNumber: '(555) 456-7890',
-      assignedSensor: 'Sensor #12394'
+      assignedSensor: 'Sensor #12379',
+      status: 'In Progress'
     },
     {
       id: 35,
-      address: '222222 231st Street, Aventura, Florida 33180',
-      clientName: 'Tyler Adams',
+      address: '555555 243rd Street, Aventura, Florida 33180',
+      clientName: 'Brittany Mitchell',
       contactNumber: '(555) 567-8901',
-      assignedSensor: 'Sensor #12395'
+      assignedSensor: 'Sensor #12380',
+      status: 'Scheduled'
     },
     {
       id: 36,
-      address: '333333 235th Street, Aventura, Florida 33180',
-      clientName: 'Ashley Nelson',
+      address: '666666 247th Street, Aventura, Florida 33180',
+      clientName: 'Nathan Perez',
       contactNumber: '(555) 678-9012',
-      assignedSensor: 'Sensor #12396'
+      assignedSensor: 'Sensor #12381',
+      status: 'Completed'
     },
     {
       id: 37,
-      address: '444444 239th Street, Aventura, Florida 33180',
-      clientName: 'Joshua Carter',
+      address: '777777 251st Street, Aventura, Florida 33180',
+      clientName: 'Samantha Roberts',
       contactNumber: '(555) 789-0123',
-      assignedSensor: 'Sensor #12397'
+      assignedSensor: 'Sensor #12382',
+      status: 'In Progress'
     },
     {
       id: 38,
-      address: '555555 243rd Street, Aventura, Florida 33180',
-      clientName: 'Brittany Mitchell',
+      address: '888888 255th Street, Aventura, Florida 33180',
+      clientName: 'Jonathan Turner',
       contactNumber: '(555) 890-1234',
-      assignedSensor: 'Sensor #12398'
+      assignedSensor: 'Sensor #12383',
+      status: 'Scheduled'
     },
     {
       id: 39,
-      address: '666666 247th Street, Aventura, Florida 33180',
-      clientName: 'Nathan Perez',
+      address: '999999 259th Street, Aventura, Florida 33180',
+      clientName: 'Victoria Phillips',
       contactNumber: '(555) 901-2345',
-      assignedSensor: 'Sensor #12399'
+      assignedSensor: 'Sensor #12384',
+      status: 'Completed'
     },
     {
       id: 40,
-      address: '777777 251st Street, Aventura, Florida 33180',
-      clientName: 'Samantha Roberts',
+      address: '1111111 263rd Street, Aventura, Florida 33180',
+      clientName: 'Derek Campbell',
       contactNumber: '(555) 012-3456',
-      assignedSensor: 'Sensor #12400'
+      assignedSensor: 'Sensor #12385',
+      status: 'In Progress'
     },
     {
       id: 41,
-      address: '888888 255th Street, Aventura, Florida 33180',
-      clientName: 'Jonathan Turner',
+      address: '2222222 267th Street, Aventura, Florida 33180',
+      clientName: 'Hannah Parker',
       contactNumber: '(555) 123-4567',
-      assignedSensor: 'Sensor #12401'
+      assignedSensor: 'Sensor #12386',
+      status: 'Scheduled'
     },
     {
       id: 42,
-      address: '999999 259th Street, Aventura, Florida 33180',
-      clientName: 'Victoria Phillips',
+      address: '3333333 271st Street, Aventura, Florida 33180',
+      clientName: 'Corey Evans',
       contactNumber: '(555) 234-5678',
-      assignedSensor: 'Sensor #12402'
+      assignedSensor: 'Sensor #12387',
+      status: 'Completed'
     },
     {
       id: 43,
-      address: '1111111 263rd Street, Aventura, Florida 33180',
-      clientName: 'Derek Campbell',
+      address: '4444444 275th Street, Aventura, Florida 33180',
+      clientName: 'Amber Edwards',
       contactNumber: '(555) 345-6789',
-      assignedSensor: 'Sensor #12403'
+      assignedSensor: 'Sensor #12388',
+      status: 'In Progress'
     },
     {
       id: 44,
-      address: '2222222 267th Street, Aventura, Florida 33180',
-      clientName: 'Hannah Parker',
+      address: '5555555 279th Street, Aventura, Florida 33180',
+      clientName: 'Travis Collins',
       contactNumber: '(555) 456-7890',
-      assignedSensor: 'Sensor #12404'
+      assignedSensor: 'Sensor #12389',
+      status: 'Scheduled'
     },
     {
       id: 45,
-      address: '3333333 271st Street, Aventura, Florida 33180',
-      clientName: 'Corey Evans',
+      address: '6666666 283rd Street, Aventura, Florida 33180',
+      clientName: 'Melissa Stewart',
       contactNumber: '(555) 567-8901',
-      assignedSensor: 'Sensor #12405'
+      assignedSensor: 'Sensor #12390',
+      status: 'Completed'
     },
     {
       id: 46,
-      address: '4444444 275th Street, Aventura, Florida 33180',
-      clientName: 'Amber Edwards',
+      address: '7777777 287th Street, Aventura, Florida 33180',
+      clientName: 'Marcus Morris',
       contactNumber: '(555) 678-9012',
-      assignedSensor: 'Sensor #12406'
+      assignedSensor: 'Sensor #12391',
+      status: 'In Progress'
     },
     {
       id: 47,
-      address: '5555555 279th Street, Aventura, Florida 33180',
-      clientName: 'Travis Collins',
+      address: '8888888 291st Street, Aventura, Florida 33180',
+      clientName: 'Crystal Rogers',
       contactNumber: '(555) 789-0123',
-      assignedSensor: 'Sensor #12407'
+      assignedSensor: 'Sensor #12392',
+      status: 'Scheduled'
     },
     {
       id: 48,
-      address: '6666666 283rd Street, Aventura, Florida 33180',
-      clientName: 'Melissa Stewart',
+      address: '9999999 295th Street, Aventura, Florida 33180',
+      clientName: 'Dustin Reed',
       contactNumber: '(555) 890-1234',
-      assignedSensor: 'Sensor #12408'
+      assignedSensor: 'Sensor #12393',
+      status: 'Completed'
     },
     {
       id: 49,
-      address: '7777777 287th Street, Aventura, Florida 33180',
-      clientName: 'Marcus Morris',
+      address: '11111111 299th Street, Aventura, Florida 33180',
+      clientName: 'Tiffany Cook',
       contactNumber: '(555) 901-2345',
-      assignedSensor: 'Sensor #12409'
+      assignedSensor: 'Sensor #12394',
+      status: 'In Progress'
     },
     {
       id: 50,
-      address: '8888888 291st Street, Aventura, Florida 33180',
-      clientName: 'Crystal Rogers',
+      address: '22222222 303rd Street, Aventura, Florida 33180',
+      clientName: 'Brent Morgan',
       contactNumber: '(555) 012-3456',
-      assignedSensor: 'Sensor #12410'
+      assignedSensor: 'Sensor #12395',
+      status: 'Scheduled'
     }
   ])
 
@@ -374,23 +424,11 @@ const ManageServiceCalls = () => {
     { id: 'cancelled', label: 'Cancelled Service Calls', count: null, color: 'grey' }
   ]
 
-  // Handle tab navigation
-  const handleTabClick = (tabId) => {
-    if (tabId === 'my-calls') {
-      window.location.href = '/my-service-calls'
-    } else if (tabId === 'history') {
-      window.location.href = '/service-call-history'
-    } else if (tabId === 'cancelled') {
-      window.location.href = '/cancelled-service-calls'
-    } else {
-      setActiveTab(tabId)
-    }
-  }
-
   // Filter service calls based on search term
-  const filteredServiceCalls = serviceCalls.filter(call =>
+  const filteredServiceCalls = myServiceCalls.filter(call =>
     call.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    call.clientName.toLowerCase().includes(searchTerm.toLowerCase())
+    call.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    call.status.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   // Pagination calculations
@@ -407,9 +445,10 @@ const ManageServiceCalls = () => {
       return
     }
 
-    const filtered = serviceCalls.filter(call =>
+    const filtered = myServiceCalls.filter(call =>
       call.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      call.clientName.toLowerCase().includes(searchTerm.toLowerCase())
+      call.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      call.status.toLowerCase().includes(searchTerm.toLowerCase())
     ).slice(0, 5) // Limit to 5 suggestions
 
     setSuggestions(filtered)
@@ -503,14 +542,14 @@ const ManageServiceCalls = () => {
             <span className="breadcrumb-current">›</span>
           </li>
           <li className="breadcrumb-item">
-            <span className="breadcrumb-current">Manage Service Calls</span>
+            <span className="breadcrumb-current">My Service Calls</span>
           </li>
         </ul>
       </div>
 
       {/* Main Content Card */}
       <div className="dashboard-table-section">
-        <h1>Manage Service Calls</h1>
+        <h1>My Service Calls</h1>
         
         <div className="tabs-section">
           <div className="tabs-container">
@@ -518,7 +557,7 @@ const ManageServiceCalls = () => {
               <button
                 key={tab.id}
                 className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => handleTabClick(tab.id)}
+                onClick={() => setActiveTab(tab.id)}
               >
                 {tab.label}
                 {tab.count && (
@@ -530,15 +569,15 @@ const ManageServiceCalls = () => {
         </div>
 
         <div className="table-header">
-          <h2>Addresses Requiring a Service Call</h2>
+          <h2>My Assigned Service Calls</h2>
           <div className="search-wrapper">
             <div className="typeahead-wrapper" ref={dropdownRef}>
               <div className="search-input-container">
                 <input
                   ref={searchInputRef}
                   className="search-input"
-                  placeholder="Search Address"
-                  aria-label="Search Address"
+                  placeholder="Search Address, Client, or Status"
+                  aria-label="Search Address, Client, or Status"
                   type="text"
                   value={searchTerm}
                   onChange={(e) => {
@@ -570,7 +609,7 @@ const ManageServiceCalls = () => {
                       onClick={() => handleSuggestionClick(suggestion)}
                     >
                       <div className="suggestion-address">{suggestion.address}</div>
-                      <div className="suggestion-client">{suggestion.clientName}</div>
+                      <div className="suggestion-client">{suggestion.clientName} - {suggestion.status}</div>
                     </div>
                   ))}
                 </div>
@@ -586,14 +625,8 @@ const ManageServiceCalls = () => {
                 <th>Address</th>
                 <th>Client Name</th>
                 <th>Contact Number</th>
-                <th>
-                  Assigned Sensor
-                  <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
-                    <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
-                      <path d="M6.56 6C6.71673 5.55445 7.0261 5.17874 7.4333 4.93942C7.8405 4.70011 8.31926 4.61263 8.78478 4.69248C9.2503 4.77233 9.67254 5.01435 9.97671 5.37569C10.2809 5.73702 10.4474 6.19435 10.4467 6.66667C10.4467 8 8.44666 8.66667 8.44666 8.66667M8.5 11.3333H8.50666M15.1667 8C15.1667 11.6819 12.1819 14.6667 8.5 14.6667C4.8181 14.6667 1.83333 11.6819 1.83333 8C1.83333 4.3181 4.8181 1.33334 8.5 1.33334C12.1819 1.33334 15.1667 4.3181 15.1667 8Z" stroke="#98A2B3" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"></path>
-                    </svg>
-                  </div>
-                </th>
+                <th>Assigned Sensor</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -615,6 +648,9 @@ const ManageServiceCalls = () => {
                       <div className="skeleton-placeholder skeleton-sensor"></div>
                     </td>
                     <td>
+                      <div className="skeleton-placeholder skeleton-status"></div>
+                    </td>
+                    <td>
                       <div className="skeleton-placeholder skeleton-action"></div>
                     </td>
                   </tr>
@@ -627,6 +663,11 @@ const ManageServiceCalls = () => {
                     <td>{call.clientName}</td>
                     <td>{call.contactNumber}</td>
                     <td>{call.assignedSensor}</td>
+                    <td>
+                      <span className={`status-badge status-${call.status.toLowerCase().replace(' ', '-')}`}>
+                        {call.status}
+                      </span>
+                    </td>
                     <td>
                       <div className="icon-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
@@ -685,4 +726,4 @@ const ManageServiceCalls = () => {
   )
 }
 
-export default ManageServiceCalls 
+export default MyServiceCalls 
