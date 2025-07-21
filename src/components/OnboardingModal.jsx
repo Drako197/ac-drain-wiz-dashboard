@@ -303,7 +303,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
         { name: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Last Name', required: true },
         { name: 'mobileNumber', label: 'Mobile Number', type: 'tel', placeholder: '(000) 000-0000', required: true },
         { name: 'email', label: 'Email', type: 'email', placeholder: 'name@domain.com', required: true },
-        { name: 'addressName', label: 'Address Name', type: 'select', options: ['Warehouse', 'Office', 'Home', 'Other'], required: true },
+        { name: 'addressNameType', label: 'Address Name', type: 'select', options: ['Home', 'Office', 'Warehouse', 'Apartment', 'Airbnb', 'Custom'], required: true },
+        { name: 'customAddressName', label: 'Custom Address Name', type: 'text', placeholder: 'Enter custom address name', required: false, conditional: { field: 'addressNameType', value: 'Custom' } },
         { name: 'clientAddress1', label: 'Address 1', type: 'text', placeholder: '123 Main Street', required: true },
         { name: 'clientAddress2', label: 'Address 2', type: 'text', placeholder: '', required: false },
         { name: 'clientCity', label: 'City', type: 'text', placeholder: '', required: true },
@@ -1688,26 +1689,49 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                               </div>
                             </div>
                             
-                            <div className="form-group">
-                              <label className="form-label">
-                                Address Name
-                                <span className="required">*</span>
-                              </label>
-                              <select
-                                name="addressName"
-                                className={`form-select ${showErrors && errors.addressName ? 'error' : ''}`}
-                                value={formData.addressName || ''}
-                                onChange={(e) => handleInputChange('addressName', e.target.value)}
-                              >
-                                <option value="">Select address name</option>
-                                <option value="Warehouse">Warehouse</option>
-                                <option value="Office">Office</option>
-                                <option value="Home">Home</option>
-                                <option value="Other">Other</option>
-                              </select>
-                              <div className="helper-text">Use this to help you quickly tell one address from another</div>
-                              {showErrors && errors.addressName && (
-                                <div className="form-error">{errors.addressName}</div>
+                            <div className="form-row">
+                              <div className={`form-group ${formData.addressNameType === 'Custom' ? 'half-width' : 'full-width'}`}>
+                                <label className="form-label">
+                                  Address Name
+                                  <span className="required">*</span>
+                                  <span className="helper-text">Use this to help you quickly tell one address from another</span>
+                                </label>
+                                <select
+                                  name="addressNameType"
+                                  className={`form-select ${showErrors && errors.addressNameType ? 'error' : ''}`}
+                                  value={formData.addressNameType || ''}
+                                  onChange={(e) => handleInputChange('addressNameType', e.target.value)}
+                                >
+                                  <option value="">Select address name</option>
+                                  <option value="Home">Home</option>
+                                  <option value="Office">Office</option>
+                                  <option value="Warehouse">Warehouse</option>
+                                  <option value="Apartment">Apartment</option>
+                                  <option value="Airbnb">Airbnb</option>
+                                  <option value="Custom">Custom</option>
+                                </select>
+                                {showErrors && errors.addressNameType && (
+                                  <div className="form-error">{errors.addressNameType}</div>
+                                )}
+                              </div>
+                              {formData.addressNameType === 'Custom' && (
+                                <div className="form-group half-width">
+                                  <label className="form-label">
+                                    Custom Address Name
+                                    <span className="required">*</span>
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="customAddressName"
+                                    className={`form-input ${showErrors && errors.customAddressName ? 'error' : ''}`}
+                                    value={formData.customAddressName || ''}
+                                    onChange={(e) => handleInputChange('customAddressName', e.target.value)}
+                                    placeholder="Enter custom address name"
+                                  />
+                                  {showErrors && errors.customAddressName && (
+                                    <div className="form-error">{errors.customAddressName}</div>
+                                  )}
+                                </div>
                               )}
                             </div>
                             
