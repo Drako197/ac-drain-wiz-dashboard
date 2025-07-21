@@ -369,8 +369,8 @@
   box-shadow: none;
 }
 
-/* Loading Overlay */
-.loading-overlay {
+/* Loading Overlay - Service Call Pages Specific */
+.table-container .loading-overlay {
   position: absolute;
   top: 0;
   left: 0;
