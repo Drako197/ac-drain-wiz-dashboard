@@ -807,6 +807,8 @@ const ManageServiceCalls = () => {
                   </th>
                 )}
                 {activeTab === 'history' && <th>Priority</th>}
+                {activeTab === 'history' && <th>Client Name</th>}
+                {activeTab === 'history' && <th>Contact Number</th>}
                 {activeTab === 'history' && (
                   <th>
                     Assigned Sensor
@@ -836,6 +838,11 @@ const ManageServiceCalls = () => {
                         <div className="skeleton-placeholder skeleton-priority"></div>
                       </td>
                     )}
+                    {activeTab === 'history' && (
+                      <td>
+                        <div className="skeleton-placeholder skeleton-priority"></div>
+                      </td>
+                    )}
                     <td>
                       <div className="skeleton-placeholder skeleton-name"></div>
                     </td>
@@ -850,11 +857,6 @@ const ManageServiceCalls = () => {
                     {activeTab === 'my-calls' && (
                       <td>
                         <div className="skeleton-placeholder skeleton-sensor"></div>
-                      </td>
-                    )}
-                    {activeTab === 'history' && (
-                      <td>
-                        <div className="skeleton-placeholder skeleton-priority"></div>
                       </td>
                     )}
                     {activeTab === 'history' && (
@@ -892,10 +894,6 @@ const ManageServiceCalls = () => {
                         </span>
                       </td>
                     )}
-                    <td>{call.clientName}</td>
-                    <td>{call.contactNumber}</td>
-                    {activeTab === 'required' && <td>{call.assignedSensor}</td>}
-                    {activeTab === 'my-calls' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'history' && (
                       <td>
                         <span className={`priority-badge priority-${call.priority.toLowerCase()}`}>
@@ -903,6 +901,10 @@ const ManageServiceCalls = () => {
                         </span>
                       </td>
                     )}
+                    <td>{call.clientName}</td>
+                    <td>{call.contactNumber}</td>
+                    {activeTab === 'required' && <td>{call.assignedSensor}</td>}
+                    {activeTab === 'my-calls' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'history' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'cancelled' && <td>{call.date}</td>}
                     {activeTab === 'cancelled' && <td>{call.reason}</td>}
