@@ -28,6 +28,12 @@
   font-size: 16px;
 }
 
+.breadcrumb-icon {
+  color: #374151;
+  width: 16px;
+  height: 16px;
+}
+
 /* Main Content Card */
 .service-calls-card {
   background: white;
