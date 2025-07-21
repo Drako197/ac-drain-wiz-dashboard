@@ -262,7 +262,7 @@ body {
 /* Main Content Area */
 .main-content {
   flex: 1;
-  max-width: 1160px;
+  max-width: 1440px;
   width: 100%;
   background: #f6f7fb;
   padding: 16px;
@@ -693,7 +693,7 @@ body {
   }
   
   .main-content {
-    max-width: 1160px;
+    max-width: 1440px;
     width: 100%;
   }
 }
