@@ -783,33 +783,10 @@ const ManageServiceCalls = () => {
             <thead>
               <tr>
                 <th>Address</th>
-                {activeTab === 'my-calls' && <th>Priority</th>}
+                {(activeTab === 'my-calls' || activeTab === 'history') && <th>Priority</th>}
                 <th>Client Name</th>
                 <th>Contact Number</th>
-                {activeTab === 'required' && (
-                  <th>
-                    Assigned Sensor
-                    <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
-                      <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
-                        <path d="M6.56 6C6.71673 5.55445 7.0261 5.17874 7.4333 4.93942C7.8405 4.70011 8.31926 4.61263 8.78478 4.69248C9.2503 4.77233 9.67254 5.01435 9.97671 5.37569C10.2809 5.73702 10.4474 6.19435 10.4467 6.66667C10.4467 8 8.44666 8.66667 8.44666 8.66667M8.5 11.3333H8.50666M15.1667 8C15.1667 11.6819 12.1819 14.6667 8.5 14.6667C4.8181 14.6667 1.83333 11.6819 1.83333 8C1.83333 4.3181 4.8181 1.33334 8.5 1.33334C12.1819 1.33334 15.1667 4.3181 15.1667 8Z" stroke="#98A2B3" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"></path>
-                      </svg>
-                    </div>
-                  </th>
-                )}
-                {activeTab === 'my-calls' && (
-                  <th>
-                    Assigned Sensor
-                    <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
-                      <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
-                        <path d="M6.56 6C6.71673 5.55445 7.0261 5.17874 7.4333 4.93942C7.8405 4.70011 8.31926 4.61263 8.78478 4.69248C9.2503 4.77233 9.67254 5.01435 9.97671 5.37569C10.2809 5.73702 10.4474 6.19435 10.4467 6.66667C10.4467 8 8.44666 8.66667 8.44666 8.66667M8.5 11.3333H8.50666M15.1667 8C15.1667 11.6819 12.1819 14.6667 8.5 14.6667C4.8181 14.6667 1.83333 11.6819 1.83333 8C1.83333 4.3181 4.8181 1.33334 8.5 1.33334C12.1819 1.33334 15.1667 4.3181 15.1667 8Z" stroke="#98A2B3" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"></path>
-                      </svg>
-                    </div>
-                  </th>
-                )}
-                {activeTab === 'history' && <th>Priority</th>}
-                {activeTab === 'history' && <th>Client Name</th>}
-                {activeTab === 'history' && <th>Contact Number</th>}
-                {activeTab === 'history' && (
+                {(activeTab === 'required' || activeTab === 'my-calls' || activeTab === 'history') && (
                   <th>
                     Assigned Sensor
                     <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
@@ -833,12 +810,7 @@ const ManageServiceCalls = () => {
                     <td>
                       <div className="skeleton-placeholder skeleton-address"></div>
                     </td>
-                    {activeTab === 'my-calls' && (
-                      <td>
-                        <div className="skeleton-placeholder skeleton-priority"></div>
-                      </td>
-                    )}
-                    {activeTab === 'history' && (
+                    {(activeTab === 'my-calls' || activeTab === 'history') && (
                       <td>
                         <div className="skeleton-placeholder skeleton-priority"></div>
                       </td>
@@ -849,17 +821,7 @@ const ManageServiceCalls = () => {
                     <td>
                       <div className="skeleton-placeholder skeleton-phone"></div>
                     </td>
-                    {activeTab === 'required' && (
-                      <td>
-                        <div className="skeleton-placeholder skeleton-sensor"></div>
-                      </td>
-                    )}
-                    {activeTab === 'my-calls' && (
-                      <td>
-                        <div className="skeleton-placeholder skeleton-sensor"></div>
-                      </td>
-                    )}
-                    {activeTab === 'history' && (
+                    {(activeTab === 'required' || activeTab === 'my-calls' || activeTab === 'history') && (
                       <td>
                         <div className="skeleton-placeholder skeleton-sensor"></div>
                       </td>
@@ -887,25 +849,16 @@ const ManageServiceCalls = () => {
                 currentData.map((call) => (
                   <tr key={call.id}>
                     <td>{call.address}</td>
-                    {activeTab === 'my-calls' && (
+                    {(activeTab === 'my-calls' || activeTab === 'history') && (
                       <td>
                         <span className={`priority-badge priority-${call.priority.toLowerCase().replace(' ', '-')}`}>
                           {call.priority}
                         </span>
                       </td>
                     )}
-                    {activeTab === 'history' && (
-                      <td>
-                        <span className={`priority-badge priority-${call.priority.toLowerCase()}`}>
-                          {call.priority}
-                        </span>
-                      </td>
-                    )}
                     <td>{call.clientName}</td>
                     <td>{call.contactNumber}</td>
-                    {activeTab === 'required' && <td>{call.assignedSensor}</td>}
-                    {activeTab === 'my-calls' && <td>{call.assignedSensor}</td>}
-                    {activeTab === 'history' && <td>{call.assignedSensor}</td>}
+                    {(activeTab === 'required' || activeTab === 'my-calls' || activeTab === 'history') && <td>{call.assignedSensor}</td>}
                     {activeTab === 'cancelled' && <td>{call.date}</td>}
                     {activeTab === 'cancelled' && <td>{call.reason}</td>}
                     {activeTab === 'cancelled' && <td>{call.cancelledBy}</td>}
