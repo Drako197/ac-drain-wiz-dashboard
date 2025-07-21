@@ -371,83 +371,83 @@ const ManageServiceCalls = () => {
   const [myServiceCalls] = useState([
     {
       id: 1,
-      address: '123 Main Street, Miami Beach, Florida 33181',
-      clientName: 'Steven Segal',
-      contactNumber: '(555) 123-4567',
-      assignedSensor: 'Sensor #12346',
-      status: 'In Progress'
+      address: '3030 Coral Way, Coral Gables, Florida 33134',
+      clientName: 'Roy Perez',
+      contactNumber: '(555) 897-6280',
+      assignedSensor: 'Sensor #12350',
+      priority: 'Open'
     },
     {
       id: 2,
-      address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
-      clientName: 'Martin Short',
-      contactNumber: '(555) 234-5678',
-      assignedSensor: 'Sensor #12347',
-      status: 'Scheduled'
+      address: '9090 Meridian Avenue, Miami Beach, Florida 33139',
+      clientName: 'Eric Young',
+      contactNumber: '(555) 468-2575',
+      assignedSensor: 'Sensor #12356',
+      priority: 'In Progress'
     },
     {
       id: 3,
-      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
-      clientName: 'Thomas Aguilar',
-      contactNumber: '(555) 345-6789',
-      assignedSensor: 'Sensor #12348',
-      status: 'Completed'
+      address: '5555 25th Street, Miami Beach, Florida 33140',
+      clientName: 'Ronald Robinson',
+      contactNumber: '(555) 636-9397',
+      assignedSensor: 'Sensor #12361',
+      priority: 'In Progress'
     },
     {
       id: 4,
-      address: '1010 Sunset Boulevard, Miami, Florida 33133',
-      clientName: 'Jake Smith',
-      contactNumber: '(555) 456-7890',
-      assignedSensor: 'Sensor #12349',
-      status: 'In Progress'
+      address: '6666 30th Street, Miami Beach, Florida 33140',
+      clientName: 'Patrick Gonzalez',
+      contactNumber: '(555) 696-7040',
+      assignedSensor: 'Sensor #12362',
+      priority: 'Open'
     },
     {
       id: 5,
-      address: '2020 Sunrise Boulevard, Fort Lauderdale, Florida 33304',
-      clientName: 'Robert Black',
-      contactNumber: '(555) 567-8901',
-      assignedSensor: 'Sensor #12350',
-      status: 'Scheduled'
+      address: '8888 40th Street, Miami Beach, Florida 33140',
+      clientName: 'Edward Rodriguez',
+      contactNumber: '(555) 957-8672',
+      assignedSensor: 'Sensor #12364',
+      priority: 'In Progress'
     },
     {
       id: 6,
-      address: '3030 Coral Way, Coral Gables, Florida 33134',
-      clientName: 'Mauricio Cicone',
-      contactNumber: '(555) 678-9012',
-      assignedSensor: 'Sensor #12351',
-      status: 'Completed'
+      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
+      clientName: 'Donald Anderson',
+      contactNumber: '(555) 834-5313',
+      assignedSensor: 'Sensor #12367',
+      priority: 'Open'
     },
     {
       id: 7,
-      address: '4040 Biscayne Boulevard, Miami, Florida 33137',
-      clientName: 'Brad Agustini',
-      contactNumber: '(555) 789-0123',
-      assignedSensor: 'Sensor #12352',
-      status: 'In Progress'
+      address: '1010 Sunset Boulevard, Miami, Florida 33133',
+      clientName: 'Edward Rodriguez',
+      contactNumber: '(555) 201-4564',
+      assignedSensor: 'Sensor #12368',
+      priority: 'In Progress'
     },
     {
       id: 8,
-      address: '5050 Collins Avenue, Miami Beach, Florida 33140',
-      clientName: 'John Snow',
-      contactNumber: '(555) 890-1234',
-      assignedSensor: 'Sensor #12353',
-      status: 'Scheduled'
+      address: '3030 Coral Way, Coral Gables, Florida 33134',
+      clientName: 'Jeffrey Lewis',
+      contactNumber: '(555) 805-5071',
+      assignedSensor: 'Sensor #12370',
+      priority: 'In Progress'
     },
     {
       id: 9,
-      address: '6060 Lincoln Road, Miami Beach, Florida 33139',
-      clientName: 'Michael Johnson',
-      contactNumber: '(555) 901-2345',
-      assignedSensor: 'Sensor #12354',
-      status: 'Completed'
+      address: '4040 Biscayne Boulevard, Miami, Florida 33137',
+      clientName: 'Raymond Green',
+      contactNumber: '(555) 602-7066',
+      assignedSensor: 'Sensor #12371',
+      priority: 'In Progress'
     },
     {
       id: 10,
-      address: '7070 Washington Avenue, Miami Beach, Florida 33139',
-      clientName: 'David Wilson',
-      contactNumber: '(555) 012-3456',
-      assignedSensor: 'Sensor #12355',
-      status: 'In Progress'
+      address: '9090 Meridian Avenue, Miami Beach, Florida 33139',
+      clientName: 'Thomas Aguilar',
+      contactNumber: '(555) 237-3622',
+      assignedSensor: 'Sensor #12376',
+      priority: 'In Progress'
     }
   ])
 
@@ -800,7 +800,17 @@ const ManageServiceCalls = () => {
                     </div>
                   </th>
                 )}
-                {activeTab === 'my-calls' && <th>Status</th>}
+                {activeTab === 'my-calls' && <th>Priority</th>}
+                {activeTab === 'my-calls' && (
+                  <th>
+                    Assigned Sensor
+                    <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
+                      <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
+                        <path d="M6.56 6C6.71673 5.55445 7.0261 5.17874 7.4333 4.93942C7.8405 4.70011 8.31926 4.61263 8.78478 4.69248C9.2503 4.77233 9.67254 5.01435 9.97671 5.37569C10.2809 5.73702 10.4474 6.19435 10.4467 6.66667C10.4467 8 8.44666 8.66667 8.44666 8.66667M8.5 11.3333H8.50666M15.1667 8C15.1667 11.6819 12.1819 14.6667 8.5 14.6667C4.8181 14.6667 1.83333 11.6819 1.83333 8C1.83333 4.3181 4.8181 1.33334 8.5 1.33334C12.1819 1.33334 15.1667 4.3181 15.1667 8Z" stroke="#98A2B3" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"></path>
+                      </svg>
+                    </div>
+                  </th>
+                )}
                 {activeTab === 'history' && <th>Date</th>}
                 {activeTab === 'history' && <th>Technician</th>}
                 {activeTab === 'cancelled' && <th>Date</th>}
@@ -830,7 +840,12 @@ const ManageServiceCalls = () => {
                     )}
                     {activeTab === 'my-calls' && (
                       <td>
-                        <div className="skeleton-placeholder skeleton-status"></div>
+                        <div className="skeleton-placeholder skeleton-priority"></div>
+                      </td>
+                    )}
+                    {activeTab === 'my-calls' && (
+                      <td>
+                        <div className="skeleton-placeholder skeleton-sensor"></div>
                       </td>
                     )}
                     {activeTab === 'history' && (
@@ -871,11 +886,12 @@ const ManageServiceCalls = () => {
                     {activeTab === 'required' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'my-calls' && (
                       <td>
-                        <span className={`status-badge status-${call.status.toLowerCase().replace(' ', '-')}`}>
-                          {call.status}
+                        <span className={`priority-badge priority-${call.priority.toLowerCase().replace(' ', '-')}`}>
+                          {call.priority}
                         </span>
                       </td>
                     )}
+                    {activeTab === 'my-calls' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'history' && <td>{call.date}</td>}
                     {activeTab === 'history' && <td>{call.technician}</td>}
                     {activeTab === 'cancelled' && <td>{call.date}</td>}
