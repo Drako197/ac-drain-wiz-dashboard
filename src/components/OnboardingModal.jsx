@@ -1645,7 +1645,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                             <div className="form-row">
                               <div className="form-group half-width">
                                 <label className="form-label">
-                                  First name
+                                  First Name
                                   <span className="required">*</span>
                                 </label>
                                 <input
@@ -1654,7 +1654,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                                   className={`form-input ${showErrors && errors.firstName ? 'error' : ''}`}
                                   value={formData.firstName || ''}
                                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                                  placeholder="Enter client's first name"
+                                  placeholder="Enter first name"
                                 />
                                 {showErrors && errors.firstName && (
                                   <div className="form-error">{errors.firstName}</div>
@@ -1662,7 +1662,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                               </div>
                               <div className="form-group half-width">
                                 <label className="form-label">
-                                  Last name
+                                  Last Name
                                   <span className="required">*</span>
                                 </label>
                                 <input
@@ -1671,7 +1671,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                                   className={`form-input ${showErrors && errors.lastName ? 'error' : ''}`}
                                   value={formData.lastName || ''}
                                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                                  placeholder="Enter client's last name"
+                                  placeholder="Enter last name"
                                 />
                                 {showErrors && errors.lastName && (
                                   <div className="form-error">{errors.lastName}</div>
@@ -1682,24 +1682,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                             <div className="form-row">
                               <div className="form-group half-width">
                                 <label className="form-label">
-                                  Email address
-                                  <span className="required">*</span>
-                                </label>
-                                <input
-                                  type="email"
-                                  name="email"
-                                  className={`form-input ${showErrors && errors.email ? 'error' : ''}`}
-                                  value={formData.email || ''}
-                                  onChange={(e) => handleInputChange('email', e.target.value)}
-                                  placeholder="Enter client's email address"
-                                />
-                                {showErrors && errors.email && (
-                                  <div className="form-error">{errors.email}</div>
-                                )}
-                              </div>
-                              <div className="form-group half-width">
-                                <label className="form-label">
-                                  Mobile number
+                                  Mobile Number
                                   <span className="required">*</span>
                                 </label>
                                 <input
@@ -1708,49 +1691,90 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                                   className={`form-input ${showErrors && errors.mobileNumber ? 'error' : ''}`}
                                   value={formData.mobileNumber || ''}
                                   onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
-                                  placeholder="Enter client's mobile number"
+                                  placeholder="Enter mobile number"
                                 />
                                 {showErrors && errors.mobileNumber && (
                                   <div className="form-error">{errors.mobileNumber}</div>
+                                )}
+                              </div>
+                              <div className="form-group half-width">
+                                <label className="form-label">
+                                  Email
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="email"
+                                  name="email"
+                                  className={`form-input ${showErrors && errors.email ? 'error' : ''}`}
+                                  value={formData.email || ''}
+                                  onChange={(e) => handleInputChange('email', e.target.value)}
+                                  placeholder="Enter email address"
+                                />
+                                {showErrors && errors.email && (
+                                  <div className="form-error">{errors.email}</div>
                                 )}
                               </div>
                             </div>
                             
                             <div className="form-group">
                               <label className="form-label">
-                                Business address
+                                Address Name
                                 <span className="required">*</span>
                               </label>
-                              <input
-                                type="text"
-                                name="clientAddress1"
-                                className={`form-input ${showErrors && errors.clientAddress1 ? 'error' : ''}`}
-                                value={formData.clientAddress1 || ''}
-                                onChange={(e) => handleInputChange('clientAddress1', e.target.value)}
-                                placeholder="Street address"
-                              />
-                              {showErrors && errors.clientAddress1 && (
-                                <div className="form-error">{errors.clientAddress1}</div>
+                              <select
+                                name="addressName"
+                                className={`form-select ${showErrors && errors.addressName ? 'error' : ''}`}
+                                value={formData.addressName || ''}
+                                onChange={(e) => handleInputChange('addressName', e.target.value)}
+                              >
+                                <option value="">Select address name</option>
+                                <option value="Warehouse">Warehouse</option>
+                                <option value="Office">Office</option>
+                                <option value="Home">Home</option>
+                                <option value="Other">Other</option>
+                              </select>
+                              <div className="helper-text">Use this to help you quickly tell one address from another</div>
+                              {showErrors && errors.addressName && (
+                                <div className="form-error">{errors.addressName}</div>
                               )}
-                            </div>
-                            
-                            <div className="form-group">
-                              <label className="form-label">
-                                Address line 2
-                                <span className="optional">(optional)</span>
-                              </label>
-                              <input
-                                type="text"
-                                name="clientAddress2"
-                                className="form-input"
-                                value={formData.clientAddress2 || ''}
-                                onChange={(e) => handleInputChange('clientAddress2', e.target.value)}
-                                placeholder="Apartment, suite, etc."
-                              />
                             </div>
                             
                             <div className="form-row">
                               <div className="form-group half-width">
+                                <label className="form-label">
+                                  Address 1
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="clientAddress1"
+                                  className={`form-input ${showErrors && errors.clientAddress1 ? 'error' : ''}`}
+                                  value={formData.clientAddress1 || ''}
+                                  onChange={(e) => handleInputChange('clientAddress1', e.target.value)}
+                                  placeholder="Enter street address"
+                                />
+                                {showErrors && errors.clientAddress1 && (
+                                  <div className="form-error">{errors.clientAddress1}</div>
+                                )}
+                              </div>
+                              <div className="form-group half-width">
+                                <label className="form-label">
+                                  Address 2 Optional
+                                  <span className="optional">(optional)</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="clientAddress2"
+                                  className="form-input"
+                                  value={formData.clientAddress2 || ''}
+                                  onChange={(e) => handleInputChange('clientAddress2', e.target.value)}
+                                  placeholder="Enter apartment, suite, etc."
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="form-row">
+                              <div className="form-group">
                                 <label className="form-label">
                                   City
                                   <span className="required">*</span>
@@ -1767,38 +1791,44 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                                   <div className="form-error">{errors.clientCity}</div>
                                 )}
                               </div>
-                              <div className="form-group half-width">
+                              <div className="form-group">
                                 <label className="form-label">
                                   State
                                   <span className="required">*</span>
                                 </label>
-                                <input
-                                  type="text"
+                                <select
                                   name="clientState"
-                                  className={`form-input ${showErrors && errors.clientState ? 'error' : ''}`}
+                                  className={`form-select ${showErrors && errors.clientState ? 'error' : ''}`}
                                   value={formData.clientState || ''}
                                   onChange={(e) => handleInputChange('clientState', e.target.value)}
-                                  placeholder="Enter state"
-                                />
+                                >
+                                  <option value="">Select state</option>
+                                  <option value="Florida">Florida</option>
+                                  <option value="California">California</option>
+                                  <option value="Texas">Texas</option>
+                                  <option value="New York">New York</option>
+                                </select>
                                 {showErrors && errors.clientState && (
                                   <div className="form-error">{errors.clientState}</div>
                                 )}
                               </div>
-                            </div>
-                            
-                            <div className="form-group">
-                              <label className="form-label">
-                                ZIP code
-                                <span className="optional">(optional)</span>
-                              </label>
-                              <input
-                                type="text"
-                                name="clientZipCode"
-                                className="form-input"
-                                value={formData.clientZipCode || ''}
-                                onChange={(e) => handleInputChange('clientZipCode', e.target.value)}
-                                placeholder="Enter ZIP code"
-                              />
+                              <div className="form-group">
+                                <label className="form-label">
+                                  Zip Code
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="clientZipCode"
+                                  className={`form-input ${showErrors && errors.clientZipCode ? 'error' : ''}`}
+                                  value={formData.clientZipCode || ''}
+                                  onChange={(e) => handleInputChange('clientZipCode', e.target.value)}
+                                  placeholder="Enter ZIP code"
+                                />
+                                {showErrors && errors.clientZipCode && (
+                                  <div className="form-error">{errors.clientZipCode}</div>
+                                )}
+                              </div>
                             </div>
                           </>
                         ) : currentStep === 4 ? (
