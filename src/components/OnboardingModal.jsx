@@ -303,8 +303,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
         { name: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Last Name', required: true },
         { name: 'mobileNumber', label: 'Mobile Number', type: 'tel', placeholder: '(000) 000-0000', required: true },
         { name: 'email', label: 'Email', type: 'email', placeholder: 'name@domain.com', required: true },
-        { name: 'addressNameType', label: 'Address Name', type: 'select', options: ['Home', 'Office', 'Warehouse', 'Apartment', 'Airbnb', 'Custom'], required: true },
-        { name: 'customAddressName', label: 'Custom Address Name', type: 'text', placeholder: 'Enter custom address name', required: false, conditional: { field: 'addressNameType', value: 'Custom' } },
+        { name: 'addressName', label: 'Address Name', type: 'select', options: ['Warehouse', 'Office', 'Home', 'Other'], required: true },
         { name: 'clientAddress1', label: 'Address 1', type: 'text', placeholder: '123 Main Street', required: true },
         { name: 'clientAddress2', label: 'Address 2', type: 'text', placeholder: '', required: false },
         { name: 'clientCity', label: 'City', type: 'text', placeholder: '', required: true },
@@ -422,32 +421,9 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
       }
     });
 
-    // Special validation for Step 3: Check unique custom address names
+    // Special validation for Step 3: No custom validation needed
     if (stepIndex === 3) {
-      console.log('Step 3 custom validation:');
-      console.log('- addressNameType:', formData.addressNameType);
-      console.log('- customAddressName:', formData.customAddressName);
-      console.log('- addressNameType === Custom:', formData.addressNameType === 'Custom');
-      
-      // Check if custom address name is required but empty
-      if (formData.addressNameType === 'Custom' && (!formData.customAddressName || formData.customAddressName.trim() === '')) {
-        console.log('Custom address name is required but empty');
-        newErrors.customAddressName = 'Custom address name is required when Custom is selected';
-      }
-      // Check if custom address name is a duplicate
-      else if (formData.addressNameType === 'Custom' && formData.customAddressName) {
-        const customName = formData.customAddressName.trim().toLowerCase();
-        console.log('Validating custom address name:', customName);
-        console.log('Existing names:', existingCustomAddressNames);
-        console.log('Address type:', formData.addressNameType);
-        console.log('Custom address name value:', formData.customAddressName);
-        if (existingCustomAddressNames.includes(customName)) {
-          console.log('Duplicate found! Adding error');
-          newErrors.customAddressName = 'This custom address name already exists. Please choose a unique name.';
-        } else {
-          console.log('No duplicate found, name is unique');
-        }
-      }
+      console.log('Step 3 validation - using standard field validation');
     }
 
     // Special validation for Step 4: Check that at least one sensor is selected

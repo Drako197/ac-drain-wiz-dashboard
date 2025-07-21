@@ -2791,3 +2791,11 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.helper-text {
+  color: #6b7280;
+  font-size: .75rem;
+  margin-top: 4px;
+  display: block;
+  text-align: left;
+}
