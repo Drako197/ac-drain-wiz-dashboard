@@ -917,7 +917,7 @@ const ManageServiceCalls = () => {
                           style={{ position: 'relative', display: 'inline-block' }}
                           title={
                             activeTab === 'my-calls' ? 'Edit service call details' :
-                            activeTab === 'history' ? 'View Details' :
+                            activeTab === 'history' ? 'View service call history detail' :
                             'Create Service Call'
                           }
                           onMouseEnter={handleTooltipPosition}
