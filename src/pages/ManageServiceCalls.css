@@ -573,3 +573,56 @@
     opacity: 0.7;
   }
 } 
+
+/* Status Badge Styles */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.status-badge.status-in-progress {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.status-scheduled {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.status-badge.status-completed {
+  background: #d1fae5;
+  color: #059669;
+}
+
+/* Additional skeleton placeholders for new columns */
+.skeleton-status {
+  width: 80px;
+  height: 24px;
+}
+
+.skeleton-date {
+  width: 100px;
+  height: 16px;
+}
+
+.skeleton-technician {
+  width: 120px;
+  height: 16px;
+}
+
+.skeleton-reason {
+  width: 140px;
+  height: 16px;
+}
+
+.skeleton-cancelled-by {
+  width: 100px;
+  height: 16px;
+}

@@ -13,7 +13,7 @@ const ManageServiceCalls = () => {
   const searchInputRef = useRef(null)
   const dropdownRef = useRef(null)
 
-  // Expanded service calls data (50 entries for 5 pages)
+  // Service calls data for "Service Call Required" tab (50 entries for 5 pages)
   const [serviceCalls] = useState([
     {
       id: 1,
@@ -367,6 +367,193 @@ const ManageServiceCalls = () => {
     }
   ])
 
+  // My Service Calls data
+  const [myServiceCalls] = useState([
+    {
+      id: 1,
+      address: '123 Main Street, Miami Beach, Florida 33181',
+      clientName: 'Steven Segal',
+      contactNumber: '(555) 123-4567',
+      assignedSensor: 'Sensor #12346',
+      status: 'In Progress'
+    },
+    {
+      id: 2,
+      address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
+      clientName: 'Martin Short',
+      contactNumber: '(555) 234-5678',
+      assignedSensor: 'Sensor #12347',
+      status: 'Scheduled'
+    },
+    {
+      id: 3,
+      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
+      clientName: 'Thomas Aguilar',
+      contactNumber: '(555) 345-6789',
+      assignedSensor: 'Sensor #12348',
+      status: 'Completed'
+    },
+    {
+      id: 4,
+      address: '1010 Sunset Boulevard, Miami, Florida 33133',
+      clientName: 'Jake Smith',
+      contactNumber: '(555) 456-7890',
+      assignedSensor: 'Sensor #12349',
+      status: 'In Progress'
+    },
+    {
+      id: 5,
+      address: '2020 Sunrise Boulevard, Fort Lauderdale, Florida 33304',
+      clientName: 'Robert Black',
+      contactNumber: '(555) 567-8901',
+      assignedSensor: 'Sensor #12350',
+      status: 'Scheduled'
+    },
+    {
+      id: 6,
+      address: '3030 Coral Way, Coral Gables, Florida 33134',
+      clientName: 'Mauricio Cicone',
+      contactNumber: '(555) 678-9012',
+      assignedSensor: 'Sensor #12351',
+      status: 'Completed'
+    },
+    {
+      id: 7,
+      address: '4040 Biscayne Boulevard, Miami, Florida 33137',
+      clientName: 'Brad Agustini',
+      contactNumber: '(555) 789-0123',
+      assignedSensor: 'Sensor #12352',
+      status: 'In Progress'
+    },
+    {
+      id: 8,
+      address: '5050 Collins Avenue, Miami Beach, Florida 33140',
+      clientName: 'John Snow',
+      contactNumber: '(555) 890-1234',
+      assignedSensor: 'Sensor #12353',
+      status: 'Scheduled'
+    },
+    {
+      id: 9,
+      address: '6060 Lincoln Road, Miami Beach, Florida 33139',
+      clientName: 'Michael Johnson',
+      contactNumber: '(555) 901-2345',
+      assignedSensor: 'Sensor #12354',
+      status: 'Completed'
+    },
+    {
+      id: 10,
+      address: '7070 Washington Avenue, Miami Beach, Florida 33139',
+      clientName: 'David Wilson',
+      contactNumber: '(555) 012-3456',
+      assignedSensor: 'Sensor #12355',
+      status: 'In Progress'
+    }
+  ])
+
+  // Service Call History data
+  const [serviceCallHistory] = useState([
+    {
+      id: 1,
+      address: '123 Main Street, Miami Beach, Florida 33181',
+      clientName: 'Steven Segal',
+      contactNumber: '(555) 123-4567',
+      assignedSensor: 'Sensor #12346',
+      date: '2024-01-15',
+      technician: 'John Smith'
+    },
+    {
+      id: 2,
+      address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
+      clientName: 'Martin Short',
+      contactNumber: '(555) 234-5678',
+      assignedSensor: 'Sensor #12347',
+      date: '2024-01-14',
+      technician: 'Mike Johnson'
+    },
+    {
+      id: 3,
+      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
+      clientName: 'Thomas Aguilar',
+      contactNumber: '(555) 345-6789',
+      assignedSensor: 'Sensor #12348',
+      date: '2024-01-13',
+      technician: 'Sarah Wilson'
+    },
+    {
+      id: 4,
+      address: '1010 Sunset Boulevard, Miami, Florida 33133',
+      clientName: 'Jake Smith',
+      contactNumber: '(555) 456-7890',
+      assignedSensor: 'Sensor #12349',
+      date: '2024-01-12',
+      technician: 'David Brown'
+    },
+    {
+      id: 5,
+      address: '2020 Sunrise Boulevard, Fort Lauderdale, Florida 33304',
+      clientName: 'Robert Black',
+      contactNumber: '(555) 567-8901',
+      assignedSensor: 'Sensor #12350',
+      date: '2024-01-11',
+      technician: 'Lisa Davis'
+    }
+  ])
+
+  // Cancelled Service Calls data
+  const [cancelledServiceCalls] = useState([
+    {
+      id: 1,
+      address: '123 Main Street, Miami Beach, Florida 33181',
+      clientName: 'Steven Segal',
+      contactNumber: '(555) 123-4567',
+      assignedSensor: 'Sensor #12346',
+      date: '2024-01-15',
+      reason: 'Client cancelled',
+      cancelledBy: 'Client'
+    },
+    {
+      id: 2,
+      address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
+      clientName: 'Martin Short',
+      contactNumber: '(555) 234-5678',
+      assignedSensor: 'Sensor #12347',
+      date: '2024-01-14',
+      reason: 'Weather conditions',
+      cancelledBy: 'System'
+    },
+    {
+      id: 3,
+      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
+      clientName: 'Thomas Aguilar',
+      contactNumber: '(555) 345-6789',
+      assignedSensor: 'Sensor #12348',
+      date: '2024-01-13',
+      reason: 'Technician unavailable',
+      cancelledBy: 'Admin'
+    },
+    {
+      id: 4,
+      address: '1010 Sunset Boulevard, Miami, Florida 33133',
+      clientName: 'Jake Smith',
+      contactNumber: '(555) 456-7890',
+      assignedSensor: 'Sensor #12349',
+      date: '2024-01-12',
+      reason: 'Client requested reschedule',
+      cancelledBy: 'Client'
+    },
+    {
+      id: 5,
+      address: '2020 Sunrise Boulevard, Fort Lauderdale, Florida 33304',
+      clientName: 'Robert Black',
+      contactNumber: '(555) 567-8901',
+      assignedSensor: 'Sensor #12350',
+      date: '2024-01-11',
+      reason: 'Equipment failure',
+      cancelledBy: 'System'
+    }
+  ])
+
   const tabs = [
     { id: 'required', label: 'Service Call Required', count: 8, color: 'purple' },
     { id: 'my-calls', label: 'My Service Calls', count: 15, color: 'red' },
@@ -374,30 +561,41 @@ const ManageServiceCalls = () => {
     { id: 'cancelled', label: 'Cancelled Service Calls', count: null, color: 'grey' }
   ]
 
-  // Handle tab navigation
+  // Handle tab navigation - single page behavior
   const handleTabClick = (tabId) => {
-    if (tabId === 'my-calls') {
-      window.location.href = '/my-service-calls'
-    } else if (tabId === 'history') {
-      window.location.href = '/service-call-history'
-    } else if (tabId === 'cancelled') {
-      window.location.href = '/cancelled-service-calls'
-    } else {
-      setActiveTab(tabId)
+    setActiveTab(tabId)
+    setCurrentPage(1) // Reset to first page when switching tabs
+    setSearchTerm('') // Clear search when switching tabs
+    setShowSuggestions(false)
+  }
+
+  // Get current data based on active tab
+  const getCurrentData = () => {
+    switch (activeTab) {
+      case 'required':
+        return serviceCalls
+      case 'my-calls':
+        return myServiceCalls
+      case 'history':
+        return serviceCallHistory
+      case 'cancelled':
+        return cancelledServiceCalls
+      default:
+        return serviceCalls
     }
   }
 
-  // Filter service calls based on search term
-  const filteredServiceCalls = serviceCalls.filter(call =>
+  // Filter data based on search term and active tab
+  const filteredData = getCurrentData().filter(call =>
     call.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
     call.clientName.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   // Pagination calculations
-  const totalPages = Math.ceil(filteredServiceCalls.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentServiceCalls = filteredServiceCalls.slice(startIndex, endIndex)
+  const currentData = filteredData.slice(startIndex, endIndex)
 
   // Generate search suggestions
   useEffect(() => {
@@ -407,7 +605,7 @@ const ManageServiceCalls = () => {
       return
     }
 
-    const filtered = serviceCalls.filter(call =>
+    const filtered = getCurrentData().filter(call =>
       call.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
       call.clientName.toLowerCase().includes(searchTerm.toLowerCase())
     ).slice(0, 5) // Limit to 5 suggestions
@@ -415,7 +613,7 @@ const ManageServiceCalls = () => {
     setSuggestions(filtered)
     setShowSuggestions(filtered.length > 0)
     setSelectedSuggestion(-1)
-  }, [searchTerm])
+  }, [searchTerm, activeTab])
 
   // Handle keyboard navigation
   const handleKeyDown = (e) => {
@@ -530,7 +728,12 @@ const ManageServiceCalls = () => {
         </div>
 
         <div className="table-header">
-          <h2>Addresses Requiring a Service Call</h2>
+          <h2>
+            {activeTab === 'required' && 'Addresses Requiring a Service Call'}
+            {activeTab === 'my-calls' && 'My Service Calls'}
+            {activeTab === 'history' && 'Service Call History'}
+            {activeTab === 'cancelled' && 'Cancelled Service Calls'}
+          </h2>
           <div className="search-wrapper">
             <div className="typeahead-wrapper" ref={dropdownRef}>
               <div className="search-input-container">
@@ -587,14 +790,22 @@ const ManageServiceCalls = () => {
                 <th>Address</th>
                 <th>Client Name</th>
                 <th>Contact Number</th>
-                <th>
-                  Assigned Sensor
-                  <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
-                    <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
-                      <path d="M6.56 6C6.71673 5.55445 7.0261 5.17874 7.4333 4.93942C7.8405 4.70011 8.31926 4.61263 8.78478 4.69248C9.2503 4.77233 9.67254 5.01435 9.97671 5.37569C10.2809 5.73702 10.4474 6.19435 10.4467 6.66667C10.4467 8 8.44666 8.66667 8.44666 8.66667M8.5 11.3333H8.50666M15.1667 8C15.1667 11.6819 12.1819 14.6667 8.5 14.6667C4.8181 14.6667 1.83333 11.6819 1.83333 8C1.83333 4.3181 4.8181 1.33334 8.5 1.33334C12.1819 1.33334 15.1667 4.3181 15.1667 8Z" stroke="#98A2B3" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"></path>
-                    </svg>
-                  </div>
-                </th>
+                {activeTab === 'required' && (
+                  <th>
+                    Assigned Sensor
+                    <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
+                      <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
+                        <path d="M6.56 6C6.71673 5.55445 7.0261 5.17874 7.4333 4.93942C7.8405 4.70011 8.31926 4.61263 8.78478 4.69248C9.2503 4.77233 9.67254 5.01435 9.97671 5.37569C10.2809 5.73702 10.4474 6.19435 10.4467 6.66667C10.4467 8 8.44666 8.66667 8.44666 8.66667M8.5 11.3333H8.50666M15.1667 8C15.1667 11.6819 12.1819 14.6667 8.5 14.6667C4.8181 14.6667 1.83333 11.6819 1.83333 8C1.83333 4.3181 4.8181 1.33334 8.5 1.33334C12.1819 1.33334 15.1667 4.3181 15.1667 8Z" stroke="#98A2B3" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"></path>
+                      </svg>
+                    </div>
+                  </th>
+                )}
+                {activeTab === 'my-calls' && <th>Status</th>}
+                {activeTab === 'history' && <th>Date</th>}
+                {activeTab === 'history' && <th>Technician</th>}
+                {activeTab === 'cancelled' && <th>Date</th>}
+                {activeTab === 'cancelled' && <th>Reason</th>}
+                {activeTab === 'cancelled' && <th>Cancelled By</th>}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -612,9 +823,39 @@ const ManageServiceCalls = () => {
                     <td>
                       <div className="skeleton-placeholder skeleton-phone"></div>
                     </td>
-                    <td>
-                      <div className="skeleton-placeholder skeleton-sensor"></div>
-                    </td>
+                    {activeTab === 'required' && (
+                      <td>
+                        <div className="skeleton-placeholder skeleton-sensor"></div>
+                      </td>
+                    )}
+                    {activeTab === 'my-calls' && (
+                      <td>
+                        <div className="skeleton-placeholder skeleton-status"></div>
+                      </td>
+                    )}
+                    {activeTab === 'history' && (
+                      <>
+                        <td>
+                          <div className="skeleton-placeholder skeleton-date"></div>
+                        </td>
+                        <td>
+                          <div className="skeleton-placeholder skeleton-technician"></div>
+                        </td>
+                      </>
+                    )}
+                    {activeTab === 'cancelled' && (
+                      <>
+                        <td>
+                          <div className="skeleton-placeholder skeleton-date"></div>
+                        </td>
+                        <td>
+                          <div className="skeleton-placeholder skeleton-reason"></div>
+                        </td>
+                        <td>
+                          <div className="skeleton-placeholder skeleton-cancelled-by"></div>
+                        </td>
+                      </>
+                    )}
                     <td>
                       <div className="skeleton-placeholder skeleton-action"></div>
                     </td>
@@ -622,12 +863,24 @@ const ManageServiceCalls = () => {
                 ))
               ) : (
                 // Actual data
-                currentServiceCalls.map((call) => (
+                currentData.map((call) => (
                   <tr key={call.id}>
                     <td>{call.address}</td>
                     <td>{call.clientName}</td>
                     <td>{call.contactNumber}</td>
-                    <td>{call.assignedSensor}</td>
+                    {activeTab === 'required' && <td>{call.assignedSensor}</td>}
+                    {activeTab === 'my-calls' && (
+                      <td>
+                        <span className={`status-badge status-${call.status.toLowerCase().replace(' ', '-')}`}>
+                          {call.status}
+                        </span>
+                      </td>
+                    )}
+                    {activeTab === 'history' && <td>{call.date}</td>}
+                    {activeTab === 'history' && <td>{call.technician}</td>}
+                    {activeTab === 'cancelled' && <td>{call.date}</td>}
+                    {activeTab === 'cancelled' && <td>{call.reason}</td>}
+                    {activeTab === 'cancelled' && <td>{call.cancelledBy}</td>}
                     <td>
                       <div className="icon-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
@@ -653,7 +906,7 @@ const ManageServiceCalls = () => {
 
         <div className="pagination-container">
           <div className="pagination-info">
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredServiceCalls.length)} of {filteredServiceCalls.length} results
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} results
           </div>
           <div className="pagination">
             <button 
