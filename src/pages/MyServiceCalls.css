@@ -382,7 +382,8 @@
 }
 
 .pagination-btn.active:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  background: white;
+  color: #1e293b;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
