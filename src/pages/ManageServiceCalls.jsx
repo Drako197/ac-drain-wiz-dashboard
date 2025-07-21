@@ -916,7 +916,7 @@ const ManageServiceCalls = () => {
                           className="icon-wrapper" 
                           style={{ position: 'relative', display: 'inline-block' }}
                           title={
-                            activeTab === 'my-calls' ? 'Edit Service Call' :
+                            activeTab === 'my-calls' ? 'Edit service call details' :
                             activeTab === 'history' ? 'View Details' :
                             'Create Service Call'
                           }
