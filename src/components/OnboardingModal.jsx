@@ -1613,10 +1613,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                         ) : currentStep === 3 ? (
                           // Step 3: Client form
                           <>
-                            <div className="form-header">
-                              <h1>Add Your First Client</h1>
-                              <p>Let's set up your first client to get started with service calls.</p>
-                            </div>
                             
                             <div className="form-row">
                               <div className="form-group half-width">
