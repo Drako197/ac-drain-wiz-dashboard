@@ -735,8 +735,16 @@ const ServiceCallHistory = () => {
           {isPageLoading && (
             <div className="loading-overlay">
               <div className="loading-container">
-                <div className="loading-spinner">
-                  <div className="spinner"></div>
+                <div className="lottie-loading">
+                  <div className="lottie-circle">
+                    <div className="lottie-spinner"></div>
+                    <div className="lottie-pulse"></div>
+                  </div>
+                  <div className="lottie-dots">
+                    <div className="lottie-dot"></div>
+                    <div className="lottie-dot"></div>
+                    <div className="lottie-dot"></div>
+                  </div>
                 </div>
                 <div className="loading-text">Loading service call history...</div>
               </div>

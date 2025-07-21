@@ -443,23 +443,97 @@
   }
 }
 
-/* Loading Animation - Consistent with Dashboard */
-.loading-spinner {
+/* Lottie-Style Loading Animation */
+.lottie-loading {
   margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-.spinner {
-  width: 32px;
-  height: 32px;
-  border: 2px solid #e5e7eb;
-  border-top: 2px solid #3b82f6;
+.lottie-circle {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.lottie-spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: lottieSpin 1.2s linear infinite;
 }
 
-@keyframes spin {
+.lottie-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  background: #3b82f6;
+  border-radius: 50%;
+  animation: lottiePulse 1.5s ease-in-out infinite;
+}
+
+.lottie-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.lottie-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3b82f6;
+  animation: lottieDot 1.4s ease-in-out infinite both;
+}
+
+.lottie-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.lottie-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.lottie-dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes lottieSpin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes lottiePulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes lottieDot {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
 }
 
 .loading-spinner {
