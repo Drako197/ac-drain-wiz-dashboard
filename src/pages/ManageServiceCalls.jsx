@@ -1,8 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import './ManageServiceCalls.css'
 
 const ManageServiceCalls = () => {
   const [activeTab, setActiveTab] = useState('required')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [suggestions, setSuggestions] = useState([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [selectedSuggestion, setSelectedSuggestion] = useState(-1)
+  const searchInputRef = useRef(null)
+  const dropdownRef = useRef(null)
+
   const [serviceCalls] = useState([
     {
       id: 1,
@@ -83,6 +90,90 @@ const ManageServiceCalls = () => {
     { id: 'cancelled', label: 'Cancelled Service Calls', count: null, color: 'grey' }
   ]
 
+  // Filter service calls based on search term
+  const filteredServiceCalls = serviceCalls.filter(call =>
+    call.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    call.clientName.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  // Generate search suggestions
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setSuggestions([])
+      setShowSuggestions(false)
+      return
+    }
+
+    const filtered = serviceCalls.filter(call =>
+      call.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      call.clientName.toLowerCase().includes(searchTerm.toLowerCase())
+    ).slice(0, 5) // Limit to 5 suggestions
+
+    setSuggestions(filtered)
+    setShowSuggestions(filtered.length > 0)
+    setSelectedSuggestion(-1)
+  }, [searchTerm])
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e) => {
+    if (!showSuggestions) return
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault()
+        setSelectedSuggestion(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        )
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        setSelectedSuggestion(prev => prev > 0 ? prev - 1 : -1)
+        break
+      case 'Enter':
+        e.preventDefault()
+        if (selectedSuggestion >= 0 && suggestions[selectedSuggestion]) {
+          const selected = suggestions[selectedSuggestion]
+          setSearchTerm(selected.address)
+          setShowSuggestions(false)
+        }
+        break
+      case 'Escape':
+        setShowSuggestions(false)
+        searchInputRef.current?.blur()
+        break
+      default:
+        break
+    }
+  }
+
+  // Handle suggestion click
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion.address)
+    setShowSuggestions(false)
+    searchInputRef.current?.focus()
+  }
+
+  // Handle clear search
+  const handleClearSearch = () => {
+    setSearchTerm('')
+    setShowSuggestions(false)
+    setSelectedSuggestion(-1)
+    searchInputRef.current?.focus()
+  }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+          searchInputRef.current && !searchInputRef.current.contains(event.target)) {
+        setShowSuggestions(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   return (
     <div className="page">
       {/* Breadcrumb Navigation */}
@@ -127,14 +218,46 @@ const ManageServiceCalls = () => {
         <div className="table-header">
           <h2>Addresses Requiring a Service Call</h2>
           <div className="search-wrapper">
-            <div className="typeahead-wrapper">
-              <input
-                className="search-input"
-                placeholder="Search Address"
-                aria-label="Search Address"
-                type="text"
-                value=""
-              />
+            <div className="typeahead-wrapper" ref={dropdownRef}>
+              <div className="search-input-container">
+                <input
+                  ref={searchInputRef}
+                  className="search-input"
+                  placeholder="Search Address"
+                  aria-label="Search Address"
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => searchTerm.trim() !== '' && setShowSuggestions(true)}
+                />
+                {searchTerm && (
+                  <button 
+                    className="search-clear-btn"
+                    onClick={handleClearSearch}
+                    type="button"
+                    aria-label="Clear search"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 4L4 12M4 4L12 12" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                )}
+              </div>
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="search-suggestions">
+                  {suggestions.map((suggestion, index) => (
+                    <div
+                      key={suggestion.id}
+                      className={`suggestion-item ${index === selectedSuggestion ? 'selected' : ''}`}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                    >
+                      <div className="suggestion-address">{suggestion.address}</div>
+                      <div className="suggestion-client">{suggestion.clientName}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -158,7 +281,7 @@ const ManageServiceCalls = () => {
               </tr>
             </thead>
             <tbody>
-              {serviceCalls.map((call) => (
+              {filteredServiceCalls.map((call) => (
                 <tr key={call.id}>
                   <td>{call.address}</td>
                   <td>{call.clientName}</td>
@@ -178,7 +301,7 @@ const ManageServiceCalls = () => {
         </div>
 
         <div className="pagination-container">
-          <div className="pagination-info">Showing 1 to 10 of 16 results</div>
+          <div className="pagination-info">Showing 1 to {filteredServiceCalls.length} of {filteredServiceCalls.length} results</div>
           <div className="pagination">
             <button className="pagination-btn" disabled="">← Previous</button>
             <button className="pagination-btn active">1</button>
