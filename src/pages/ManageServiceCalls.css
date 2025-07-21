@@ -72,14 +72,14 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: #6b7280;
+  color: #dc2626;
   position: relative;
   transition: all 0.2s ease;
   border-bottom: 2px solid transparent;
 }
 
 .tab-button:hover {
-  color: #374151;
+  color: #b91c1c;
 }
 
 .tab-button.active {
@@ -87,7 +87,15 @@
   border-bottom-color: #7c3aed;
 }
 
-.tab-count {
+.tab-button:not(.active):not(:has(.tab-count)) {
+  color: #6b7280;
+}
+
+.tab-button:not(.active):not(:has(.tab-count)):hover {
+  color: #374151;
+}
+
+.tab-button .tab-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -98,6 +106,10 @@
   font-size: 12px;
   font-weight: 600;
   color: white;
+  background: #dc2626;
+}
+
+.tab-button.active .tab-count {
   background: #7c3aed;
 }
 
