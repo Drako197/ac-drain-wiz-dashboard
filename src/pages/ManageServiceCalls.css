@@ -587,13 +587,13 @@
 }
 
 .priority-badge.priority-open {
-  background: #fef3c7;
-  color: #d97706;
+  background: #dbeafe;
+  color: #2563eb;
 }
 
 .priority-badge.priority-in-progress {
-  background: #dbeafe;
-  color: #2563eb;
+  background: #fef3c7;
+  color: #d97706;
 }
 
 /* Status Badge Styles (keeping for backward compatibility) */

@@ -788,6 +788,7 @@ const ManageServiceCalls = () => {
             <thead>
               <tr>
                 <th>Address</th>
+                {activeTab === 'my-calls' && <th>Priority</th>}
                 <th>Client Name</th>
                 <th>Contact Number</th>
                 {activeTab === 'required' && (
@@ -800,7 +801,6 @@ const ManageServiceCalls = () => {
                     </div>
                   </th>
                 )}
-                {activeTab === 'my-calls' && <th>Priority</th>}
                 {activeTab === 'my-calls' && (
                   <th>
                     Assigned Sensor
@@ -827,6 +827,11 @@ const ManageServiceCalls = () => {
                     <td>
                       <div className="skeleton-placeholder skeleton-address"></div>
                     </td>
+                    {activeTab === 'my-calls' && (
+                      <td>
+                        <div className="skeleton-placeholder skeleton-priority"></div>
+                      </td>
+                    )}
                     <td>
                       <div className="skeleton-placeholder skeleton-name"></div>
                     </td>
@@ -836,11 +841,6 @@ const ManageServiceCalls = () => {
                     {activeTab === 'required' && (
                       <td>
                         <div className="skeleton-placeholder skeleton-sensor"></div>
-                      </td>
-                    )}
-                    {activeTab === 'my-calls' && (
-                      <td>
-                        <div className="skeleton-placeholder skeleton-priority"></div>
                       </td>
                     )}
                     {activeTab === 'my-calls' && (
@@ -881,9 +881,6 @@ const ManageServiceCalls = () => {
                 currentData.map((call) => (
                   <tr key={call.id}>
                     <td>{call.address}</td>
-                    <td>{call.clientName}</td>
-                    <td>{call.contactNumber}</td>
-                    {activeTab === 'required' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'my-calls' && (
                       <td>
                         <span className={`priority-badge priority-${call.priority.toLowerCase().replace(' ', '-')}`}>
@@ -891,6 +888,9 @@ const ManageServiceCalls = () => {
                         </span>
                       </td>
                     )}
+                    <td>{call.clientName}</td>
+                    <td>{call.contactNumber}</td>
+                    {activeTab === 'required' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'my-calls' && <td>{call.assignedSensor}</td>}
                     {activeTab === 'history' && <td>{call.date}</td>}
                     {activeTab === 'history' && <td>{call.technician}</td>}
