@@ -9,6 +9,7 @@
   margin: 0;
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .breadcrumb-item {
@@ -19,10 +20,12 @@
 .breadcrumb-current {
   color: #6b7280;
   font-size: 14px;
+  font-weight: 400;
 }
 
 .breadcrumb-item:first-child .breadcrumb-current {
   color: #374151;
+  font-size: 16px;
 }
 
 /* Main Content Card */
