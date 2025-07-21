@@ -25,9 +25,18 @@ function App() {
     }
   }, []);
 
-  const handleOnboardingComplete = () => {
+  const handleOnboardingComplete = (contractorName, contractorEmail, fullName) => {
     setShowOnboarding(false);
     localStorage.setItem('acdrainwiz_onboarding_completed', 'true');
+    if (contractorName && contractorName.trim()) {
+      localStorage.setItem('acdrainwiz_contractor_name', contractorName.trim());
+    }
+    if (contractorEmail && contractorEmail.trim()) {
+      localStorage.setItem('acdrainwiz_contractor_email', contractorEmail.trim());
+    }
+    if (fullName && fullName.trim()) {
+      localStorage.setItem('acdrainwiz_full_name', fullName.trim());
+    }
     showToastMessage('🎉 Welcome to AC Drain Wiz! Your setup is complete.');
   };
 
@@ -52,7 +61,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <div className="dashboard-container">
+        <div className={`dashboard-container ${showOnboarding ? 'onboarding-active' : ''}`}>
           <aside className="sidebar">
             <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
           </aside>
@@ -89,6 +98,7 @@ function App() {
 
         {/* Onboarding Trigger Button */}
         <button 
+          className={showOnboarding ? 'onboarding-active' : ''}
           style={{
             position: 'fixed',
             bottom: '20px',

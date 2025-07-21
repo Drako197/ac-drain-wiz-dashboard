@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = ({ onPageChange }) => {
+  const [contractorName, setContractorName] = useState('Acme HVAC and Cooling');
+  const [contractorEmail, setContractorEmail] = useState('ariddle@acdrainwiz.com');
+  const [fullName, setFullName] = useState('Diana Rivera');
+
+  useEffect(() => {
+    const storedContractorName = localStorage.getItem('acdrainwiz_contractor_name');
+    if (storedContractorName && storedContractorName.trim()) {
+      setContractorName(storedContractorName.trim());
+    }
+    
+    const storedContractorEmail = localStorage.getItem('acdrainwiz_contractor_email');
+    if (storedContractorEmail && storedContractorEmail.trim()) {
+      setContractorEmail(storedContractorEmail.trim());
+    }
+    
+    const storedFullName = localStorage.getItem('acdrainwiz_full_name');
+    if (storedFullName && storedFullName.trim()) {
+      setFullName(storedFullName.trim());
+    }
+  }, []);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,13 +48,13 @@ const Sidebar = ({ onPageChange }) => {
     <aside className="sidebar">
       <div className="sidebar-logo">
         <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
-      </div>
-      
+        </div>
+        
       <div className="contractor-card">
         <span className="pro-badge">PRO</span>
-        <span className="contractor-name" title="AC Drain Wiz">AC Drain Wiz</span>
+        <span className="contractor-name" title={contractorName}>{contractorName}</span>
       </div>
-      
+
       <nav className="sidebar-nav">
         <ul>
           <li>
@@ -103,7 +123,7 @@ const Sidebar = ({ onPageChange }) => {
                 e.preventDefault();
                 handleNavigation('/manage-employees');
               }}
-            >
+              >
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon">
                 <path d="M16.5 15.75V14.25C16.5 12.8521 15.5439 11.6775 14.25 11.3445M11.625 2.46807C12.7244 2.91311 13.5 3.99098 13.5 5.25C13.5 6.50902 12.7244 7.58689 11.625 8.03193M12.75 15.75C12.75 14.3522 12.75 13.6533 12.5216 13.1019C12.2172 12.3669 11.6331 11.7828 10.8981 11.4784C10.3467 11.25 9.64783 11.25 8.25 11.25H6C4.60218 11.25 3.90326 11.25 3.35195 11.4784C2.61687 11.7828 2.03284 12.3669 1.72836 13.1019C1.5 13.6533 1.5 14.3522 1.5 15.75M10.125 5.25C10.125 6.90685 8.78185 8.25 7.125 8.25C5.46815 8.25 4.125 6.90685 4.125 5.25C4.125 3.59315 5.46815 2.25 7.125 2.25C8.78185 2.25 10.125 3.59315 10.125 5.25Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
               </svg> 
@@ -126,7 +146,7 @@ const Sidebar = ({ onPageChange }) => {
             </defs>
           </svg> 
           Support
-        </div>
+                </div>
         <div className="sidebar-settings">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon">
             <g clipPath="url(#clip0_1221_19766)">
@@ -146,8 +166,8 @@ const Sidebar = ({ onPageChange }) => {
             <span className="material-symbols-outlined">person</span>
           </div>
           <div className="user-info">
-            <div className="user-name">Diana Rivera</div>
-            <div className="user-email" title="ariddle@acdrainwiz.com">ariddle@acdrainwiz.com</div>
+            <div className="user-name">{fullName}</div>
+            <div className="user-email" title={contractorEmail}>{contractorEmail}</div>
           </div>
         </div>
       </div>

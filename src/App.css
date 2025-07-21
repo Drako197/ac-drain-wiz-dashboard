@@ -32,6 +32,229 @@ body {
   box-sizing: border-box;
 }
 
+/* Page Header with Actions */
+.page-header-with-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header-with-actions h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: #222;
+  margin: 0 0 20px;
+  text-align: left;
+}
+
+/* Tabs Section */
+.tabs-section {
+  margin-bottom: 24px;
+}
+
+.tabs-container {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #dc2626;
+  position: relative;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+}
+
+.tab-button:hover {
+  color: #b91c1c;
+}
+
+.tab-button.active {
+  color: #7c3aed;
+  border-bottom-color: #7c3aed;
+}
+
+.tab-button:not(.active):not(:has(.tab-count)) {
+  color: #6b7280;
+}
+
+.tab-button:not(.active):not(:has(.tab-count)):hover {
+  color: #374151;
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background: #dc2626;
+}
+
+.tab-button.active .tab-count {
+  background: #7c3aed;
+}
+
+/* Button Styles for Employee Management */
+.btn-manage-roles {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  margin-right: 12px;
+}
+
+.btn-manage-roles:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-add-employee {
+  background: #ff5733;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-add-employee:hover {
+  background: #e04527;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 87, 51, 0.3);
+}
+
+/* Loading Overlay Styles */
+.loading-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 32px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  min-width: 200px;
+  border: 1px solid #e5e7eb;
+}
+
+.loading-spinner {
+  margin-bottom: 16px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  text-align: center;
+  margin: 0;
+}
+
+/* Role Link and Tooltip Styles */
+.role-link {
+  color: #3b82f6;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.role-link:hover {
+  color: #2563eb;
+}
+
+.role-tooltip {
+  position: fixed;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  z-index: 1000;
+  min-width: 200px;
+  border: 1px solid #e5e7eb;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.role-tooltip-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+
+.role-tooltip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.role-tooltip-item {
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 6px;
+  padding-left: 16px;
+  position: relative;
+}
+
+.role-tooltip-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #6b7280;
+  font-weight: bold;
+}
+
+.role-tooltip-item:last-child {
+  margin-bottom: 0;
+}
+
 /* Sidebar Styles */
 .sidebar {
   width: 280px;
@@ -313,8 +536,8 @@ body {
 }
 
 .dashboard-welcome h1 {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 500;
   margin: 0 0 8px 0;
   color: white;
 }
@@ -548,6 +771,50 @@ body {
   text-align: left;
 }
 
+/* Header Actions Styles */
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-import-clients {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-import-clients:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-add-client {
+  background: #ff5733;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-add-client:hover {
+  background: #e04527;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 87, 51, 0.3);
+}
+
 .search-wrapper {
   flex-shrink: 0;
 }
@@ -598,6 +865,10 @@ body {
   font-size: 0.75em;
 }
 
+.dashboard-table th:last-child {
+  text-align: center;
+}
+
 .dashboard-table td {
   padding: 14px 12px;
   border-bottom: 1px solid #f1f5f9;
@@ -608,6 +879,62 @@ body {
 
 .dashboard-table tbody tr:hover {
   background: #f8fafc;
+}
+
+/* Compact table when search results are few - using !important to override page-specific styles */
+.dashboard-table.compact-results {
+  margin-bottom: 0 !important;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+.dashboard-table.compact-results tbody {
+  min-height: auto !important;
+  height: auto !important;
+  display: table-row-group !important;
+}
+
+.dashboard-table.compact-results tbody tr {
+  border-bottom: 1px solid #f1f5f9 !important;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+.dashboard-table.compact-results tbody tr:last-child {
+  border-bottom: none !important;
+}
+
+/* Remove any fixed heights that might be causing spacing issues */
+.dashboard-table.compact-results td {
+  padding: 10px 12px !important;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+/* Ensure the table container doesn't force a minimum height */
+.dashboard-table.compact-results + .loading-overlay {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Additional rules to ensure compact display */
+.dashboard-table.compact-results {
+  table-layout: auto !important;
+}
+
+.dashboard-table.compact-results thead {
+  height: auto !important;
+}
+
+.dashboard-table.compact-results thead tr {
+  height: auto !important;
+}
+
+.dashboard-table.compact-results thead th {
+  height: auto !important;
+  padding: 12px 12px !important;
 }
 
 .icon-wrapper {
@@ -797,7 +1124,7 @@ body {
   }
   
   .dashboard-welcome h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
   
   .dashboard-cards {
@@ -818,4 +1145,23 @@ body {
   .pagination {
     justify-content: center;
   }
+}
+
+/* Onboarding Modal Background Overlay */
+.dashboard-container.onboarding-active {
+  display: none;
+}
+
+/* Hide onboarding trigger button when onboarding is active */
+button.onboarding-active {
+  display: none;
+}
+
+/* Ensure onboarding modal stays above the blurred content */
+.onboarding-overlay {
+  z-index: 1000;
+}
+
+.onboarding-modal {
+  z-index: 1001;
 } 

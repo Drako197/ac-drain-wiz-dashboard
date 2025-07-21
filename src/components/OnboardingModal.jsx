@@ -12,6 +12,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [selectedDate, setSelectedDate] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Generate consistent appointments across multiple months
   const generateAppointments = () => {
@@ -142,7 +143,18 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
   };
 
   // Dynamic name generation
-  const names = ['Quincy', 'Ryan', 'Dan', 'Alex', 'Jordan', 'Casey', 'Taylor', 'Morgan', 'Jamie', 'Riley'];
+  const names = [
+    { firstName: 'Quincy', lastName: 'Rodriguez' },
+    { firstName: 'Ryan', lastName: 'Thompson' },
+    { firstName: 'Dan', lastName: 'Williams' },
+    { firstName: 'Alex', lastName: 'Martinez' },
+    { firstName: 'Jordan', lastName: 'Anderson' },
+    { firstName: 'Casey', lastName: 'Garcia' },
+    { firstName: 'Taylor', lastName: 'Miller' },
+    { firstName: 'Morgan', lastName: 'Davis' },
+    { firstName: 'Jamie', lastName: 'Brown' },
+    { firstName: 'Riley', lastName: 'Johnson' }
+  ];
 
   useEffect(() => {
     if (isOpen) {
@@ -198,8 +210,16 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
       setExistingCustomAddressNames(['main office', 'warehouse a', 'downtown location']);
       
       // Generate a random name when modal opens
-      const randomName = names[Math.floor(Math.random() * names.length)];
-      setUserName(randomName);
+      const randomNameObj = names[Math.floor(Math.random() * names.length)];
+      setUserName(randomNameObj.firstName);
+      // Store the random name for later use in completion, but don't auto-populate step 3 fields
+      setFormData(prev => ({
+        ...prev,
+        // Store random name separately for completion, but don't populate firstName/lastName fields
+        randomFirstName: randomNameObj.firstName,
+        randomLastName: randomNameObj.lastName,
+        fullName: `${randomNameObj.firstName} ${randomNameObj.lastName}`
+      }));
     }
   }, [isOpen]);
 
@@ -224,11 +244,23 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
       return true;
     });
     
-    const isValid = requiredFields.every(field => 
+    let isValid = requiredFields.every(field => 
       formData[field.name] && formData[field.name].trim() !== ''
     );
+
+    // Special validation for Step 4: Check that at least one sensor is selected
+    if (currentStep === 4) {
+      const hasSelectedSensor = formData.sensor1 || formData.sensor2 || formData.sensor3;
+      isValid = isValid && hasSelectedSensor;
+    }
+
     setIsStepValid(isValid);
   }, [currentStep, formData]);
+
+  // Debug isLoading state changes
+  useEffect(() => {
+    console.log('isLoading state changed to:', isLoading);
+  }, [isLoading]);
 
   const steps = [
     {
@@ -518,6 +550,22 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
       return;
     }
 
+    if (currentStep === 4) {
+      // Service operations step - show loading animation before moving to completion
+      console.log('=== HANDLE NEXT STEP 4 DEBUG ===');
+      console.log('Setting isLoading to true');
+      setIsLoading(true);
+      console.log('Setting timeout for 5 seconds');
+      setTimeout(() => {
+        console.log('Timeout triggered - setting isLoading to false');
+        setIsLoading(false);
+        console.log('Moving to step 5');
+        setCurrentStep(5);
+        showToastMessage("Setup complete! Welcome to AC Drain Wiz!", "success");
+      }, 5000);
+      return;
+    }
+
     if (!isStepValid) {
       return; // Don't proceed if validation fails, let inline errors show
     }
@@ -539,12 +587,16 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
       showToastMessage(stepMessages[nextStep - 3].message, stepMessages[nextStep - 3].type);
     } else {
       showToastMessage("Welcome to AC Drain Wiz! Your setup is complete.", "success");
-      onComplete();
+      // Use random name for fullName construction
+      const fullName = formData.randomFirstName && formData.randomLastName ? `${formData.randomFirstName} ${formData.randomLastName}` : '';
+      onComplete(formData.contractorName, formData.contractorEmail, fullName);
     }
   };
 
   const handleSkip = () => {
-    onComplete();
+    // Construct full name from firstName and lastName
+    const fullName = formData.firstName && formData.lastName ? `${formData.firstName} ${formData.lastName}` : '';
+    onComplete(formData.contractorName, formData.contractorEmail, fullName);
   };
 
   const handleClose = () => {
@@ -577,14 +629,25 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
       }
       // Don't show toast message for Step 3 - let inline errors show instead
     } else if (currentStep === 4) {
+      console.log('=== STEP 4 VALIDATION DEBUG ===');
       console.log('Step 4 validation called');
       console.log('Current form data:', formData);
       console.log('Sensor values:', { sensor1: formData.sensor1, sensor2: formData.sensor2, sensor3: formData.sensor3 });
+      console.log('Priority:', formData.priority);
+      console.log('Service Date:', formData.serviceDate);
+      console.log('Start Time:', formData.startTime);
+      console.log('End Time:', formData.endTime);
+      console.log('Is Step Valid:', isStepValid);
+      
       const isValid = validateStep(4);
       console.log('Step 4 validation result:', isValid);
       console.log('Current errors after validation:', errors);
+      
       if (isValid) {
+        console.log('✅ Validation passed - calling handleNext()');
         handleNext();
+      } else {
+        console.log('❌ Validation failed - not calling handleNext()');
       }
       // Don't show toast message for Step 4 - let inline errors show instead
     } else {
@@ -654,16 +717,46 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     if (newDate < todayStart) return; // Prevent selecting past dates
     
     setSelectedDate(newDate);
+    
+    // Check if the selected date has existing appointments
+    const busySlots = getBusyTimeSlots(newDate);
+    const hasExistingAppointments = busySlots.length > 0;
+    
+    // Get the next available time slot
+    const nextAvailableTime = getNextAvailableTimeSlot(newDate);
+    
+    // Auto-set end time based on the selected start time
+    const timeSlots = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'];
+    const startIndex = timeSlots.indexOf(nextAvailableTime);
+    const endTime = startIndex !== -1 && startIndex < timeSlots.length - 1 ? timeSlots[startIndex + 1] : '09:00 AM';
+    
     setFormData(prev => ({
       ...prev,
-      serviceDate: formatDate(newDate)
+      serviceDate: formatDate(newDate),
+      startTime: nextAvailableTime,
+      endTime: endTime
     }));
+    
+    // Show a toast message if appointments were found and time was auto-adjusted
+    if (hasExistingAppointments) {
+      showToastMessage(`Date selected! Start time automatically set to ${nextAvailableTime} due to existing appointments.`, "info");
+    }
     
     // Clear error for serviceDate when date is selected
     if (showErrors && errors.serviceDate) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors.serviceDate;
+        return newErrors;
+      });
+    }
+    
+    // Clear errors for startTime and endTime when they're auto-set
+    if (showErrors) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.startTime;
+        delete newErrors.endTime;
         return newErrors;
       });
     }
@@ -710,16 +803,46 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     setSelectedDate(today);
     setCurrentMonth(today.getMonth());
     setCurrentYear(today.getFullYear());
+    
+    // Check if today has existing appointments
+    const busySlots = getBusyTimeSlots(today);
+    const hasExistingAppointments = busySlots.length > 0;
+    
+    // Get the next available time slot
+    const nextAvailableTime = getNextAvailableTimeSlot(today);
+    
+    // Auto-set end time based on the selected start time
+    const timeSlots = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'];
+    const startIndex = timeSlots.indexOf(nextAvailableTime);
+    const endTime = startIndex !== -1 && startIndex < timeSlots.length - 1 ? timeSlots[startIndex + 1] : '09:00 AM';
+    
     setFormData(prev => ({
       ...prev,
-      serviceDate: formatDate(today)
+      serviceDate: formatDate(today),
+      startTime: nextAvailableTime,
+      endTime: endTime
     }));
+    
+    // Show a toast message if appointments were found and time was auto-adjusted
+    if (hasExistingAppointments) {
+      showToastMessage(`Today selected! Start time automatically set to ${nextAvailableTime} due to existing appointments.`, "info");
+    }
     
     // Clear error for serviceDate when Today is clicked
     if (showErrors && errors.serviceDate) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors.serviceDate;
+        return newErrors;
+      });
+    }
+    
+    // Clear errors for startTime and endTime when they're auto-set
+    if (showErrors) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.startTime;
+        delete newErrors.endTime;
         return newErrors;
       });
     }
@@ -762,6 +885,24 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     }
     
     return busySlots;
+  };
+
+  // Find the next available time slot for a given date
+  const getNextAvailableTimeSlot = (selectedDate) => {
+    if (!selectedDate) return '08:00 AM';
+    
+    const busySlots = getBusyTimeSlots(selectedDate);
+    const allTimeSlots = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'];
+    
+    // Find the first available time slot
+    for (const timeSlot of allTimeSlots) {
+      if (!busySlots.includes(timeSlot)) {
+        return timeSlot;
+      }
+    }
+    
+    // If all slots are busy, return the first slot (fallback)
+    return '08:00 AM';
   };
 
   const renderCalendar = () => {
@@ -922,6 +1063,21 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
               </button>
             );
           })}
+        </div>
+        
+        {/* Calendar Legend */}
+        <div className="calendar-legend">
+          <div className="legend-heading">Existing appointment indicators</div>
+          <div className="legend-items">
+            <div className="legend-item">
+              <span className="legend-dot regular"></span>
+              <span className="legend-text">Regular appointment</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-dot urgent"></span>
+              <span className="legend-text">Urgent appointment</span>
+            </div>
+          </div>
         </div>
         
         <div className="calendar-actions">
@@ -1087,7 +1243,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
   const renderEmployeeInviteStep = () => (
     <div className="onboarding-content">
       <div className="content-header">
-        <h1>{invitedEmployees.length === 0 ? 'Invite Your First Employee' : 'Invite Another Employee'}</h1>
+        <h1>Build Your Team</h1>
       </div>
       
       <div className="form-container">
@@ -1196,641 +1352,655 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     <>
       <div className="onboarding-overlay" onClick={handleClose}>
         <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
-          <div className="onboarding-left">
-            <div className="onboarding-logo">
-              <img className="logo-img" src="/images/acdrainwiz_logo.png" alt="AC Drain Wiz" />
+          {isLoading ? (
+            // Simple loading animation
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white',
+              textAlign: 'center',
+              padding: '40px'
+            }}>
+              <h1 style={{fontSize: '32px', marginBottom: '30px'}}>Finalizing Your Setup</h1>
+              <div style={{fontSize: '18px', marginBottom: '40px'}}>Please wait while we complete your setup...</div>
+              <div style={{
+                width: '100px',
+                height: '100px',
+                border: '4px solid rgba(255,255,255,0.3)',
+                borderTop: '4px solid white',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }}></div>
             </div>
-            
-            <div className={`onboarding-steps ${isWelcomeStep ? 'preview-mode' : ''}`}>
-              <div className="steps-preview-header">
-                <h3>Setup Steps</h3>
-                <p>Here's what we'll help you set up:</p>
-              </div>
-              
-              {steps.slice(1).map((step, index) => {
-                const stepIcons = [
-                  // Star icon for Step 1
-                  <svg key="star" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.2827 3.45332C11.5131 2.98638 11.6284 2.75291 11.7848 2.67831C11.9209 2.61341 12.0791 2.61341 12.2152 2.67831C12.3717 2.75291 12.4869 2.98638 12.7174 3.45332L14.9041 7.88328C14.9721 8.02113 15.0061 8.09006 15.0558 8.14358C15.0999 8.19096 15.1527 8.22935 15.2113 8.25662C15.2776 8.28742 15.3536 8.29854 15.5057 8.32077L20.397 9.03571C20.9121 9.11099 21.1696 9.14863 21.2888 9.27444C21.3925 9.38389 21.4412 9.5343 21.4215 9.68377C21.3988 9.85558 21.2124 10.0372 20.8395 10.4004L17.3014 13.8464C17.1912 13.9538 17.136 14.0076 17.1004 14.0715C17.0689 14.128 17.0487 14.1902 17.0409 14.2545C17.0321 14.3271 17.0451 14.403 17.0711 14.5547L17.906 19.4221C17.994 19.9355 18.038 20.1922 17.9553 20.3445C17.8833 20.477 17.7554 20.57 17.6071 20.5975C17.4366 20.6291 17.2061 20.5078 16.7451 20.2654L12.3724 17.9658C12.2361 17.8942 12.168 17.8584 12.0962 17.8443C12.0327 17.8318 11.9673 17.8318 11.9038 17.8443C11.832 17.8584 11.7639 17.8942 11.6277 17.9658L7.25492 20.2654C6.79392 20.5078 6.56341 20.6291 6.39297 20.5975C6.24468 20.57 6.11672 20.477 6.04474 20.3445C5.962 20.1922 6.00603 19.9355 6.09407 19.4221L6.92889 14.5547C6.95491 14.403 6.96793 14.3271 6.95912 14.2545C6.95132 14.1902 6.93111 14.128 6.89961 14.0715C6.86402 14.0076 6.80888 13.9538 6.69859 13.8464L3.16056 10.4004C2.78766 10.0372 2.60121 9.85558 2.57853 9.68377C2.55879 9.5343 2.60755 9.38389 2.71125 9.27444C2.83044 9.14863 3.08797 9.11099 3.60304 9.03571L8.49431 8.32077C8.64642 8.29854 8.72248 8.28742 8.78872 8.25662C8.84736 8.22935 8.90016 8.19096 8.94419 8.14358C8.99391 8.09006 9.02793 8.02113 9.09597 7.88328L11.2827 3.45332Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                  </svg>,
-                  // Person icon for Step 2
-                  <svg key="person" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>,
-                  // Wrench and screwdriver icon for Step 3
-                  <svg key="tools" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>,
-                  // Map pin icon for Step 4
-                  <svg key="pin" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>,
-                  // Star icon for Step 5 (Setup Complete)
-                  <svg key="star-complete" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.2827 3.45332C11.5131 2.98638 11.6284 2.75291 11.7848 2.67831C11.9209 2.61341 12.0791 2.61341 12.2152 2.67831C12.3717 2.75291 12.4869 2.98638 12.7174 3.45332L14.9041 7.88328C14.9721 8.02113 15.0061 8.09006 15.0558 8.14358C15.0999 8.19096 15.1527 8.22935 15.2113 8.25662C15.2776 8.28742 15.3536 8.29854 15.5057 8.32077L20.397 9.03571C20.9121 9.11099 21.1696 9.14863 21.2888 9.27444C21.3925 9.38389 21.4412 9.5343 21.4215 9.68377C21.3988 9.85558 21.2124 10.0372 20.8395 10.4004L17.3014 13.8464C17.1912 13.9538 17.136 14.0076 17.1004 14.0715C17.0689 14.128 17.0487 14.1902 17.0409 14.2545C17.0321 14.3271 17.0451 14.403 17.0711 14.5547L17.906 19.4221C17.994 19.9355 18.038 20.1922 17.9553 20.3445C17.8833 20.477 17.7554 20.57 17.6071 20.5975C17.4366 20.6291 17.2061 20.5078 16.7451 20.2654L12.3724 17.9658C12.2361 17.8942 12.168 17.8584 12.0962 17.8443C12.0327 17.8318 11.9673 17.8318 11.9038 17.8443C11.832 17.8584 11.7639 17.8942 11.6277 17.9658L7.25492 20.2654C6.79392 20.5078 6.56341 20.6291 6.39297 20.5975C6.24468 20.57 6.11672 20.477 6.04474 20.3445C5.962 20.1922 6.00603 19.9355 6.09407 19.4221L6.92889 14.5547C6.95491 14.403 6.96793 14.3271 6.95912 14.2545C6.95132 14.1902 6.93111 14.128 6.89961 14.0715C6.86402 14.0076 6.80888 13.9538 6.69859 13.8464L3.16056 10.4004C2.78766 10.0372 2.60121 9.85558 2.57853 9.68377C2.55879 9.5343 2.60755 9.38389 2.71125 9.27444C2.83044 9.14863 3.08797 9.11099 3.60304 9.03571L8.49431 8.32077C8.64642 8.29854 8.72248 8.28742 8.78872 8.25662C8.84736 8.22935 8.90016 8.19096 8.94419 8.14358C8.99391 8.09006 9.02793 8.02113 9.09597 7.88328L11.2827 3.45332Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                  </svg>
-                ];
+          ) : (
+            <>
+              <div className="onboarding-left">
+                <div className="onboarding-logo">
+                  <img className="logo-img" src="/images/acdrainwiz_logo.png" alt="AC Drain Wiz" />
+                </div>
                 
-                return (
-                  <div 
-                    key={index + 1} 
-                    className={`step-item ${index + 1 < currentStep ? 'completed' : index + 1 === currentStep ? 'active' : 'disabled-preview'} ${isWelcomeStep ? 'muted' : ''}`}
-                  >
-                    <div className="step-icon">
-                      {stepIcons[index]}
-                    </div>
-                    <div className="step-content">
-                      <span className="step-number">Step {index + 1}:</span>
-                      <span className="step-title">{step.title}</span>
-                    </div>
-                    {index + 1 < steps.length - 1 && (
-                      <div className={`step-connector ${index + 1 < currentStep ? 'active' : 'disabled'}`}></div>
-                    )}
+                <div className={`onboarding-steps ${isWelcomeStep ? 'preview-mode' : ''}`}>
+                  <div className="steps-preview-header">
+                    <h3>Setup Steps</h3>
+                    <p>Here's what we'll help you set up:</p>
                   </div>
-                );
-              })}
-            </div>
-          </div>
+                  
+                  {steps.slice(1).map((step, index) => {
+                    const stepIcons = [
+                      // Star icon for Step 1
+                      <svg key="star" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.2827 3.45332C11.5131 2.98638 11.6284 2.75291 11.7848 2.67831C11.9209 2.61341 12.0791 2.61341 12.2152 2.67831C12.3717 2.75291 12.4869 2.98638 12.7174 3.45332L14.9041 7.88328C14.9721 8.02113 15.0061 8.09006 15.0558 8.14358C15.0999 8.19096 15.1527 8.22935 15.2113 8.25662C15.2776 8.28742 15.3536 8.29854 15.5057 8.32077L20.397 9.03571C20.9121 9.11099 21.1696 9.14863 21.2888 9.27444C21.3925 9.38389 21.4412 9.5343 21.4215 9.68377C21.3988 9.85558 21.2124 10.0372 20.8395 10.4004L17.3014 13.8464C17.1912 13.9538 17.136 14.0076 17.1004 14.0715C17.0689 14.128 17.0487 14.1902 17.0409 14.2545C17.0321 14.3271 17.0451 14.403 17.0711 14.5547L17.906 19.4221C17.994 19.9355 18.038 20.1922 17.9553 20.3445C17.8833 20.477 17.7554 20.57 17.6071 20.5975C17.4366 20.6291 17.2061 20.5078 16.7451 20.2654L12.3724 17.9658C12.2361 17.8942 12.168 17.8584 12.0962 17.8443C12.0327 17.8318 11.9673 17.8318 11.9038 17.8443C11.832 17.8584 11.7639 17.8942 11.6277 17.9658L7.25492 20.2654C6.79392 20.5078 6.56341 20.6291 6.39297 20.5975C6.24468 20.57 6.11672 20.477 6.04474 20.3445C5.962 20.1922 6.00603 19.9355 6.09407 19.4221L6.92889 14.5547C6.95491 14.403 6.96793 14.3271 6.95912 14.2545C6.95132 14.1902 6.93111 14.128 6.89961 14.0715C6.86402 14.0076 6.80888 13.9538 6.69859 13.8464L3.16056 10.4004C2.78766 10.0372 2.60121 9.85558 2.57853 9.68377C2.55879 9.5343 2.60755 9.38389 2.71125 9.27444C2.83044 9.14863 3.08797 9.11099 3.60304 9.03571L8.49431 8.32077C8.64642 8.29854 8.72248 8.28742 8.78872 8.25662C8.84736 8.22935 8.90016 8.19096 8.94419 8.14358C8.99391 8.09006 9.02793 8.02113 9.09597 7.88328L11.2827 3.45332Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                      </svg>,
+                      // Person icon for Step 2
+                      <svg key="person" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>,
+                      // Wrench and screwdriver icon for Step 3
+                      <svg key="tools" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>,
+                      // Map pin icon for Step 4
+                      <svg key="pin" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>,
+                      // Star icon for Step 5 (Setup Complete)
+                      <svg key="star-complete" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.2827 3.45332C11.5131 2.98638 11.6284 2.75291 11.7848 2.67831C11.9209 2.61341 12.0791 2.61341 12.2152 2.67831C12.3717 2.75291 12.4869 2.98638 12.7174 3.45332L14.9041 7.88328C14.9721 8.02113 15.0061 8.09006 15.0558 8.14358C15.0999 8.19096 15.1527 8.22935 15.2113 8.25662C15.2776 8.28742 15.3536 8.29854 15.5057 8.32077L20.397 9.03571C20.9121 9.11099 21.1696 9.14863 21.2888 9.27444C21.3925 9.38389 21.4412 9.5343 21.4215 9.68377C21.3988 9.85558 21.2124 10.0372 20.8395 10.4004L17.3014 13.8464C17.1912 13.9538 17.136 14.0076 17.1004 14.0715C17.0689 14.128 17.0487 14.1902 17.0409 14.2545C17.0321 14.3271 17.0451 14.403 17.0711 14.5547L17.906 19.4221C17.994 19.9355 18.038 20.1922 17.9553 20.3445C17.8833 20.477 17.7554 20.57 17.6071 20.5975C17.4366 20.6291 17.2061 20.5078 16.7451 20.2654L12.3724 17.9658C12.2361 17.8942 12.168 17.8584 12.0962 17.8443C12.0327 17.8318 11.9673 17.8318 11.9038 17.8443C11.832 17.8584 11.7639 17.8942 11.6277 17.9658L7.25492 20.2654C6.79392 20.5078 6.56341 20.6291 6.39297 20.5975C6.24468 20.57 6.11672 20.477 6.04474 20.3445C5.962 20.1922 6.00603 19.9355 6.09407 19.4221L6.92889 14.5547C6.95491 14.403 6.96793 14.3271 6.95912 14.2545C6.95132 14.1902 6.93111 14.128 6.89961 14.0715C6.86402 14.0076 6.80888 13.9538 6.69859 13.8464L3.16056 10.4004C2.78766 10.0372 2.60121 9.85558 2.57853 9.68377C2.55879 9.5343 2.60755 9.38389 2.71125 9.27444C2.83044 9.14863 3.08797 9.11099 3.60304 9.03571L8.49431 8.32077C8.64642 8.29854 8.72248 8.28742 8.78872 8.25662C8.84736 8.22935 8.90016 8.19096 8.94419 8.14358C8.99391 8.09006 9.02793 8.02113 9.09597 7.88328L11.2827 3.45332Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                      </svg>
+                    ];
+                    
+                    return (
+                      <div 
+                        key={index + 1} 
+                        className={`step-item ${index + 1 < currentStep ? 'completed' : index + 1 === currentStep ? 'active' : 'disabled-preview'} ${isWelcomeStep ? 'muted' : ''}`}
+                      >
+                        <div className="step-icon">
+                          {stepIcons[index]}
+                        </div>
+                        <div className="step-content">
+                          <span className="step-number">Step {index + 1}:</span>
+                          <span className="step-title">{step.title}</span>
+                        </div>
+                        {index + 1 < steps.length - 1 && (
+                          <div className={`step-connector ${index + 1 < currentStep ? 'active' : 'disabled'}`}></div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-          <div className="onboarding-right">
-            {isWelcomeStep ? (
-              <div className="onboarding-content">
-                <div className="content-header">
-                  <h1>Welcome to AC Drain Wiz sensor monitoring</h1>
-                  <h2>{userName}</h2>
-                </div>
-                <p className="content-description">Before you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything—and sets you up for smarter service and smoother installs.</p>
-                <div className="content-image">
-                  <img alt="Technician Hero" src="/images/technician-hero.png" />
-                </div>
-                <div className="content-actions">
-                  <button className="btn-next" onClick={handleNext}>
-                    Get Started
-                  </button>
-                </div>
-              </div>
-            ) : isEmployeeInviteStep ? (
-              renderEmployeeInviteStep()
-            ) : currentStepData.formFields && currentStepData.formFields.length > 0 ? (
-              <div className="onboarding-content">
-                {currentStep !== 1 && (
-                  <div className="content-header">
-                    <h1>{currentStepData.title}</h1>
-                    <p>{currentStepData.description}</p>
-                  </div>
-                )}
-                
-                <form className="onboarding-form" onSubmit={(e) => {
-                  e.preventDefault();
-                  // Only allow form submission for step 1
-                  if (currentStep === 1) {
-                    const isValid = validateStep(1);
-                    if (isValid) {
-                      handleNext();
-                    }
-                    // Don't show toast message - let inline errors show instead
-                  }
-                }}>
-                  {currentStep === 1 ? (
-                    // Step 1: Contractor Profile with original styling
-                    <div className="form-container">
-                      <div className="form-header">
-                        <h1>Create Your Contractor Profile</h1>
-                      </div>
-                      
-                      <div className="form-row">
-                        <div className="form-group half-width">
-                          <label className="form-label">
-                            Contractor Name
-                            <span className="assistive-text-inline">Your Company Name</span>
-                          </label>
-                          <input
-                            placeholder="Contractor Name" 
-                            className={`form-input ${showErrors && errors.contractorName ? 'error' : ''}`}
-                            type="text" 
-                            value={formData.contractorName || ''}
-                            onChange={(e) => handleInputChange('contractorName', e.target.value)}
-                            name="contractorName"
-                          />
-                          {showErrors && errors.contractorName && (
-                            <div className="form-error">{errors.contractorName}</div>
-                          )}
-                        </div>
-                        <div className="form-group half-width">
-                          <label className="form-label">Contractor Email</label>
-                          <input
-                            placeholder="name@domain.com" 
-                            className={`form-input ${showErrors && errors.contractorEmail ? 'error' : ''}`}
-                            type="email" 
-                            value={formData.contractorEmail || ''}
-                            onChange={(e) => handleInputChange('contractorEmail', e.target.value)}
-                            name="contractorEmail"
-                          />
-                          {showErrors && errors.contractorEmail && (
-                            <div className="form-error">{errors.contractorEmail}</div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="form-group half-width">
-                          <label className="form-label">Address 1</label>
-                          <input
-                            placeholder="123 Main Street" 
-                            className={`form-input ${showErrors && errors.address1 ? 'error' : ''}`}
-                            type="text" 
-                            value={formData.address1 || ''}
-                            onChange={(e) => handleInputChange('address1', e.target.value)}
-                            name="address1"
-                          />
-                          {showErrors && errors.address1 && (
-                            <div className="form-error">{errors.address1}</div>
-                          )}
-                        </div>
-                        <div className="form-group half-width">
-                          <label className="form-label">
-                            Address 2 
-                            <span className="optional">Optional</span>
-                          </label>
-                          <input
-                            placeholder="" 
-                            className={`form-input ${showErrors && errors.address2 ? 'error' : ''}`}
-                            type="text"
-                            value={formData.address2 || ''}
-                            onChange={(e) => handleInputChange('address2', e.target.value)}
-                            name="address2"
-                          />
-                          {showErrors && errors.address2 && (
-                            <div className="form-error">{errors.address2}</div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="form-row three-col">
-                        <div className="form-group">
-                          <label className="form-label">City</label>
-                          <input
-                            placeholder="" 
-                            className={`form-input ${showErrors && errors.city ? 'error' : ''}`}
-                            type="text" 
-                            value={formData.city || ''}
-                            onChange={(e) => handleInputChange('city', e.target.value)}
-                            name="city"
-                          />
-                          {showErrors && errors.city && (
-                            <div className="form-error">{errors.city}</div>
-                          )}
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">State</label>
-                          <select
-                            name="state" 
-                            className={`form-select ${showErrors && errors.state ? 'error' : ''}`}
-                            value={formData.state || ''}
-                            onChange={(e) => handleInputChange('state', e.target.value)}
-                          >
-                            <option value="">Select</option>
-                            {['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'].map(option => (
-                              <option key={option} value={option}>{option}</option>
-                            ))}
-                          </select>
-                          {showErrors && errors.state && (
-                            <div className="form-error">{errors.state}</div>
-                          )}
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Zip Code</label>
-                          <input
-                            placeholder="Zip/Postal Code" 
-                            className={`form-input ${showErrors && errors.zipCode ? 'error' : ''}`}
-                            type="text" 
-                            value={formData.zipCode || ''}
-                            onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                            name="zipCode"
-                          />
-                          {showErrors && errors.zipCode && (
-                            <div className="form-error">{errors.zipCode}</div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="form-group full-width">
-                          <label className="form-label">
-                            Contractor Logo
-                            <span className="help-icon" title="This logo is optional and will be used to customize your in app experience">?</span>
-                            <span className="optional">Optional</span>
-                          </label>
-                          <div className="file-upload-area">
-                            <div className="file-upload-content">
-                              <div className="upload-icon">📁</div>
-                              <div className="upload-text">
-                                <span className="upload-link">Click to upload</span> or drag and drop
-                              </div>
-                              <div className="upload-formats">SVG, PNG, JPG or GIF (max. 5MB)</div>
-                            </div>
-                            <input 
-                              type="file" 
-                              className="file-input"
-                              onChange={(e) => handleInputChange('contractorLogo', e.target.files[0])}
-                              accept="image/*"
-                            />
-                          </div>
-                        </div>
-                      </div>
+              <div className="onboarding-right">
+                {isWelcomeStep ? (
+                  <div className="onboarding-content">
+                    <div className="content-header">
+                      <h1>Welcome to AC Drain Wiz sensor monitoring</h1>
+                      <h2>{userName}</h2>
                     </div>
-                  ) : (
-                    // Other steps: Use dynamic form rendering
-                    currentStepData.formFields && currentStepData.formFields.length > 0 && (
+                    <p className="content-description">Before you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything—and sets you up for smarter service and smoother installs.</p>
+                    <div className="content-image">
+                      <img alt="Technician Hero" src="/images/technician-hero.png" />
+                    </div>
+                    <div className="content-actions">
+                      <button className="btn-next" onClick={handleNext}>
+                        Get Started
+                      </button>
+                    </div>
+                  </div>
+                ) : isEmployeeInviteStep ? (
+                  renderEmployeeInviteStep()
+                ) : currentStepData.formFields && currentStepData.formFields.length > 0 ? (
+                  <div className="onboarding-content">
+                    {currentStep !== 1 && (
+                      <div className="content-header">
+                        <h1>{currentStepData.title}</h1>
+                        <p>{currentStepData.description}</p>
+                      </div>
+                    )}
+                    
+                    <form className="onboarding-form" onSubmit={(e) => {
+                      e.preventDefault();
+                      // Only allow form submission for step 1
+                      if (currentStep === 1) {
+                        const isValid = validateStep(1);
+                        if (isValid) {
+                          handleNext();
+                        }
+                        // Don't show toast message - let inline errors show instead
+                      }
+                    }}>
                       <div className="form-container">
-                        {currentStep === 3 ? (
-                          // Step 3: Client form with specific layout
+                        {currentStep === 1 ? (
+                          // Step 1: Contractor form
                           <>
+                            <div className="form-header">
+                              <h1>Create Your Contractor Profile</h1>
+                              <p>This will be your primary account for managing clients, employees, and service calls.</p>
+                            </div>
+                            
                             <div className="form-row">
                               <div className="form-group half-width">
-                                <label className="form-label">First Name</label>
+                                <label className="form-label">
+                                  Contractor Name
+                                  <span className="required">*</span>
+                                </label>
                                 <input
-                                  placeholder="First Name"
-                                  className={`form-input ${showErrors && errors.firstName ? 'error' : ''}`}
                                   type="text"
+                                  name="contractorName"
+                                  className={`form-input ${showErrors && errors.contractorName ? 'error' : ''}`}
+                                  value={formData.contractorName || ''}
+                                  onChange={(e) => handleInputChange('contractorName', e.target.value)}
+                                  placeholder="Contractor Name"
+                                />
+                                {showErrors && errors.contractorName && (
+                                  <div className="form-error">{errors.contractorName}</div>
+                                )}
+                              </div>
+                              <div className="form-group half-width">
+                                <label className="form-label">
+                                  Contractor Email
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="email"
+                                  name="contractorEmail"
+                                  className={`form-input ${showErrors && errors.contractorEmail ? 'error' : ''}`}
+                                  value={formData.contractorEmail || ''}
+                                  onChange={(e) => handleInputChange('contractorEmail', e.target.value)}
+                                  placeholder="name@domain.com"
+                                />
+                                {showErrors && errors.contractorEmail && (
+                                  <div className="form-error">{errors.contractorEmail}</div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="form-group">
+                              <label className="form-label">
+                                Address 1
+                                <span className="required">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                name="address1"
+                                className={`form-input ${showErrors && errors.address1 ? 'error' : ''}`}
+                                value={formData.address1 || ''}
+                                onChange={(e) => handleInputChange('address1', e.target.value)}
+                                placeholder="123 Main Street"
+                              />
+                              {showErrors && errors.address1 && (
+                                <div className="form-error">{errors.address1}</div>
+                              )}
+                            </div>
+                            
+                            <div className="form-group">
+                              <label className="form-label">
+                                Address 2
+                                <span className="optional">(Optional)</span>
+                              </label>
+                              <input
+                                type="text"
+                                name="address2"
+                                className="form-input"
+                                value={formData.address2 || ''}
+                                onChange={(e) => handleInputChange('address2', e.target.value)}
+                                placeholder=""
+                              />
+                            </div>
+                            
+                            <div className="form-row three-col">
+                              <div className="form-group">
+                                <label className="form-label">
+                                  City
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="city"
+                                  className={`form-input ${showErrors && errors.city ? 'error' : ''}`}
+                                  value={formData.city || ''}
+                                  onChange={(e) => handleInputChange('city', e.target.value)}
+                                  placeholder=""
+                                />
+                                {showErrors && errors.city && (
+                                  <div className="form-error">{errors.city}</div>
+                                )}
+                              </div>
+                              <div className="form-group">
+                                <label className="form-label">
+                                  State
+                                  <span className="required">*</span>
+                                </label>
+                                <select
+                                  name="state"
+                                  className={`form-select ${showErrors && errors.state ? 'error' : ''}`}
+                                  value={formData.state || ''}
+                                  onChange={(e) => handleInputChange('state', e.target.value)}
+                                >
+                                  <option value="">Select</option>
+                                  {['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'].map(option => (
+                                    <option key={option} value={option}>{option}</option>
+                                  ))}
+                                </select>
+                                {showErrors && errors.state && (
+                                  <div className="form-error">{errors.state}</div>
+                                )}
+                              </div>
+                              <div className="form-group">
+                                <label className="form-label">
+                                  Zip Code
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="zipCode"
+                                  className={`form-input ${showErrors && errors.zipCode ? 'error' : ''}`}
+                                  value={formData.zipCode || ''}
+                                  onChange={(e) => handleInputChange('zipCode', e.target.value)}
+                                  placeholder="Zip/Postal Code"
+                                />
+                                {showErrors && errors.zipCode && (
+                                  <div className="form-error">{errors.zipCode}</div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="form-group">
+                              <label className="form-label">
+                                Contractor Logo
+                                <span className="optional">(Optional)</span>
+                              </label>
+                              <div className="file-upload-area">
+                                <div className="file-upload-content">
+                                  <div className="upload-icon">📁</div>
+                                  <div className="upload-text">
+                                    <span className="upload-link">Click to upload</span> or drag and drop
+                                  </div>
+                                  <div className="upload-formats">SVG, PNG, JPG or GIF (max. 5MB)</div>
+                                </div>
+                                <input
+                                  type="file"
+                                  className="file-input"
+                                  onChange={(e) => handleInputChange('contractorLogo', e.target.files[0])}
+                                  accept="image/*"
+                                />
+                              </div>
+                            </div>
+                          </>
+                        ) : currentStep === 3 ? (
+                          // Step 3: Client form
+                          <>
+                            <div className="form-header">
+                              <h1>Add Your First Client</h1>
+                              <p>Let's set up your first client to get started with service calls.</p>
+                            </div>
+                            
+                            <div className="form-row">
+                              <div className="form-group half-width">
+                                <label className="form-label">
+                                  First name
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  name="firstName"
+                                  className={`form-input ${showErrors && errors.firstName ? 'error' : ''}`}
                                   value={formData.firstName || ''}
                                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                                  name="firstName"
+                                  placeholder="Enter client's first name"
                                 />
                                 {showErrors && errors.firstName && (
                                   <div className="form-error">{errors.firstName}</div>
                                 )}
                               </div>
                               <div className="form-group half-width">
-                                <label className="form-label">Last Name</label>
+                                <label className="form-label">
+                                  Last name
+                                  <span className="required">*</span>
+                                </label>
                                 <input
-                                  placeholder="Last Name"
-                                  className={`form-input ${showErrors && errors.lastName ? 'error' : ''}`}
                                   type="text"
+                                  name="lastName"
+                                  className={`form-input ${showErrors && errors.lastName ? 'error' : ''}`}
                                   value={formData.lastName || ''}
                                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                                  name="lastName"
+                                  placeholder="Enter client's last name"
                                 />
                                 {showErrors && errors.lastName && (
                                   <div className="form-error">{errors.lastName}</div>
                                 )}
                               </div>
                             </div>
+                            
                             <div className="form-row">
                               <div className="form-group half-width">
-                                <label className="form-label">Mobile Number</label>
+                                <label className="form-label">
+                                  Email address
+                                  <span className="required">*</span>
+                                </label>
                                 <input
-                                  placeholder="(000) 000-0000"
-                                  className={`form-input ${showErrors && errors.mobileNumber ? 'error' : ''}`}
-                                  type="tel"
-                                  value={formData.mobileNumber || ''}
-                                  onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
-                                  name="mobileNumber"
-                                />
-                                {showErrors && errors.mobileNumber && (
-                                  <div className="form-error">{errors.mobileNumber}</div>
-                                )}
-                              </div>
-                              <div className="form-group half-width">
-                                <label className="form-label">Email</label>
-                                <input
-                                  placeholder="name@domain.com"
-                                  className={`form-input ${showErrors && errors.email ? 'error' : ''}`}
                                   type="email"
+                                  name="email"
+                                  className={`form-input ${showErrors && errors.email ? 'error' : ''}`}
                                   value={formData.email || ''}
                                   onChange={(e) => handleInputChange('email', e.target.value)}
-                                  name="email"
+                                  placeholder="Enter client's email address"
                                 />
                                 {showErrors && errors.email && (
                                   <div className="form-error">{errors.email}</div>
                                 )}
                               </div>
-                            </div>
-                            <div className="form-row">
-                              <div className={`form-group ${formData.addressNameType === 'Custom' ? 'half-width' : 'full-width'}`}>
-                                <label className="form-label">Address Name</label>
-                                <select
-                                  name="addressNameType"
-                                  className={`form-select ${showErrors && errors.addressNameType ? 'error' : ''}`}
-                                  value={formData.addressNameType || ''}
-                                  onChange={(e) => handleInputChange('addressNameType', e.target.value)}
-                                >
-                                  <option value="">Select address type</option>
-                                  <option value="Home">Home</option>
-                                  <option value="Office">Office</option>
-                                  <option value="Warehouse">Warehouse</option>
-                                  <option value="Apartment">Apartment</option>
-                                  <option value="Airbnb">Airbnb</option>
-                                  <option value="Custom">Custom</option>
-                                </select>
-                                {showErrors && errors.addressNameType && (
-                                  <div className="form-error">{errors.addressNameType}</div>
-                                )}
-                              </div>
-                              {formData.addressNameType === 'Custom' && (
-                                <div className="form-group half-width">
-                                  <label className="form-label">Custom Address Name</label>
-                                  <input
-                                    placeholder="Enter custom address name"
-                                    className={`form-input ${showErrors && errors.customAddressName ? 'error' : ''}`}
-                                    type="text"
-                                    value={formData.customAddressName || ''}
-                                    onChange={(e) => handleInputChange('customAddressName', e.target.value)}
-                                    name="customAddressName"
-                                  />
-                                  {showErrors && errors.customAddressName && (
-                                    <div className="form-error">{errors.customAddressName}</div>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                            <div className="form-row">
-                              <div className="form-group full-width">
-                                <small className="field-help">Use this to help you quickly tell one address from another</small>
-                              </div>
-                            </div>
-                            <div className="form-row">
-                              <div className="form-group half-width">
-                                <label className="form-label">Address 1</label>
-                                <input
-                                  placeholder="123 Main Street"
-                                  className={`form-input ${showErrors && errors.clientAddress1 ? 'error' : ''}`}
-                                  type="text"
-                                  value={formData.clientAddress1 || ''}
-                                  onChange={(e) => handleInputChange('clientAddress1', e.target.value)}
-                                  name="clientAddress1"
-                                />
-                                {showErrors && errors.clientAddress1 && (
-                                  <div className="form-error">{errors.clientAddress1}</div>
-                                )}
-                              </div>
                               <div className="form-group half-width">
                                 <label className="form-label">
-                                  Address 2 
-                                  <span className="optional">Optional</span>
+                                  Mobile number
+                                  <span className="required">*</span>
                                 </label>
                                 <input
-                                  placeholder=""
-                                  className={`form-input ${showErrors && errors.clientAddress2 ? 'error' : ''}`}
-                                  type="text"
-                                  value={formData.clientAddress2 || ''}
-                                  onChange={(e) => handleInputChange('clientAddress2', e.target.value)}
-                                  name="clientAddress2"
+                                  type="tel"
+                                  name="mobileNumber"
+                                  className={`form-input ${showErrors && errors.mobileNumber ? 'error' : ''}`}
+                                  value={formData.mobileNumber || ''}
+                                  onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
+                                  placeholder="Enter client's mobile number"
                                 />
-                                {showErrors && errors.clientAddress2 && (
-                                  <div className="form-error">{errors.clientAddress2}</div>
+                                {showErrors && errors.mobileNumber && (
+                                  <div className="form-error">{errors.mobileNumber}</div>
                                 )}
                               </div>
                             </div>
-                            <div className="form-row three-col">
-                              <div className="form-group">
-                                <label className="form-label">City</label>
+                            
+                            <div className="form-group">
+                              <label className="form-label">
+                                Business address
+                                <span className="required">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                name="clientAddress1"
+                                className={`form-input ${showErrors && errors.clientAddress1 ? 'error' : ''}`}
+                                value={formData.clientAddress1 || ''}
+                                onChange={(e) => handleInputChange('clientAddress1', e.target.value)}
+                                placeholder="Street address"
+                              />
+                              {showErrors && errors.clientAddress1 && (
+                                <div className="form-error">{errors.clientAddress1}</div>
+                              )}
+                            </div>
+                            
+                            <div className="form-group">
+                              <label className="form-label">
+                                Address line 2
+                                <span className="optional">(optional)</span>
+                              </label>
+                              <input
+                                type="text"
+                                name="clientAddress2"
+                                className="form-input"
+                                value={formData.clientAddress2 || ''}
+                                onChange={(e) => handleInputChange('clientAddress2', e.target.value)}
+                                placeholder="Apartment, suite, etc."
+                              />
+                            </div>
+                            
+                            <div className="form-row">
+                              <div className="form-group half-width">
+                                <label className="form-label">
+                                  City
+                                  <span className="required">*</span>
+                                </label>
                                 <input
-                                  placeholder=""
-                                  className={`form-input ${showErrors && errors.clientCity ? 'error' : ''}`}
                                   type="text"
+                                  name="clientCity"
+                                  className={`form-input ${showErrors && errors.clientCity ? 'error' : ''}`}
                                   value={formData.clientCity || ''}
                                   onChange={(e) => handleInputChange('clientCity', e.target.value)}
-                                  name="clientCity"
+                                  placeholder="Enter city"
                                 />
                                 {showErrors && errors.clientCity && (
                                   <div className="form-error">{errors.clientCity}</div>
                                 )}
                               </div>
-                              <div className="form-group">
-                                <label className="form-label">State</label>
-                                <select
+                              <div className="form-group half-width">
+                                <label className="form-label">
+                                  State
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  type="text"
                                   name="clientState"
-                                  className={`form-select ${showErrors && errors.clientState ? 'error' : ''}`}
+                                  className={`form-input ${showErrors && errors.clientState ? 'error' : ''}`}
                                   value={formData.clientState || ''}
                                   onChange={(e) => handleInputChange('clientState', e.target.value)}
-                                >
-                                  <option value="">Select</option>
-                                  <option value="AL">Alabama</option>
-                                  <option value="FL">Florida</option>
-                                  <option value="GA">Georgia</option>
-                                  <option value="TX">Texas</option>
-                                  <option value="CA">California</option>
-                                  <option value="NY">New York</option>
-                                </select>
+                                  placeholder="Enter state"
+                                />
                                 {showErrors && errors.clientState && (
                                   <div className="form-error">{errors.clientState}</div>
                                 )}
                               </div>
+                            </div>
+                            
+                            <div className="form-group">
+                              <label className="form-label">
+                                ZIP code
+                                <span className="optional">(optional)</span>
+                              </label>
+                              <input
+                                type="text"
+                                name="clientZipCode"
+                                className="form-input"
+                                value={formData.clientZipCode || ''}
+                                onChange={(e) => handleInputChange('clientZipCode', e.target.value)}
+                                placeholder="Enter ZIP code"
+                              />
+                            </div>
+                          </>
+                        ) : currentStep === 4 ? (
+                          // Step 4: Service call form
+                          <>
+                            {/* Client Contact Information */}
+                            <div className="client-contact-section">
+                              <h3 className="client-contact-title">Client Contact Information</h3>
+                              <div className="client-contact-grid">
+                                <div className="client-contact-item">
+                                  <label className="client-contact-label">CLIENT NAME:</label>
+                                  <span className="client-contact-value">
+                                    {formData.firstName && formData.lastName 
+                                      ? `${formData.firstName} ${formData.lastName}` 
+                                      : 'Not provided'}
+                                  </span>
+                                </div>
+                                <div className="client-contact-item">
+                                  <label className="client-contact-label">ADDRESS:</label>
+                                  <span className="client-contact-value address-link">
+                                    <svg className="location-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    {formData.clientAddress1 && formData.clientCity && formData.clientState 
+                                      ? `${formData.clientAddress1}${formData.clientAddress2 ? `, ${formData.clientAddress2}` : ''}, ${formData.clientCity}, ${formData.clientState} ${formData.clientZipCode || ''}`.trim()
+                                      : 'Not provided'}
+                                  </span>
+                                </div>
+                                <div className="client-contact-item">
+                                  <label className="client-contact-label">EMAIL ADDRESS:</label>
+                                  <span className="client-contact-value">
+                                    {formData.email || 'Not provided'}
+                                  </span>
+                                </div>
+                                <div className="client-contact-item">
+                                  <label className="client-contact-label">MOBILE NUMBER:</label>
+                                  <span className="client-contact-value">
+                                    {formData.mobileNumber || 'Not provided'}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Assign Technician and Priority */}
+                            <div className="form-row">
+                              <div className="form-group half-width">
+                                <label className="form-label">Assign technician:</label>
+                                <select
+                                  name="assignedTechnician"
+                                  className="form-select"
+                                  value={formData.assignedTechnician || 'Awaiting Technicians'}
+                                  disabled
+                                >
+                                  <option value="Awaiting Technicians">Awaiting Technicians</option>
+                                  <option value="John Smith">John Smith</option>
+                                  <option value="Jane Doe">Jane Doe</option>
+                                  <option value="Mike Johnson">Mike Johnson</option>
+                                </select>
+                              </div>
+                              <div className="form-group half-width">
+                                <label className="form-label">Priority:</label>
+                                <select
+                                  name="priority"
+                                  className={`form-select ${showErrors && errors.priority ? 'error' : ''}`}
+                                  value={formData.priority || ''}
+                                  onChange={(e) => handleInputChange('priority', e.target.value)}
+                                >
+                                  <option value="">Select priority</option>
+                                  <option value="Low">Low</option>
+                                  <option value="Medium">Medium</option>
+                                  <option value="High">High</option>
+                                  <option value="Emergency">Emergency</option>
+                                </select>
+                                {showErrors && errors.priority && (
+                                  <div className="form-error">{errors.priority}</div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Sensors to Service */}
+                            <div className="form-group">
+                              <label className="form-label">
+                                Sensors to service
+                                <small className="assistive-text-inline">Select at least one</small>
+                              </label>
+                              <div className={`sensors-badges ${showErrors && errors.selectedSensors ? 'error' : ''}`}>
+                                <span 
+                                  className={`sensor-badge ${formData.sensor1 ? 'selected' : ''}`}
+                                  onClick={() => handleInputChange('sensor1', !formData.sensor1)}
+                                >
+                                  <span className={`sensor-check-icon ${formData.sensor1 ? 'selected' : 'unselected'}`}>✓</span>
+                                  Sensor 1 - Aft Deck
+                                </span>
+                                <span 
+                                  className={`sensor-badge ${formData.sensor2 ? 'selected' : ''}`}
+                                  onClick={() => handleInputChange('sensor2', !formData.sensor2)}
+                                >
+                                  <span className={`sensor-check-icon ${formData.sensor2 ? 'selected' : 'unselected'}`}>✓</span>
+                                  Sensor 2 - Starboard
+                                </span>
+                                <span 
+                                  className={`sensor-badge ${formData.sensor3 ? 'selected' : ''}`}
+                                  onClick={() => handleInputChange('sensor3', !formData.sensor3)}
+                                >
+                                  <span className={`sensor-check-icon ${formData.sensor3 ? 'selected' : 'unselected'}`}>✓</span>
+                                  Sensor 3 - Port
+                                </span>
+                              </div>
+                              {showErrors && errors.selectedSensors && (
+                                <div className="form-error">{errors.selectedSensors}</div>
+                              )}
+                            </div>
+
+                            {/* Date and Time Fields */}
+                            <div className="form-row three-col">
                               <div className="form-group">
-                                <label className="form-label">Zip Code</label>
-                                <input
-                                  placeholder="Zip/Postal Code"
-                                  className={`form-input ${showErrors && errors.clientZipCode ? 'error' : ''}`}
-                                  type="text"
-                                  value={formData.clientZipCode || ''}
-                                  onChange={(e) => handleInputChange('clientZipCode', e.target.value)}
-                                  name="clientZipCode"
-                                />
-                                {showErrors && errors.clientZipCode && (
-                                  <div className="form-error">{errors.clientZipCode}</div>
+                                <label className="form-label">Select date:</label>
+                                <div className="date-input-container">
+                                  <input
+                                    type="text"
+                                    className={`form-input date-input ${showErrors && errors.serviceDate ? 'error' : ''}`}
+                                    value={formData.serviceDate ? formatDisplayDate(new Date(formData.serviceDate)) : ''}
+                                    placeholder="Select date"
+                                    readOnly
+                                    onClick={() => setIsCalendarOpen(true)}
+                                  />
+                                  <button
+                                    type="button"
+                                    className="calendar-trigger-btn"
+                                    onClick={() => setIsCalendarOpen(true)}
+                                  >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M21 10H3M16 2V6M8 2V6M7.8 22H16.2C17.8802 22 18.7202 22 19.362 21.673C19.9265 21.3854 20.3854 20.9265 20.673 20.362C21 19.7202 21 18.8802 21 17.2V8.8C21 7.11984 21 6.27976 20.673 5.63803C20.3854 5.07354 19.9265 4.6146 19.362 4.32698C18.7202 4 17.8802 4 16.2 4H7.8C6.11984 4 5.27976 4 4.63803 4.32698C4.07354 4.6146 3.6146 5.07354 3.32698 5.63803C3 6.27976 3 7.11984 3 8.8V17.2C3 18.8802 3 19.7202 3.32698 20.362C3.6146 20.9265 4.07354 21.3854 4.63803 21.673C5.27976 22 6.11984 22 7.8 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                  </button>
+                                </div>
+                                {showErrors && errors.serviceDate && (
+                                  <div className="form-error">{errors.serviceDate}</div>
+                                )}
+                              </div>
+                              <div className="form-group">
+                                <label className="form-label">Start time:</label>
+                                <select
+                                  name="startTime"
+                                  className={`form-select ${showErrors && errors.startTime ? 'error' : ''}`}
+                                  value={formData.startTime || ''}
+                                  onChange={(e) => handleInputChange('startTime', e.target.value)}
+                                >
+                                  <option value="">Select time</option>
+                                  {['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'].map(time => {
+                                    const busySlots = getBusyTimeSlots(selectedDate);
+                                    const isDisabled = busySlots.includes(time);
+                                    return (
+                                      <option 
+                                        key={time} 
+                                        value={time}
+                                        disabled={isDisabled}
+                                        style={isDisabled ? { color: '#9ca3af' } : {}}
+                                      >
+                                        {time} {isDisabled ? '(Booked)' : ''}
+                                      </option>
+                                    );
+                                  })}
+                                </select>
+                                {showErrors && errors.startTime && (
+                                  <div className="form-error">{errors.startTime}</div>
+                                )}
+                              </div>
+                              <div className="form-group">
+                                <label className="form-label">End time:</label>
+                                <select
+                                  name="endTime"
+                                  className={`form-select ${showErrors && errors.endTime ? 'error' : ''}`}
+                                  value={formData.endTime || ''}
+                                  onChange={(e) => handleInputChange('endTime', e.target.value)}
+                                >
+                                  <option value="">Select time</option>
+                                  {['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'].map(time => {
+                                    const busySlots = getBusyTimeSlots(selectedDate);
+                                    const isDisabled = busySlots.includes(time);
+                                    return (
+                                      <option 
+                                        key={time} 
+                                        value={time}
+                                        disabled={isDisabled}
+                                        style={isDisabled ? { color: '#9ca3af' } : {}}
+                                      >
+                                        {time} {isDisabled ? '(Booked)' : ''}
+                                      </option>
+                                    );
+                                  })}
+                                </select>
+                                {showErrors && errors.endTime && (
+                                  <div className="form-error">{errors.endTime}</div>
                                 )}
                               </div>
                             </div>
                           </>
                         ) : (
                           // Other steps: Use dynamic form rendering
-                          currentStepData.formFields && currentStepData.formFields.length > 0 && (
-                            <div className="form-container">
-                              {currentStep === 4 ? (
-                                // Step 4: Service Operations form with custom layout
-                                <>
-                                  {/* Client Contact Information Section */}
-                                  <div className="client-contact-section">
-                                    <h3 className="client-contact-title">Client Contact Information</h3>
-                                    <div className="client-contact-grid">
-                                      <div className="client-contact-item">
-                                        <div className="client-contact-label">CLIENT NAME:</div>
-                                        <div className="client-contact-value">Luis Lopez</div>
-                                      </div>
-                                      <div className="client-contact-item">
-                                        <div className="client-contact-label">ADDRESS:</div>
-                                        <div className="client-contact-value">
-                                          <span className="info-value address-link" style={{cursor: 'pointer', color: 'rgb(0, 119, 197)', textDecoration: 'underline', display: 'flex', alignItems: 'center'}}>
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="location-icon" style={{marginRight: '12px'}}>
-                                              <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                                              <path d="M12 22C16 18 20 14.4183 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 14.4183 8 18 12 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                                            </svg>
-                                            15051 Royal Oaks Lane, Apt 1504, North Miami, FL 33181
-                                          </span>
-                                        </div>
-                                      </div>
-                                      <div className="client-contact-item">
-                                        <div className="client-contact-label">MOBILE NUMBER:</div>
-                                        <div className="client-contact-value">(305) 318-5611</div>
-                                      </div>
-                                      <div className="client-contact-item">
-                                        <div className="client-contact-label">EMAIL ADDRESS:</div>
-                                        <div className="client-contact-value">drako197@gmail.com</div>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* Assign Technician and Priority */}
-                                  <div className="form-row">
-                                    <div className="form-group half-width">
-                                      <label className="form-label">Assign technician:</label>
-                                      <select
-                                        name="assignedTechnician"
-                                        className="form-select"
-                                        value={formData.assignedTechnician || 'Awaiting Technicians'}
-                                        disabled
-                                      >
-                                        <option value="Awaiting Technicians">Awaiting Technicians</option>
-                                        <option value="John Smith">John Smith</option>
-                                        <option value="Jane Doe">Jane Doe</option>
-                                        <option value="Mike Johnson">Mike Johnson</option>
-                                      </select>
-                                    </div>
-                                    <div className="form-group half-width">
-                                      <label className="form-label">Priority:</label>
-                                      <select
-                                        name="priority"
-                                        className={`form-select ${showErrors && errors.priority ? 'error' : ''}`}
-                                        value={formData.priority || ''}
-                                        onChange={(e) => handleInputChange('priority', e.target.value)}
-                                      >
-                                        <option value="">Select priority</option>
-                                        <option value="Low">Low</option>
-                                        <option value="Medium">Medium</option>
-                                        <option value="High">High</option>
-                                        <option value="Emergency">Emergency</option>
-                                      </select>
-                                      {showErrors && errors.priority && (
-                                        <div className="form-error">{errors.priority}</div>
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  {/* Sensors to Service */}
-                                  <div className="form-group">
-                                    <label className="form-label">
-                                      Sensors to service
-                                      <small className="assistive-text-inline">Select at least one</small>
-                                    </label>
-                                    <div className={`sensors-badges ${showErrors && errors.selectedSensors ? 'error' : ''}`}>
-                                      <span 
-                                        className={`sensor-badge ${formData.sensor1 ? 'selected' : ''}`}
-                                        onClick={() => handleInputChange('sensor1', !formData.sensor1)}
-                                      >
-                                        <span className={`sensor-check-icon ${formData.sensor1 ? 'selected' : 'unselected'}`}>✓</span>
-                                        Sensor 1 - Aft Deck
-                                      </span>
-                                      <span 
-                                        className={`sensor-badge ${formData.sensor2 ? 'selected' : ''}`}
-                                        onClick={() => handleInputChange('sensor2', !formData.sensor2)}
-                                      >
-                                        <span className={`sensor-check-icon ${formData.sensor2 ? 'selected' : 'unselected'}`}>✓</span>
-                                        Sensor 2 - Starboard
-                                      </span>
-                                      <span 
-                                        className={`sensor-badge ${formData.sensor3 ? 'selected' : ''}`}
-                                        onClick={() => handleInputChange('sensor3', !formData.sensor3)}
-                                      >
-                                        <span className={`sensor-check-icon ${formData.sensor3 ? 'selected' : 'unselected'}`}>✓</span>
-                                        Sensor 3 - Port
-                                      </span>
-                                    </div>
-                                    {showErrors && errors.selectedSensors && (
-                                      <div className="form-error">{errors.selectedSensors}</div>
-                                    )}
-                                  </div>
-
-                                  {/* Date and Time Fields */}
-                                  <div className="form-row three-col">
-                                    <div className="form-group">
-                                      <label className="form-label">Select date:</label>
-                                      <div className="date-input-container">
-                                        <input
-                                          type="text"
-                                          className={`form-input date-input ${showErrors && errors.serviceDate ? 'error' : ''}`}
-                                          value={formData.serviceDate ? formatDisplayDate(new Date(formData.serviceDate)) : ''}
-                                          placeholder="Select date"
-                                          readOnly
-                                          onClick={() => setIsCalendarOpen(true)}
-                                        />
-                                        <button
-                                          type="button"
-                                          className="calendar-trigger-btn"
-                                          onClick={() => setIsCalendarOpen(true)}
-                                        >
-                                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M21 10H3M16 2V6M8 2V6M7.8 22H16.2C17.8802 22 18.7202 22 19.362 21.673C19.9265 21.3854 20.3854 20.9265 20.673 20.362C21 19.7202 21 18.8802 21 17.2V8.8C21 7.11984 21 6.27976 20.673 5.63803C20.3854 5.07354 19.9265 4.6146 19.362 4.32698C18.7202 4 17.8802 4 16.2 4H7.8C6.11984 4 5.27976 4 4.63803 4.32698C4.07354 4.6146 3.6146 5.07354 3.32698 5.63803C3 6.27976 3 7.11984 3 8.8V17.2C3 18.8802 3 19.7202 3.32698 20.362C3.6146 20.9265 4.07354 21.3854 4.63803 21.673C5.27976 22 6.11984 22 7.8 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                          </svg>
-                                        </button>
-                                      </div>
-                                      {showErrors && errors.serviceDate && (
-                                        <div className="form-error">{errors.serviceDate}</div>
-                                      )}
-                                    </div>
-                                    <div className="form-group">
-                                      <label className="form-label">Start time:</label>
-                                      <select
-                                        name="startTime"
-                                        className={`form-select ${showErrors && errors.startTime ? 'error' : ''}`}
-                                        value={formData.startTime || ''}
-                                        onChange={(e) => handleInputChange('startTime', e.target.value)}
-                                      >
-                                        <option value="">Select time</option>
-                                        {['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'].map(time => {
-                                          const busySlots = getBusyTimeSlots(selectedDate);
-                                          const isDisabled = busySlots.includes(time);
-                                          return (
-                                            <option 
-                                              key={time} 
-                                              value={time}
-                                              disabled={isDisabled}
-                                              style={isDisabled ? { color: '#9ca3af' } : {}}
-                                            >
-                                              {time} {isDisabled ? '(Booked)' : ''}
-                                            </option>
-                                          );
-                                        })}
-                                      </select>
-                                      {showErrors && errors.startTime && (
-                                        <div className="form-error">{errors.startTime}</div>
-                                      )}
-                                    </div>
-                                    <div className="form-group">
-                                      <label className="form-label">End time:</label>
-                                      <select
-                                        name="endTime"
-                                        className={`form-select ${showErrors && errors.endTime ? 'error' : ''}`}
-                                        value={formData.endTime || ''}
-                                        onChange={(e) => handleInputChange('endTime', e.target.value)}
-                                      >
-                                        <option value="">Select time</option>
-                                        {['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'].map(time => {
-                                          const busySlots = getBusyTimeSlots(selectedDate);
-                                          const isDisabled = busySlots.includes(time);
-                                          return (
-                                            <option 
-                                              key={time} 
-                                              value={time}
-                                              disabled={isDisabled}
-                                              style={isDisabled ? { color: '#9ca3af' } : {}}
-                                            >
-                                              {time} {isDisabled ? '(Booked)' : ''}
-                                            </option>
-                                          );
-                                        })}
-                                      </select>
-                                      {showErrors && errors.endTime && (
-                                        <div className="form-error">{errors.endTime}</div>
-                                      )}
-                                    </div>
-                                  </div>
-                                </>
-                              ) : (
-                                // Other steps: Use dynamic form rendering
-                                currentStepData.formFields.map(field => renderFormField(field))
-                              )}
-                            </div>
-                          )
+                          currentStepData.formFields.map(field => renderFormField(field))
                         )}
                       </div>
                     )
@@ -1923,28 +2093,30 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
               </div>
             )}
           </div>
-        </div>
+        </>
+      )}
+    </div>
+  </div>
+
+  {/* Calendar Popup */}
+  {isCalendarOpen && (
+    <div className="calendar-overlay" onClick={() => setIsCalendarOpen(false)}>
+      <div className="calendar-modal" onClick={(e) => e.stopPropagation()}>
+        {renderCalendar()}
       </div>
+    </div>
+  )}
 
-      {/* Calendar Popup */}
-      {isCalendarOpen && (
-        <div className="calendar-overlay" onClick={() => setIsCalendarOpen(false)}>
-          <div className="calendar-modal" onClick={(e) => e.stopPropagation()}>
-            {renderCalendar()}
-          </div>
-        </div>
-      )}
-
-      {/* Toast Messages */}
-      {toast && (
-        <Toast 
-          message={toast.message} 
-          type={toast.type} 
-          onClose={() => setToast(null)}
-        />
-      )}
-    </>
-  );
+  {/* Toast Messages */}
+  {toast && (
+    <Toast 
+      message={toast.message} 
+      type={toast.type} 
+      onClose={() => setToast(null)}
+    />
+  )}
+</>
+);
 };
 
 export default OnboardingModal;

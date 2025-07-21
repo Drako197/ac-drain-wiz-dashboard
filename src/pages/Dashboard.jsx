@@ -10,8 +10,22 @@ const Dashboard = ({ onShowOnboarding }) => {
   const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
   const [isLoading, setIsLoading] = useState(true);
   const [isPageLoading, setIsPageLoading] = useState(false);
+  const [contractorName, setContractorName] = useState('Acme HVAC and Cooling');
+  const [contractorEmail, setContractorEmail] = useState('ariddle@acdrainwiz.com');
   const searchInputRef = useRef(null);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const storedContractorName = localStorage.getItem('acdrainwiz_contractor_name');
+    if (storedContractorName && storedContractorName.trim()) {
+      setContractorName(storedContractorName.trim());
+    }
+    
+    const storedContractorEmail = localStorage.getItem('acdrainwiz_contractor_email');
+    if (storedContractorEmail && storedContractorEmail.trim()) {
+      setContractorEmail(storedContractorEmail.trim());
+    }
+  }, []);
 
   // Expanded mock data for demonstration (100 entries for 10 pages)
   const clientAddresses = [
@@ -307,16 +321,16 @@ const Dashboard = ({ onShowOnboarding }) => {
             </div>
             <div className="dashboard-contact">
               <div className="contact-card">
-                <div className="contact-title" title="AC Drain Wiz">
+                <div className="contact-title" title={contractorName}>
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" className="contact-logo">
                     <path d="M7.26232 8.72485C10.0934 7.34724 12.309 5.00949 13.581 2.08729C12.7604 1.21063 11.6936 0.58444 10.5447 0.208729L9.92928 0C9.88825 0.0834914 9.84722 0.208734 9.84722 0.292225C8.8625 3.13093 6.85203 5.42695 4.14404 6.72106C2.25666 7.63947 0.861632 9.3093 0.20515 11.3131L0 11.9393C0.0820602 11.981 0.205152 12.0228 0.287212 12.0228C1.06678 12.315 1.84636 12.6907 2.5849 13.1499C3.61065 11.2713 5.25185 9.68501 7.26232 8.72485Z" fill="#087443"></path>
                     <path d="M19.1611 8.89185C17.643 11.2296 15.5504 13.1082 12.9655 14.3605C10.873 15.3624 9.27282 17.241 8.53428 19.4953L8.32913 20.2049C9.1087 20.9146 10.0524 21.4573 11.0781 21.7913L11.6936 22C11.7346 21.9165 11.7757 21.7913 11.7757 21.7078C12.7604 18.8691 14.7709 16.5731 17.4788 15.2789C19.3662 14.3605 20.8023 12.6907 21.4177 10.6869L21.6229 10.0607C20.7612 9.81026 19.9406 9.39279 19.1611 8.89185Z" fill="#16B364"></path>
                     <path d="M6.68793 18.0341C7.71368 15.5294 9.60106 13.4838 12.0218 12.3149C14.2375 11.2295 16.0838 9.55971 17.3557 7.51417C16.4121 6.59576 15.6325 5.55212 15.0581 4.29974C13.5399 7.13845 11.1602 9.43447 8.24707 10.8538C6.56484 11.647 5.21085 13.0246 4.39024 14.6944C5.29291 15.5711 6.03145 16.6565 6.60587 17.8671C6.60587 17.8671 6.6469 17.9506 6.68793 18.0341Z" fill="#099250"></path>
                   </svg>
-                  AC Drain Wiz
+                  {contractorName}
                 </div>
                 <div className="contact-email">
-                  <span className="contact-label">Email:</span> ariddle@acdrainwiz.com
+                  <span className="contact-label">Email:</span> {contractorEmail}
                 </div>
                 <div className="contact-phone">
                   <span className="contact-label">Mobile Number:</span> (000) 000-0000
@@ -440,7 +454,7 @@ const Dashboard = ({ onShowOnboarding }) => {
             </div>
           ) : (
             <>
-              <table className="dashboard-table">
+              <table className={`dashboard-table ${searchTerm.trim() !== '' ? 'compact-results' : ''}`}>
                 <thead>
                   <tr>
                     <th>Client Addresses</th>
