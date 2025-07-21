@@ -1694,7 +1694,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                                 <label className="form-label">
                                   Address Name
                                   <span className="required">*</span>
-                                  <span className="helper-text">Use this to help you quickly tell one address from another</span>
                                 </label>
                                 <select
                                   name="addressNameType"
@@ -1710,6 +1709,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                                   <option value="Airbnb">Airbnb</option>
                                   <option value="Custom">Custom</option>
                                 </select>
+                                <div className="helper-text">Use this to help you quickly tell one address from another</div>
                                 {showErrors && errors.addressNameType && (
                                   <div className="form-error">{errors.addressNameType}</div>
                                 )}
