@@ -580,6 +580,15 @@ const ManageServiceCalls = () => {
         </div>
 
         <div className="table-container" style={{ position: 'relative' }}>
+          {/* Standardized Table Loading Indicator */}
+          {isPageLoading && (
+            <div className="table-loading-indicator">
+              <div className="table-loading-spinner">
+                <div className="table-spinner"></div>
+              </div>
+              <div className="table-loading-text">Loading new page...</div>
+            </div>
+          )}
           <table className="dashboard-table">
             <thead>
               <tr>
@@ -639,24 +648,7 @@ const ManageServiceCalls = () => {
               )}
             </tbody>
           </table>
-          {isPageLoading && (
-            <div className="loading-overlay">
-              <div className="loading-container">
-                <div className="lottie-loading">
-                  <div className="lottie-circle">
-                    <div className="lottie-spinner"></div>
-                    <div className="lottie-pulse"></div>
-                  </div>
-                  <div className="lottie-dots">
-                    <div className="lottie-dot"></div>
-                    <div className="lottie-dot"></div>
-                    <div className="lottie-dot"></div>
-                  </div>
-                </div>
-                <div className="loading-text">Loading service calls...</div>
-              </div>
-            </div>
-          )}
+
         </div>
 
         <div className="pagination-container">
