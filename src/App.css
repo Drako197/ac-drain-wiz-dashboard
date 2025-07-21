@@ -20,10 +20,10 @@ body {
   background: #f6f7fb;
 }
 
-/* Main Dashboard Container - Centered with 1600px max-width */
+/* Main Dashboard Container - Centered with 1800px max-width */
 .dashboard-container {
   display: flex;
-  max-width: 1600px;
+  max-width: 1800px;
   width: 100%;
   margin: 0 auto;
   min-height: 100vh;
