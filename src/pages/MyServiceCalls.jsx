@@ -682,10 +682,16 @@ const MyServiceCalls = () => {
           </table>
           {isPageLoading && (
             <div className="loading-overlay">
-              <div className="loading-spinner">
-                <div className="spinner"></div>
+              <div className="loading-container">
+                <div className="loading-animation">
+                  <div className="loading-dots">
+                    <div className="dot"></div>
+                    <div className="dot"></div>
+                    <div className="dot"></div>
+                  </div>
+                </div>
+                <div className="loading-text">Loading my service calls...</div>
               </div>
-              <div className="loading-text">Loading page...</div>
             </div>
           )}
         </div>
