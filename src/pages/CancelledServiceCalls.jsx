@@ -794,12 +794,8 @@ const CancelledServiceCalls = () => {
           {isPageLoading && (
             <div className="loading-overlay">
               <div className="loading-container">
-                <div className="loading-animation">
-                  <div className="loading-dots">
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                  </div>
+                <div className="loading-spinner">
+                  <div className="spinner"></div>
                 </div>
                 <div className="loading-text">Loading cancelled service calls...</div>
               </div>
