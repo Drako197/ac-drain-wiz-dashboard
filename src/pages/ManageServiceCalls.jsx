@@ -644,6 +644,63 @@ const ManageServiceCalls = () => {
     searchInputRef.current?.focus()
   }
 
+  // Tooltip positioning function
+  const handleTooltipPosition = (event) => {
+    const iconWrapper = event.currentTarget
+    const rect = iconWrapper.getBoundingClientRect()
+    
+    // Create tooltip element if it doesn't exist
+    let tooltip = document.getElementById('custom-tooltip')
+    if (!tooltip) {
+      tooltip = document.createElement('div')
+      tooltip.id = 'custom-tooltip'
+      tooltip.style.cssText = `
+        position: fixed;
+        background: #1f2937;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      `
+      document.body.appendChild(tooltip)
+    }
+    
+    // Set tooltip content
+    tooltip.textContent = iconWrapper.getAttribute('title')
+    
+    // Calculate position
+    let left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2)
+    let top = rect.top - tooltip.offsetHeight - 12 // 12px gap
+    
+    // Adjust if tooltip goes off screen
+    if (left < 10) left = 10
+    if (left + tooltip.offsetWidth > window.innerWidth - 10) {
+      left = window.innerWidth - tooltip.offsetWidth - 10
+    }
+    if (top < 10) {
+      // Show below if not enough space above
+      top = rect.bottom + 12
+    }
+    
+    tooltip.style.left = `${left}px`
+    tooltip.style.top = `${top}px`
+    tooltip.style.opacity = '1'
+  }
+
+  const handleTooltipHide = () => {
+    const tooltip = document.getElementById('custom-tooltip')
+    if (tooltip) {
+      tooltip.style.opacity = '0'
+    }
+  }
+
   // Handle page change with loading animation
   const handlePageChange = (newPage) => {
     setIsPageLoading(true)
@@ -863,6 +920,8 @@ const ManageServiceCalls = () => {
                             activeTab === 'history' ? 'View Details' :
                             'Create Service Call'
                           }
+                          onMouseEnter={handleTooltipPosition}
+                          onMouseLeave={handleTooltipHide}
                         >
                           {activeTab === 'my-calls' ? (
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
