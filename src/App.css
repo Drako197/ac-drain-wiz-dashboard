@@ -30,7 +30,6 @@ body {
   background: #f6f7fb;
   padding: 0 24px;
   box-sizing: border-box;
-  justify-content: center;
 }
 
 /* Sidebar Styles */
@@ -688,7 +687,6 @@ body {
 /* Responsive Design */
 @media (min-width: 1441px) {
   .dashboard-container {
-    justify-content: center;
     gap: 0;
   }
   
@@ -716,6 +714,7 @@ body {
     padding: 20px;
     width: 100%;
     min-width: auto;
+    max-width: 1520px;
   }
   
   .dashboard-welcome {
