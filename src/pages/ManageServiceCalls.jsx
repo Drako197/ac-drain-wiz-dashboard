@@ -500,52 +500,37 @@ const ManageServiceCalls = () => {
     {
       id: 1,
       address: '123 Main Street, Miami Beach, Florida 33181',
-      clientName: 'Steven Segal',
-      contactNumber: '(555) 123-4567',
-      assignedSensor: 'Sensor #12346',
-      date: '2024-01-15',
-      reason: 'Client cancelled',
-      cancelledBy: 'Client'
+      cancellationDate: '01/15/2024',
+      reason: 'Client Requested Reschedule',
+      cancellationNote: 'Client called to reschedule due to personal emergency. New appointment scheduled for next week.'
     },
     {
       id: 2,
       address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
-      clientName: 'Martin Short',
-      contactNumber: '(555) 234-5678',
-      assignedSensor: 'Sensor #12347',
-      date: '2024-01-14',
-      reason: 'Weather conditions',
-      cancelledBy: 'System'
+      cancellationDate: '01/14/2024',
+      reason: 'Weather Conditions',
+      cancellationNote: 'Heavy rain and flooding in area. Service postponed until weather improves. Client notified and understanding.'
     },
     {
       id: 3,
       address: '789 Palm Avenue, West Palm Beach, Florida 33401',
-      clientName: 'Thomas Aguilar',
-      contactNumber: '(555) 345-6789',
-      assignedSensor: 'Sensor #12348',
-      date: '2024-01-13',
-      reason: 'Technician unavailable',
-      cancelledBy: 'Admin'
+      cancellationDate: '01/13/2024',
+      reason: 'Technician Unavailable',
+      cancellationNote: 'Primary technician called out sick. Backup technician assigned but requires additional time for travel.'
     },
     {
       id: 4,
       address: '1010 Sunset Boulevard, Miami, Florida 33133',
-      clientName: 'Jake Smith',
-      contactNumber: '(555) 456-7890',
-      assignedSensor: 'Sensor #12349',
-      date: '2024-01-12',
-      reason: 'Client requested reschedule',
-      cancelledBy: 'Client'
+      cancellationDate: '01/12/2024',
+      reason: 'Equipment Maintenance',
+      cancellationNote: 'Required diagnostic equipment undergoing scheduled maintenance. Service rescheduled for following day.'
     },
     {
       id: 5,
       address: '2020 Sunrise Boulevard, Fort Lauderdale, Florida 33304',
-      clientName: 'Robert Black',
-      contactNumber: '(555) 567-8901',
-      assignedSensor: 'Sensor #12350',
-      date: '2024-01-11',
-      reason: 'Equipment failure',
-      cancelledBy: 'System'
+      cancellationDate: '12/02/2024',
+      reason: 'Emergency Call Priority',
+      cancellationNote: 'Emergency service call took priority. Client understanding and agreed to reschedule. Sensor monitoring continues with no immediate concerns detected.'
     }
   ])
 
@@ -796,9 +781,9 @@ const ManageServiceCalls = () => {
                     </div>
                   </th>
                 )}
-                {activeTab === 'cancelled' && <th>Date</th>}
+                {activeTab === 'cancelled' && <th>Cancellation Date</th>}
                 {activeTab === 'cancelled' && <th>Reason</th>}
-                {activeTab === 'cancelled' && <th>Cancelled By</th>}
+                {activeTab === 'cancelled' && <th>Cancellation Note</th>}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -835,7 +820,7 @@ const ManageServiceCalls = () => {
                           <div className="skeleton-placeholder skeleton-reason"></div>
                         </td>
                         <td>
-                          <div className="skeleton-placeholder skeleton-cancelled-by"></div>
+                          <div className="skeleton-placeholder skeleton-cancellation-note"></div>
                         </td>
                       </>
                     )}
@@ -859,9 +844,9 @@ const ManageServiceCalls = () => {
                     <td>{call.clientName}</td>
                     <td>{call.contactNumber}</td>
                     {(activeTab === 'required' || activeTab === 'my-calls' || activeTab === 'history') && <td>{call.assignedSensor}</td>}
-                    {activeTab === 'cancelled' && <td>{call.date}</td>}
+                    {activeTab === 'cancelled' && <td>{call.cancellationDate}</td>}
                     {activeTab === 'cancelled' && <td>{call.reason}</td>}
-                    {activeTab === 'cancelled' && <td>{call.cancelledBy}</td>}
+                    {activeTab === 'cancelled' && <td>{call.cancellationNote}</td>}
                     <td>
                       <div className="icon-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
                         {activeTab === 'my-calls' ? (
