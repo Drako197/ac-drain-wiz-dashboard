@@ -6,33 +6,73 @@ const ManageServiceCalls = () => {
   const [serviceCalls] = useState([
     {
       id: 1,
-      clientName: 'John Smith',
-      address: '123 Main St, Anytown, USA',
-      issue: 'Clogged drain',
-      priority: 'high',
-      status: 'in-progress',
-      assignedTo: 'Mike Davis',
-      scheduledDate: '2024-01-20'
+      address: '456 Ocean Drive, Fort Lauderdale, Florida 33301',
+      clientName: 'Dennis Roberts',
+      contactNumber: '(555) 104-3778',
+      assignedSensor: 'Sensor #12346'
     },
     {
       id: 2,
-      clientName: 'Sarah Wilson',
-      address: '456 Oak Ave, Somewhere, USA',
-      issue: 'AC maintenance',
-      priority: 'medium',
-      status: 'scheduled',
-      assignedTo: 'Lisa Chen',
-      scheduledDate: '2024-01-22'
+      address: '789 Palm Avenue, West Palm Beach, Florida 33401',
+      clientName: 'Jason Clark',
+      contactNumber: '(555) 151-9853',
+      assignedSensor: 'Sensor #12347'
     },
     {
       id: 3,
-      clientName: 'Mike Johnson',
-      address: '789 Pine Rd, Elsewhere, USA',
-      issue: 'Emergency repair',
-      priority: 'urgent',
-      status: 'completed',
-      assignedTo: 'Tom Wilson',
-      scheduledDate: '2024-01-18'
+      address: '1010 Sunset Boulevard, Miami, Florida 33133',
+      clientName: 'Mark Martinez',
+      contactNumber: '(555) 630-7774',
+      assignedSensor: 'Sensor #12348'
+    },
+    {
+      id: 4,
+      address: '5050 Collins Avenue, Miami Beach, Florida 33140',
+      clientName: 'Matthew Garcia',
+      contactNumber: '(555) 373-2216',
+      assignedSensor: 'Sensor #12352'
+    },
+    {
+      id: 5,
+      address: '4444 20th Street, Miami Beach, Florida 33139',
+      clientName: 'Roy Perez',
+      contactNumber: '(555) 809-5172',
+      assignedSensor: 'Sensor #12360'
+    },
+    {
+      id: 6,
+      address: '5555 25th Street, Miami Beach, Florida 33140',
+      clientName: 'Jake Smith',
+      contactNumber: '(555) 131-5135',
+      assignedSensor: 'Sensor #12361'
+    },
+    {
+      id: 7,
+      address: '6666 30th Street, Miami Beach, Florida 33140',
+      clientName: 'Joshua White',
+      contactNumber: '(555) 954-6303',
+      assignedSensor: 'Sensor #12362'
+    },
+    {
+      id: 8,
+      address: '7777 35th Street, Miami Beach, Florida 33140',
+      clientName: 'Jake Smith',
+      contactNumber: '(555) 904-5354',
+      assignedSensor: 'Sensor #12363'
+    },
+    {
+      id: 9,
+      address: '123 Main Street, Miami Beach, Florida 33181',
+      clientName: 'George Garcia',
+      contactNumber: '(555) 306-8401',
+      assignedSensor: 'Sensor #12365'
+    },
+    {
+      id: 10,
+      address: '3030 Coral Way, Coral Gables, Florida 33134',
+      clientName: 'Nicholas Allen',
+      contactNumber: '(555) 286-7511',
+      assignedSensor: 'Sensor #12370'
     }
   ])
 
@@ -64,83 +104,70 @@ const ManageServiceCalls = () => {
       </div>
 
       {/* Main Content Card */}
-      <div className="service-calls-card">
-        {/* Page Title */}
-        <h1 className="page-title">Manage Service Calls</h1>
-
-        {/* Tab Navigation */}
-        <div className="tab-navigation">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`tab-item ${activeTab === tab.id ? 'active' : ''} ${tab.color}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              <span className="tab-label">{tab.label}</span>
-              {tab.count && (
-                <span className={`tab-badge ${tab.color}`}>
-                  {tab.count}
-                </span>
-              )}
-            </button>
-          ))}
+      <div className="dashboard-table-section">
+        <h1>Manage Service Calls</h1>
+        
+        <div className="tabs-section">
+          <div className="tabs-container">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+                {tab.count && (
+                  <span className="tab-count">{tab.count}</span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Section Heading and Search */}
-        <div className="section-header">
-          <h2 className="section-title">Addresses Requiring a Service Call</h2>
+        <div className="table-header">
+          <h2>Addresses Requiring a Service Call</h2>
           <div className="search-wrapper">
             <div className="typeahead-wrapper">
-              <div className="search-input-container">
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder="Search Address"
-                />
-              </div>
+              <input
+                className="search-input"
+                placeholder="Search Address"
+                aria-label="Search Address"
+                type="text"
+                value=""
+              />
             </div>
           </div>
         </div>
 
-        {/* Service Calls Table Section */}
-        <div className="dashboard-table-section">
+        <div style={{ position: 'relative' }}>
           <table className="dashboard-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Client</th>
                 <th>Address</th>
-                <th>Issue</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Assigned To</th>
-                <th>Scheduled Date</th>
+                <th>Client Name</th>
+                <th>Contact Number</th>
+                <th>
+                  Assigned Sensor
+                  <div className="info-icon-wrapper" style={{ position: 'relative', display: 'inline-block', marginLeft: '6px' }}>
+                    <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
+                      <path d="M6.56 6C6.71673 5.55445 7.0261 5.17874 7.4333 4.93942C7.8405 4.70011 8.31926 4.61263 8.78478 4.69248C9.2503 4.77233 9.67254 5.01435 9.97671 5.37569C10.2809 5.73702 10.4474 6.19435 10.4467 6.66667C10.4467 8 8.44666 8.66667 8.44666 8.66667M8.5 11.3333H8.50666M15.1667 8C15.1667 11.6819 12.1819 14.6667 8.5 14.6667C4.8181 14.6667 1.83333 11.6819 1.83333 8C1.83333 4.3181 4.8181 1.33334 8.5 1.33334C12.1819 1.33334 15.1667 4.3181 15.1667 8Z" stroke="#98A2B3" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"></path>
+                    </svg>
+                  </div>
+                </th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {serviceCalls.map((call) => (
                 <tr key={call.id}>
-                  <td>#{call.id}</td>
-                  <td>{call.clientName}</td>
                   <td>{call.address}</td>
-                  <td>{call.issue}</td>
+                  <td>{call.clientName}</td>
+                  <td>{call.contactNumber}</td>
+                  <td>{call.assignedSensor}</td>
                   <td>
-                    <span className={`priority-badge ${call.priority}`}>
-                      {call.priority}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${call.status}`}>
-                      {call.status}
-                    </span>
-                  </td>
-                  <td>{call.assignedTo}</td>
-                  <td>{call.scheduledDate}</td>
-                  <td>
-                    <div className="icon-wrapper">
+                    <div className="icon-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
-                        <path d="M13.0261 6.3595C12.6961 6.02948 12.5311 5.86447 12.4693 5.6742C12.4149 5.50683 12.4149 5.32654 12.4693 5.15917C12.5311 4.9689 12.6961 4.80389 13.0261 4.47388L15.3914 2.10857C14.7638 1.82471 14.067 1.66669 13.3333 1.66669C10.5719 1.66669 8.33333 3.90526 8.33333 6.66669C8.33333 7.07589 8.38248 7.47361 8.47521 7.85426C8.57451 8.26189 8.62416 8.4657 8.61535 8.59446C8.60612 8.72926 8.58602 8.80098 8.52386 8.92095C8.46448 9.03554 8.35071 9.14931 8.12318 9.37684L2.91666 14.5834C2.22631 15.2737 2.22631 16.393 2.91666 17.0834C3.60702 17.7737 4.72631 17.7737 5.41666 17.0834L10.6232 11.8768C10.8507 11.6493 10.9645 11.5355 11.0791 11.4762C11.199 11.414 11.2708 11.3939 11.4056 11.3847C11.5343 11.3759 11.7381 11.4255 12.1458 11.5248C12.5264 11.6175 12.9241 11.6667 13.3333 11.6667C16.0948 11.6667 18.3333 9.42811 18.3333 6.66669C18.3333 5.93301 18.1753 5.23625 17.8914 4.60857L15.5261 6.97388C15.1961 7.30389 15.0311 7.4689 14.8408 7.53072C14.6735 7.5851 14.4932 7.5851 14.3258 7.53072C14.1355 7.4689 13.9705 7.30389 13.6405 6.97388L13.0261 6.3595Z" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"></path>
+                        <path d="M17.5 9.58334V7.33334C17.5 5.93321 17.5 5.23314 17.2275 4.69836C16.9878 4.22796 16.6054 3.84551 16.135 3.60582C15.6002 3.33334 14.9001 3.33334 13.5 3.33334H6.5C5.09987 3.33334 4.3998 3.33334 3.86502 3.60582C3.39462 3.84551 3.01217 4.22796 2.77248 4.69836C2.5 5.23314 2.5 5.93321 2.5 7.33334V14.3333C2.5 15.7335 2.5 16.4335 2.77248 16.9683C3.01217 17.4387 3.39462 17.8212 3.86502 18.0609C4.3998 18.3333 5.09987 18.3333 6.5 18.3333H10.4167M17.5 8.33334H2.5M13.3333 1.66667V5.00001M6.66667 1.66667V5.00001M15 17.5V12.5M12.5 15H17.5" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"></path>
                       </svg>
                     </div>
                   </td>
@@ -148,6 +175,16 @@ const ManageServiceCalls = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="pagination-container">
+          <div className="pagination-info">Showing 1 to 10 of 16 results</div>
+          <div className="pagination">
+            <button className="pagination-btn" disabled="">← Previous</button>
+            <button className="pagination-btn active">1</button>
+            <button className="pagination-btn">2</button>
+            <button className="pagination-btn">Next →</button>
+          </div>
         </div>
       </div>
     </div>
