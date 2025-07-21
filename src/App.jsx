@@ -5,6 +5,9 @@ import Dashboard from './pages/Dashboard';
 import ManageClients from './pages/ManageClients';
 import ManageEmployees from './pages/ManageEmployees';
 import ManageServiceCalls from './pages/ManageServiceCalls';
+import MyServiceCalls from './pages/MyServiceCalls';
+import ServiceCallHistory from './pages/ServiceCallHistory';
+import CancelledServiceCalls from './pages/CancelledServiceCalls';
 import OnboardingModal from './components/OnboardingModal';
 import Toast from './components/Toast';
 import './App.css';
@@ -61,6 +64,9 @@ function App() {
               <Route path="/manage-clients" element={<ManageClients />} />
               <Route path="/manage-employees" element={<ManageEmployees />} />
               <Route path="/manage-service-calls" element={<ManageServiceCalls />} />
+              <Route path="/my-service-calls" element={<MyServiceCalls />} />
+              <Route path="/service-call-history" element={<ServiceCallHistory />} />
+              <Route path="/cancelled-service-calls" element={<CancelledServiceCalls />} />
             </Routes>
           </main>
         </div>
