@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Dashboard.css';
 
-const Dashboard = ({ onShowOnboarding }) => {
+const Dashboard = ({ onShowOnboarding, onboardingCompleted }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -12,6 +12,7 @@ const Dashboard = ({ onShowOnboarding }) => {
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [contractorName, setContractorName] = useState('Acme HVAC and Cooling');
   const [contractorEmail, setContractorEmail] = useState('ariddle@acdrainwiz.com');
+  const [firstName, setFirstName] = useState('Diana');
   const searchInputRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -25,7 +26,14 @@ const Dashboard = ({ onShowOnboarding }) => {
     if (storedContractorEmail && storedContractorEmail.trim()) {
       setContractorEmail(storedContractorEmail.trim());
     }
-  }, []);
+    
+    const storedFullName = localStorage.getItem('acdrainwiz_full_name');
+    if (storedFullName && storedFullName.trim()) {
+      const nameParts = storedFullName.trim().split(' ');
+      const firstName = nameParts[0] || 'Diana';
+      setFirstName(firstName);
+    }
+  }, [onboardingCompleted]);
 
   // Expanded mock data for demonstration (100 entries for 10 pages)
   const clientAddresses = [
@@ -316,7 +324,7 @@ const Dashboard = ({ onShowOnboarding }) => {
         <div className="dashboard-header">
           <div className="dashboard-welcome">
             <div>
-              <h1>Welcome back, Diana! 🚀</h1>
+              <h1>Welcome back, {firstName}! 🚀</h1>
               <p>Your current sensor display and activities - Updated!</p>
             </div>
             <div className="dashboard-contact">

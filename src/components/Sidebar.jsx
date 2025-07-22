@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const Sidebar = ({ onPageChange }) => {
+const Sidebar = ({ onPageChange, onboardingCompleted }) => {
   const [contractorName, setContractorName] = useState('Acme HVAC and Cooling');
   const [contractorEmail, setContractorEmail] = useState('ariddle@acdrainwiz.com');
   const [fullName, setFullName] = useState('Diana Rivera');
@@ -21,7 +21,7 @@ const Sidebar = ({ onPageChange }) => {
     if (storedFullName && storedFullName.trim()) {
       setFullName(storedFullName.trim());
     }
-  }, []);
+  }, [onboardingCompleted]);
   const navigate = useNavigate();
   const location = useLocation();
 

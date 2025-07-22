@@ -15,6 +15,7 @@ import './App.css';
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
   // Check if user has completed onboarding
   useEffect(() => {
@@ -26,6 +27,7 @@ function App() {
 
   const handleOnboardingComplete = (contractorName, contractorEmail, fullName) => {
     setShowOnboarding(false);
+    setOnboardingCompleted(true);
     localStorage.setItem('acdrainwiz_onboarding_completed', 'true');
     if (contractorName && contractorName.trim()) {
       localStorage.setItem('acdrainwiz_contractor_name', contractorName.trim());
@@ -59,13 +61,13 @@ function App() {
       <div className="App">
         <div className={`dashboard-container ${showOnboarding ? 'onboarding-active' : ''}`}>
           <aside className="sidebar">
-            <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
+            <Sidebar currentPage={currentPage} onPageChange={handlePageChange} onboardingCompleted={onboardingCompleted} />
           </aside>
           
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<Dashboard onShowOnboarding={handleShowOnboarding} />} />
-              <Route path="/dashboard" element={<Dashboard onShowOnboarding={handleShowOnboarding} />} />
+              <Route path="/" element={<Dashboard onShowOnboarding={handleShowOnboarding} onboardingCompleted={onboardingCompleted} />} />
+              <Route path="/dashboard" element={<Dashboard onShowOnboarding={handleShowOnboarding} onboardingCompleted={onboardingCompleted} />} />
               <Route path="/manage-clients" element={<ManageClients />} />
               <Route path="/manage-employees" element={<ManageEmployees />} />
               <Route path="/manage-service-calls" element={<ManageServiceCalls />} />
