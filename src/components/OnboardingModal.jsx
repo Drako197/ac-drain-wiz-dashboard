@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Toast from './Toast';
 import './OnboardingModal.css';
 
 const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [toast, setToast] = useState(null);
+
   const [userName, setUserName] = useState('');
   const [invitedEmployees, setInvitedEmployees] = useState([]);
   const [existingCustomAddressNames, setExistingCustomAddressNames] = useState(['main office', 'warehouse a', 'downtown location']);
@@ -387,8 +386,9 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
   ];
 
   const showToastMessage = (message, type = 'info') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 8000);
+    if (window.showToastMessage) {
+      window.showToastMessage(message, type);
+    }
   };
 
   const handleInputChange = (name, value) => {
@@ -813,7 +813,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     
     // Show a toast message if appointments were found and time was auto-adjusted
     if (hasExistingAppointments) {
-      showToastMessage(`Date selected! Start time automatically set to ${nextAvailableTime} due to existing appointments.`, "info");
+      showToastMessage(`This date has one or more pre-existing service calls. Available start time has been automatically set to ${nextAvailableTime}.`, "info");
     }
     
     // Clear error for serviceDate when date is selected
@@ -899,7 +899,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     
     // Show a toast message if appointments were found and time was auto-adjusted
     if (hasExistingAppointments) {
-      showToastMessage(`Today selected! Start time automatically set to ${nextAvailableTime} due to existing appointments.`, "info");
+      showToastMessage(`This date has one or more pre-existing service calls. Available start time has been automatically set to ${nextAvailableTime}.`, "info");
     }
     
     // Clear error for serviceDate when Today is clicked
@@ -2294,14 +2294,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     </div>
   )}
 
-  {/* Toast Messages */}
-  {toast && (
-    <Toast 
-      message={toast.message} 
-      type={toast.type} 
-      onClose={() => setToast(null)}
-    />
-  )}
 </>
 );
 };

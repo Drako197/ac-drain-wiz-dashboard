@@ -9,13 +9,12 @@ import MyServiceCalls from './pages/MyServiceCalls';
 import ServiceCallHistory from './pages/ServiceCallHistory';
 import CancelledServiceCalls from './pages/CancelledServiceCalls';
 import OnboardingModal from './components/OnboardingModal';
-import Toast from './components/Toast';
+import ToastContainer from './components/ToastContainer';
 import './App.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [toast, setToast] = useState(null);
 
   // Check if user has completed onboarding
   useEffect(() => {
@@ -37,7 +36,9 @@ function App() {
     if (fullName && fullName.trim()) {
       localStorage.setItem('acdrainwiz_full_name', fullName.trim());
     }
-    showToastMessage('🎉 Welcome to AC Drain Wiz! Your setup is complete.');
+    if (window.showToastMessage) {
+      window.showToastMessage('🎉 Welcome to AC Drain Wiz! Your setup is complete.', 'success');
+    }
   };
 
   const handleOnboardingClose = () => {
@@ -47,11 +48,6 @@ function App() {
 
   const handleShowOnboarding = () => {
     setShowOnboarding(true);
-  };
-
-  const showToastMessage = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   const handlePageChange = (page) => {
@@ -87,14 +83,8 @@ function App() {
           onComplete={handleOnboardingComplete}
         />
 
-        {/* Toast Notifications */}
-        {toast && (
-          <Toast 
-            message={toast.message} 
-            type={toast.type} 
-            onClose={() => setToast(null)}
-          />
-        )}
+        {/* Toast Container */}
+        <ToastContainer />
 
         {/* Onboarding Trigger Button */}
         <button 

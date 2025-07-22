@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './Toast.css';
 
-const Toast = ({ message, type = 'info', onClose }) => {
+const Toast = ({ id, message, type = 'info', onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
@@ -32,17 +32,15 @@ const Toast = ({ message, type = 'info', onClose }) => {
   };
 
   return (
-    <div className="toast-container">
-      <div className={getToastClass()}>
-        <div className="toast-content">
-          <div className="toast-icon">
-            {getToastIcon()}
-          </div>
-          <div className="toast-message">{message}</div>
-          <button className="toast-close" onClick={onClose}>
-            ×
-          </button>
+    <div className={getToastClass()}>
+      <div className="toast-content">
+        <div className="toast-icon">
+          {getToastIcon()}
         </div>
+        <div className="toast-message">{message}</div>
+        <button className="toast-close" onClick={onClose}>
+          ×
+        </button>
       </div>
     </div>
   );
