@@ -361,11 +361,19 @@
   font-size: 14px;
 }
 
+.dashboard-table th:last-child {
+  text-align: center;
+}
+
 .dashboard-table td {
   padding: 11px 16px;
   border-bottom: 1px solid #f1f5f9;
   color: #374151;
   font-size: 14px;
+}
+
+.dashboard-table td:last-child {
+  text-align: center;
 }
 
 .dashboard-table tr:hover {
