@@ -1494,29 +1494,36 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       <div className="onboarding-overlay" onClick={handleClose}>
         <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
           {isLoading ? (
-            // Simple loading animation
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              width: '100%',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white',
-              textAlign: 'center',
-              padding: '40px'
-            }}>
-              <h1 style={{fontSize: '32px', marginBottom: '30px'}}>Finalizing Your Setup</h1>
-              <div style={{fontSize: '18px', marginBottom: '40px'}}>Please wait while we complete your setup...</div>
-              <div style={{
-                width: '100px',
-                height: '100px',
-                border: '4px solid rgba(255,255,255,0.3)',
-                borderTop: '4px solid white',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite'
-              }}></div>
+            // New minimalist rocket ship loading animation
+            <div className="loading-content-rocket">
+              <div className="rocket-container">
+                <div className="orbit-circle orbit-1"></div>
+                <div className="orbit-circle orbit-2"></div>
+                <div className="rocket">
+                  <div className="rocket-nose"></div>
+                  <div className="rocket-body">
+                    <div className="rocket-window"></div>
+                  </div>
+                  <div className="rocket-fins">
+                    <div className="fin fin-left"></div>
+                    <div className="fin fin-right"></div>
+                    <div className="fin fin-bottom"></div>
+                  </div>
+                  <div className="rocket-engine">
+                    <div className="flame"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="loading-text-rocket">
+                <h2>Finalizing Your Setup</h2>
+                <div className="loading-messages-rocket">
+                  <div className="loading-message-rocket">Preparing your dashboard...</div>
+                  <div className="loading-message-rocket">Configuring sensors...</div>
+                  <div className="loading-message-rocket">Setting up service tracking...</div>
+                  <div className="loading-message-rocket">Almost ready...</div>
+                </div>
+              </div>
             </div>
           ) : (
             <>

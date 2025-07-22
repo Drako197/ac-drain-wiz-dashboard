@@ -2418,8 +2418,8 @@
   }
 }
 
-/* Loading Animation Styles */
-.loading-content {
+/* Rocket Ship Loading Animation Styles */
+.loading-content-rocket {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2428,7 +2428,299 @@
   width: 100%;
   text-align: center;
   padding: 40px;
-  min-height: 725px; /* Match the onboarding-left min-height */
+  min-height: 725px;
+  background: white;
+  color: #374151;
+}
+
+.rocket-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orbit-circle {
+  position: absolute;
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  border-radius: 50%;
+  animation: orbitRotate 8s linear infinite;
+}
+
+.orbit-1 {
+  width: 200px;
+  height: 200px;
+  animation-duration: 8s;
+}
+
+.orbit-2 {
+  width: 250px;
+  height: 250px;
+  animation-duration: 12s;
+  animation-direction: reverse;
+}
+
+.rocket {
+  position: relative;
+  width: 100px;
+  height: 160px;
+  animation: rocketFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.rocket-nose {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 35px solid #ff6b35;
+  z-index: 3;
+}
+
+.rocket-body {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 100px;
+  background: #ffffff;
+  border: 2px solid #e9ecef;
+  border-radius: 20px;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.rocket-window {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  background: #007bff;
+  border: 2px solid #0056b3;
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.rocket-fins {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 25px;
+  z-index: 1;
+}
+
+.fin {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #ff6b35;
+  border-radius: 0 0 10px 0;
+}
+
+.fin-left {
+  left: -20px;
+  transform: rotate(-20deg);
+}
+
+.fin-right {
+  right: -20px;
+  transform: rotate(20deg) scaleX(-1);
+}
+
+.fin-bottom {
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.rocket-engine {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 25px;
+  height: 30px;
+  z-index: 1;
+}
+
+.flame {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 25px;
+  background: linear-gradient(to bottom, #ffd700 0%, #ff8c00 100%);
+  border-radius: 50% 50% 0 0;
+  animation: flameFlicker 0.6s ease-in-out infinite alternate;
+}
+
+.loading-text-rocket {
+  text-align: center;
+  max-width: 400px;
+}
+
+.loading-text-rocket h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.loading-messages-rocket {
+  position: relative;
+  height: 24px;
+  overflow: hidden;
+}
+
+.loading-message-rocket {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 16px;
+  color: #6b7280;
+  opacity: 0;
+  animation: messageSlide 4s ease-in-out infinite;
+}
+
+.loading-message-rocket:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-message-rocket:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.loading-message-rocket:nth-child(3) {
+  animation-delay: 2s;
+}
+
+.loading-message-rocket:nth-child(4) {
+  animation-delay: 3s;
+}
+
+.loading-animation-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  animation: dotPulse 1.4s ease-in-out infinite both;
+}
+
+.dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.loading-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.circle-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid #e5e7eb;
+  border-radius: 50%;
+}
+
+.circle-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid transparent;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: circleRotate 2s linear infinite;
+}
+
+.loading-text-modern {
+  text-align: center;
+  max-width: 400px;
+}
+
+.loading-text-modern h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.loading-messages-modern {
+  position: relative;
+  height: 24px;
+  overflow: hidden;
+}
+
+.loading-message-modern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 16px;
+  color: #6b7280;
+  opacity: 0;
+  animation: messageSlide 4s ease-in-out infinite;
+}
+
+.loading-message-modern:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-message-modern:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.loading-message-modern:nth-child(3) {
+  animation-delay: 2s;
+}
+
+.loading-message-modern:nth-child(4) {
+  animation-delay: 3s;
 }
 
 .spaceship-container {
@@ -2807,4 +3099,59 @@
   margin-top: 4px;
   display: block;
   text-align: left;
+}
+
+/* Rocket Ship Animation Keyframes */
+@keyframes rocketFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(-3deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(3deg);
+  }
+  75% {
+    transform: translateY(-8px) rotate(0deg);
+  }
+}
+
+@keyframes orbitRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes flameFlicker {
+  0% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes messageSlide {
+  0%, 25% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  75%, 100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
 }
