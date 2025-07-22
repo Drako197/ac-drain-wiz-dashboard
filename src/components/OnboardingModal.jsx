@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import './OnboardingModal.css';
 
 const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) => {
@@ -1495,25 +1496,22 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
           {isLoading ? (
             // New minimalist rocket ship loading animation
-            <div className="loading-content-rocket">
-              <div className="rocket-container">
-                <div className="orbit-circle orbit-1"></div>
-                <div className="orbit-circle orbit-2"></div>
-                <div className="rocket">
-                  <div className="rocket-nose"></div>
-                  <div className="rocket-body">
-                    <div className="rocket-window"></div>
-                  </div>
-                  <div className="rocket-fins">
-                    <div className="fin fin-left"></div>
-                    <div className="fin fin-right"></div>
-                    <div className="fin fin-bottom"></div>
-                  </div>
-                  <div className="rocket-engine">
-                    <div className="flame"></div>
-                  </div>
+                          <div className="loading-content-rocket">
+                <div className="lottie-container">
+                  <DotLottieReact
+                    src="/Rocket Launch.json"
+                    autoplay
+                    loop
+                    style={{ 
+                      width: '300px', 
+                      height: '300px',
+                      transform: 'rotate(45deg)'
+                    }}
+                    onError={(error) => {
+                      console.log('DotLottie error:', error);
+                    }}
+                  />
                 </div>
-              </div>
               
               <div className="loading-text-rocket">
                 <h2>Finalizing Your Setup</h2>

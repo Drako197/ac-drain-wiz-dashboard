@@ -39,7 +39,7 @@ function App() {
       localStorage.setItem('acdrainwiz_full_name', fullName.trim());
     }
     if (window.showToastMessage) {
-      window.showToastMessage('🎉 Welcome to AC Drain Wiz! Your setup is complete.', 'success');
+      window.showToastMessage('Your setup is complete, feel free to navigate the application to learn how to manage your clients, employees and service calls.', 'success');
     }
   };
 
