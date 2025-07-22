@@ -310,7 +310,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
 
   // Debug isLoading state changes
   useEffect(() => {
-    console.log('isLoading state changed to:', isLoading);
+    // console.log('isLoading state changed to:', isLoading);
   }, [isLoading]);
 
   const steps = [
@@ -396,6 +396,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     }
   };
 
+
+
   const handleInputChange = (name, value) => {
     setFormData(prev => {
       const newFormData = {
@@ -446,9 +448,9 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
   };
 
   const validateStep = (stepIndex) => {
-    console.log('=== validateStep called ===');
-    console.log('Step index:', stepIndex);
-    console.log('Current form data:', formData);
+    // console.log('=== validateStep called ===');
+          // console.log('Step index:', stepIndex);
+      // console.log('Current form data:', formData);
     
     const currentStepData = steps[stepIndex];
     if (!currentStepData.formFields || currentStepData.formFields.length === 0) {
@@ -480,62 +482,62 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
 
     // Special validation for Step 2: Check that at least one employee is invited
     if (stepIndex === 2) {
-      console.log('Step 2 validation - checking invited employees');
-      console.log('Invited employees:', invitedEmployees);
+      // console.log('Step 2 validation - checking invited employees');
+      // console.log('Invited employees:', invitedEmployees);
       
       if (invitedEmployees.length === 0) {
-        console.log('No employees invited! Adding error');
+        // console.log('No employees invited! Adding error');
         newErrors.invitedEmployees = 'Please invite at least one employee before continuing';
       } else {
-        console.log('Employees are invited:', invitedEmployees.length);
+        // console.log('Employees are invited:', invitedEmployees.length);
       }
     }
 
     // Special validation for Step 3: Custom address name validation
     if (stepIndex === 3) {
-      console.log('Step 3 validation - checking custom address name');
+      // console.log('Step 3 validation - checking custom address name');
       
       // Check if "Custom" is selected for address name type
       if (formData.addressNameType === 'Custom') {
-        console.log('Custom address type selected, checking custom address name');
+        // console.log('Custom address type selected, checking custom address name');
         
         // Validate custom address name is provided
         if (!formData.customAddressName || formData.customAddressName.trim() === '') {
-          console.log('Custom address name is empty! Adding error');
+          // console.log('Custom address name is empty! Adding error');
           newErrors.customAddressName = 'Custom address name is required when "Custom" is selected';
         } else {
-          console.log('Custom address name is provided:', formData.customAddressName);
+          // console.log('Custom address name is provided:', formData.customAddressName);
         }
       } else {
-        console.log('Non-custom address type selected:', formData.addressNameType);
+        // console.log('Non-custom address type selected:', formData.addressNameType);
       }
     }
 
     // Special validation for Step 4: Check that at least one sensor is selected
     if (stepIndex === 4) {
-      console.log('Step 4 sensor validation:');
-      console.log('- sensor1:', formData.sensor1);
-      console.log('- sensor2:', formData.sensor2);
-      console.log('- sensor3:', formData.sensor3);
+      // console.log('Step 4 sensor validation:');
+      // console.log('- sensor1:', formData.sensor1);
+      // console.log('- sensor2:', formData.sensor2);
+      // console.log('- sensor3:', formData.sensor3);
       
       const hasSelectedSensor = formData.sensor1 || formData.sensor2 || formData.sensor3;
-      console.log('- hasSelectedSensor:', hasSelectedSensor);
+      // console.log('- hasSelectedSensor:', hasSelectedSensor);
       
       if (!hasSelectedSensor) {
-        console.log('No sensors selected! Adding error');
+        // console.log('No sensors selected! Adding error');
         newErrors.selectedSensors = 'Please select at least one sensor to service';
       } else {
-        console.log('At least one sensor is selected');
+        // console.log('At least one sensor is selected');
       }
     }
 
-    console.log('Final errors:', newErrors);
+    // console.log('Final errors:', newErrors);
     setErrors(newErrors);
     setShowErrors(true);
     
     const isValid = Object.keys(newErrors).length === 0;
     setIsStepValid(isValid);
-    console.log('Validation result:', isValid);
+    // console.log('Validation result:', isValid);
     return isValid;
   };
 
@@ -1353,7 +1355,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
             <input 
               accept=".svg,.png,.jpg,.jpeg,.gif" 
               type="file" 
-              style={{ display: 'none' }}
+              className="file-input"
               onChange={(e) => handleInputChange(field.name, e.target.files[0])}
             />
           </div>
@@ -1492,6 +1494,12 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
 
   return (
     <>
+      {/* Mobile Floating Step Indicator - Hidden for now */}
+      {/* <div className="mobile-step-indicator">
+        <div className="mobile-step-number">{currentStep}</div>
+        <div className="mobile-step-text">{steps[currentStep]?.title || 'Setup'}</div>
+      </div> */}
+      
       <div className="onboarding-overlay">
         <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
           {isLoading ? (
@@ -1526,10 +1534,65 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
           ) : (
             <>
               <div className="onboarding-left">
-                <div className="onboarding-logo">
-                  <img className="logo-img" src="/images/acdrainwiz_logo.png" alt="AC Drain Wiz" />
+                {/* Mobile Header */}
+                <div className="mobile-onboarding-header">
+                  <img className="mobile-logo" src="/images/acdrainwiz_logo.png" alt="AC Drain Wiz" />
+                  <div className="mobile-step-title">{steps[currentStep]?.title || 'Welcome'}</div>
+                  {/* <div className="mobile-step-description">{steps[currentStep]?.description || 'Let\'s get you set up'}</div> */}
+                  
+                  {/* Mobile Horizontal Step Indicators */}
+                  <div className="mobile-step-indicators">
+                    {/* Progress Line */}
+                    <div 
+                      className="mobile-progress-line"
+                      style={{
+                        width: `${Math.max(0, (currentStep - 1) / (steps.length - 2)) * 100}%`
+                      }}
+                    />
+                    
+                    {steps.slice(1).map((step, index) => {
+                      const stepNumber = index + 1;
+                      const isCompleted = stepNumber < currentStep;
+                      const isActive = stepNumber === currentStep;
+                      const isDisabled = stepNumber > currentStep;
+                      
+                      return (
+                        <div key={stepNumber} className="mobile-step-item">
+                          <div 
+                            className={`mobile-step-circle ${
+                              isCompleted ? 'completed' : 
+                              isActive ? 'active' : 
+                              isDisabled ? 'disabled' : ''
+                            }`}
+                          >
+                            {isCompleted ? (
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            ) : (
+                              stepNumber
+                            )}
+                          </div>
+                          <div 
+                            className={`mobile-step-text ${
+                              isCompleted ? 'completed' : 
+                              isActive ? 'active' : 
+                              isDisabled ? 'disabled' : ''
+                            }`}
+                          >
+                            {stepNumber === 1 ? 'Setup' :
+                             stepNumber === 2 ? 'Team' :
+                             stepNumber === 3 ? 'Client' :
+                             stepNumber === 4 ? 'Service' :
+                             stepNumber === 5 ? 'Done' : step.title}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
                 
+                {/* Desktop Steps (hidden on mobile) */}
                 <div className={`onboarding-steps ${isWelcomeStep ? 'preview-mode' : ''}`}>
                   <div className="steps-preview-header">
                     <h3>Setup Steps</h3>
@@ -1582,7 +1645,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                 </div>
               </div>
 
-              <div className="onboarding-right">
+              <div className={`onboarding-right ${isWelcomeStep ? '' : `step-${currentStep}`}`}>
                 {isWelcomeStep ? (
                   <div className="onboarding-content">
                     <div className="content-header">
