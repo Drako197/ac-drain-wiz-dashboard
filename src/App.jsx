@@ -83,6 +83,7 @@ function App() {
           isOpen={showOnboarding}
           onClose={handleOnboardingClose}
           onComplete={handleOnboardingComplete}
+          onboardingCompleted={onboardingCompleted}
         />
 
         {/* Toast Container */}
