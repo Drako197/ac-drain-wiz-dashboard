@@ -622,7 +622,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
         setIsLoading(false);
         console.log('Moving to step 5');
         setCurrentStep(5);
-        showToastMessage("Setup complete! Welcome to AC Drain Wiz!", "success");
       }, 5000);
       return;
     }
@@ -647,7 +646,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
       ];
       showToastMessage(stepMessages[nextStep - 3].message, stepMessages[nextStep - 3].type);
     } else {
-      showToastMessage("Welcome to AC Drain Wiz! Your setup is complete.", "success");
       // Use random name for fullName construction
       const fullName = formData.randomFirstName && formData.randomLastName ? `${formData.randomFirstName} ${formData.randomLastName}` : '';
       onComplete(formData.contractorName, formData.contractorEmail, fullName);
