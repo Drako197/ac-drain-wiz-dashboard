@@ -2030,7 +2030,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                           currentStepData.formFields.map(field => renderFormField(field))
                         )}
                       </div>
-                    )
                   )}
                   
                   {/* Form actions for step 1 only */}
