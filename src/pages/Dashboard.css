@@ -9,6 +9,7 @@
   margin: 0;
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .breadcrumb-item {
@@ -17,6 +18,20 @@
 }
 
 .breadcrumb-current {
+  color: #6b7280;
+  font-size: 14px !important;
+  font-weight: 400;
+}
+
+.breadcrumb-item:first-child .breadcrumb-current {
+  color: #374151;
+  font-size: 14px !important;
+}
+
+.breadcrumb-icon {
+  color: #374151;
+  width: 16px;
+  height: 16px;
 }
 
 /* Dashboard Header Section */
