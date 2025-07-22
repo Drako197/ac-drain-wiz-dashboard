@@ -17,12 +17,9 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
-  // Check if user has completed onboarding
+  // Always show onboarding first on refresh
   useEffect(() => {
-    const hasCompletedOnboarding = localStorage.getItem('acdrainwiz_onboarding_completed');
-    if (hasCompletedOnboarding === 'true') {
-      setShowOnboarding(false);
-    }
+    setShowOnboarding(true);
   }, []);
 
   const handleOnboardingComplete = (contractorName, contractorEmail, fullName) => {

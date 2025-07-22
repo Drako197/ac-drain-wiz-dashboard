@@ -1492,7 +1492,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
 
   return (
     <>
-      <div className="onboarding-overlay" onClick={handleClose}>
+      <div className="onboarding-overlay">
         <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
           {isLoading ? (
             // New minimalist rocket ship loading animation

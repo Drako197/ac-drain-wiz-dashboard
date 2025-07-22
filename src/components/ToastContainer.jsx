@@ -12,15 +12,28 @@ const ToastContainer = () => {
       id,
       message,
       type,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      index: toasts.length // Track position for staggered removal
     };
     
     setToasts(prev => [...prev, newToast]);
   };
 
-  // Remove a specific toast by ID
+  // Remove a specific toast by ID with staggered timing
   const removeToast = (id) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts(prev => {
+      const toastIndex = prev.findIndex(toast => toast.id === id);
+      if (toastIndex === -1) return prev;
+      
+      // Add staggered delay based on position (older toasts first)
+      const delay = toastIndex * 200; // 200ms delay between each toast
+      
+      setTimeout(() => {
+        setToasts(current => current.filter(toast => toast.id !== id));
+      }, delay);
+      
+      return prev; // Don't remove immediately, let setTimeout handle it
+    });
   };
 
   // Make addToast available globally
@@ -33,12 +46,13 @@ const ToastContainer = () => {
 
   return (
     <div className="toast-container">
-      {toasts.map((toast) => (
+      {toasts.map((toast, index) => (
         <Toast
           key={toast.id}
           id={toast.id}
           message={toast.message}
           type={toast.type}
+          index={index}
           onClose={() => removeToast(toast.id)}
         />
       ))}

@@ -1,14 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Toast.css';
 
-const Toast = ({ id, message, type = 'info', onClose }) => {
+const Toast = ({ id, message, type = 'info', index = 0, onClose }) => {
+  const [isExiting, setIsExiting] = useState(false);
+
   useEffect(() => {
+    // Stagger the auto-close timing based on index
+    const baseDelay = 8000; // 8 seconds base
+    const staggerDelay = index * 500; // 500ms additional delay per toast
+    const totalDelay = baseDelay + staggerDelay;
+    
     const timer = setTimeout(() => {
-      onClose();
-    }, 8000);
+      setIsExiting(true);
+      // Delay the actual removal to allow animation to complete
+      setTimeout(() => {
+        onClose();
+      }, 400);
+    }, totalDelay);
 
     return () => clearTimeout(timer);
-  }, [onClose]);
+  }, [onClose, index]);
+
+  const handleClose = () => {
+    setIsExiting(true);
+    setTimeout(() => {
+      onClose();
+    }, 400);
+  };
 
   const getToastIcon = () => {
     switch (type) {
@@ -34,7 +52,7 @@ const Toast = ({ id, message, type = 'info', onClose }) => {
   };
 
   const getToastClass = () => {
-    return `toast toast-${type}`;
+    return `toast toast-${type} ${isExiting ? 'toast-exit' : ''}`;
   };
 
   return (
@@ -44,7 +62,7 @@ const Toast = ({ id, message, type = 'info', onClose }) => {
           {getToastIcon()}
         </div>
         <div className="toast-message">{message}</div>
-        <button className="toast-close" onClick={onClose}>
+        <button className="toast-close" onClick={handleClose}>
           ×
         </button>
       </div>

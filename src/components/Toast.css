@@ -18,9 +18,18 @@
     box-shadow: 0 8px 32px #0000001f;
     border: 1px solid #e5e7eb;
     overflow: hidden;
-    animation: toast-slide-in .3s ease-out;
+    animation: toast-slide-in .4s ease-out;
     flex-shrink: 0;
+    transform-origin: right center;
+    transition: all 0.3s ease;
 }
+
+/* Staggered entrance animation for multiple toasts */
+.toast:nth-child(1) { animation-delay: 0ms; }
+.toast:nth-child(2) { animation-delay: 100ms; }
+.toast:nth-child(3) { animation-delay: 200ms; }
+.toast:nth-child(4) { animation-delay: 300ms; }
+.toast:nth-child(5) { animation-delay: 400ms; }
 
 .toast-success {
     border-left: 4px solid #16B884;
@@ -117,17 +126,17 @@
 
 /* Animation for toast removal */
 .toast.toast-exit {
-    animation: toast-slide-out .3s ease-in forwards;
+    animation: toast-slide-out .4s ease-in forwards;
 }
 
 @keyframes toast-slide-out {
     from {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateX(0) scale(1);
     }
     to {
         opacity: 0;
-        transform: translateX(100%);
+        transform: translateX(100%) scale(0.95);
     }
 }
 
