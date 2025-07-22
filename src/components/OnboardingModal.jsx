@@ -153,7 +153,58 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     { firstName: 'Taylor', lastName: 'Miller' },
     { firstName: 'Morgan', lastName: 'Davis' },
     { firstName: 'Jamie', lastName: 'Brown' },
-    { firstName: 'Riley', lastName: 'Johnson' }
+    { firstName: 'Riley', lastName: 'Johnson' },
+    { firstName: 'Avery', lastName: 'Wilson' },
+    { firstName: 'Blake', lastName: 'Taylor' },
+    { firstName: 'Cameron', lastName: 'Moore' },
+    { firstName: 'Drew', lastName: 'Jackson' },
+    { firstName: 'Emery', lastName: 'Martin' },
+    { firstName: 'Finley', lastName: 'Lee' },
+    { firstName: 'Gray', lastName: 'Perez' },
+    { firstName: 'Harper', lastName: 'Thompson' },
+    { firstName: 'Indigo', lastName: 'White' },
+    { firstName: 'Jules', lastName: 'Harris' },
+    { firstName: 'Kai', lastName: 'Clark' },
+    { firstName: 'Lane', lastName: 'Lewis' },
+    { firstName: 'Mika', lastName: 'Robinson' },
+    { firstName: 'Noah', lastName: 'Walker' },
+    { firstName: 'Oakley', lastName: 'Young' },
+    { firstName: 'Parker', lastName: 'Allen' },
+    { firstName: 'Quinn', lastName: 'King' },
+    { firstName: 'River', lastName: 'Wright' },
+    { firstName: 'Sage', lastName: 'Lopez' },
+    { firstName: 'Tatum', lastName: 'Hill' },
+    { firstName: 'Vale', lastName: 'Scott' },
+    { firstName: 'Wren', lastName: 'Green' },
+    { firstName: 'Xander', lastName: 'Adams' },
+    { firstName: 'Yuki', lastName: 'Baker' },
+    { firstName: 'Zara', lastName: 'Gonzalez' },
+    { firstName: 'Atlas', lastName: 'Nelson' },
+    { firstName: 'Briar', lastName: 'Carter' },
+    { firstName: 'Cedar', lastName: 'Mitchell' },
+    { firstName: 'Dove', lastName: 'Roberts' },
+    { firstName: 'Echo', lastName: 'Turner' },
+    { firstName: 'Flint', lastName: 'Phillips' },
+    { firstName: 'Gale', lastName: 'Campbell' },
+    { firstName: 'Haven', lastName: 'Parker' },
+    { firstName: 'Iris', lastName: 'Evans' },
+    { firstName: 'Jade', lastName: 'Edwards' },
+    { firstName: 'Kestrel', lastName: 'Collins' },
+    { firstName: 'Luna', lastName: 'Stewart' },
+    { firstName: 'Moss', lastName: 'Sanchez' },
+    { firstName: 'Nova', lastName: 'Morris' },
+    { firstName: 'Ocean', lastName: 'Rogers' },
+    { firstName: 'Phoenix', lastName: 'Reed' },
+    { firstName: 'Quill', lastName: 'Cook' },
+    { firstName: 'Rain', lastName: 'Morgan' },
+    { firstName: 'Sky', lastName: 'Bell' },
+    { firstName: 'Thunder', lastName: 'Murphy' },
+    { firstName: 'Umber', lastName: 'Bailey' },
+    { firstName: 'Violet', lastName: 'Rivera' },
+    { firstName: 'Willow', lastName: 'Cooper' },
+    { firstName: 'Xylo', lastName: 'Richardson' },
+    { firstName: 'Yarrow', lastName: 'Cox' },
+    { firstName: 'Zen', lastName: 'Howard' }
   ];
 
   useEffect(() => {
@@ -422,9 +473,37 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
       }
     });
 
-    // Special validation for Step 3: No custom validation needed
+    // Special validation for Step 2: Check that at least one employee is invited
+    if (stepIndex === 2) {
+      console.log('Step 2 validation - checking invited employees');
+      console.log('Invited employees:', invitedEmployees);
+      
+      if (invitedEmployees.length === 0) {
+        console.log('No employees invited! Adding error');
+        newErrors.invitedEmployees = 'Please invite at least one employee before continuing';
+      } else {
+        console.log('Employees are invited:', invitedEmployees.length);
+      }
+    }
+
+    // Special validation for Step 3: Custom address name validation
     if (stepIndex === 3) {
-      console.log('Step 3 validation - using standard field validation');
+      console.log('Step 3 validation - checking custom address name');
+      
+      // Check if "Custom" is selected for address name type
+      if (formData.addressNameType === 'Custom') {
+        console.log('Custom address type selected, checking custom address name');
+        
+        // Validate custom address name is provided
+        if (!formData.customAddressName || formData.customAddressName.trim() === '') {
+          console.log('Custom address name is empty! Adding error');
+          newErrors.customAddressName = 'Custom address name is required when "Custom" is selected';
+        } else {
+          console.log('Custom address name is provided:', formData.customAddressName);
+        }
+      } else {
+        console.log('Non-custom address type selected:', formData.addressNameType);
+      }
     }
 
     // Special validation for Step 4: Check that at least one sensor is selected
@@ -494,12 +573,17 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     }
 
     if (currentStep === 2) {
-      // Employee invite step - can continue with 0 employees
+      // Employee invite step - validate that at least one employee is invited
+      if (invitedEmployees.length === 0) {
+        console.log('Step 2: No employees invited - preventing progression');
+        setErrors(prev => ({ ...prev, invitedEmployees: 'Please invite at least one employee before continuing' }));
+        setShowErrors(true);
+        return;
+      }
+      
       setCurrentStep(3);
       const employeeCount = invitedEmployees.length;
-      if (employeeCount === 0) {
-        showToastMessage("Employee management ready", "success");
-      } else if (employeeCount === 1) {
+      if (employeeCount === 1) {
         showToastMessage("One employee invitation processed successfully", "success");
       } else {
         showToastMessage(`${employeeCount} employee invitations processed successfully`, "success");
@@ -593,6 +677,19 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
         handleNext();
       }
       // Don't show toast message - let inline errors show instead
+    } else if (currentStep === 2) {
+      console.log('Step 2 validation called');
+      console.log('Invited employees:', invitedEmployees);
+      
+      if (invitedEmployees.length === 0) {
+        console.log('No employees invited - showing inline error');
+        setErrors(prev => ({ ...prev, invitedEmployees: 'Please invite at least one employee before continuing' }));
+        setShowErrors(true);
+        return;
+      }
+      
+      console.log('Employees are invited - proceeding to next step');
+      handleNext();
     } else if (currentStep === 3) {
       console.log('Step 3 validation called');
       console.log('Current form data:', formData);
@@ -1087,6 +1184,68 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     const hasError = showErrors && errors[field.name];
     const inputClassName = `form-input ${hasError ? 'error' : ''}`;
     
+    // Special handling for city, state, zip fields in Step 3
+    if (field.name === 'clientCity' || field.name === 'clientState' || field.name === 'clientZipCode') {
+      console.log('Step 3 field processing:', field.name);
+      // Only render if this is the city field (first in the group)
+      if (field.name === 'clientCity') {
+        return (
+          <div key="city-state-zip-row" className="form-row three-col">
+            <div className="form-group">
+              <label className="form-label">
+                City {field.required && <span className="required">*</span>}
+              </label>
+              <input
+                type="text"
+                className={`form-input ${showErrors && errors.clientCity ? 'error' : ''}`}
+                value={formData.clientCity || ''}
+                onChange={(e) => handleInputChange('clientCity', e.target.value)}
+                placeholder=""
+                required={field.required}
+              />
+              {showErrors && errors.clientCity && <div className="form-error">{errors.clientCity}</div>}
+            </div>
+            
+            <div className="form-group">
+              <label className="form-label">
+                State {field.required && <span className="required">*</span>}
+              </label>
+              <select
+                className={`form-select ${showErrors && errors.clientState ? 'error' : ''}`}
+                value={formData.clientState || ''}
+                onChange={(e) => handleInputChange('clientState', e.target.value)}
+                required={field.required}
+              >
+                <option value="">Select</option>
+                {['AL', 'FL', 'GA', 'TX', 'CA', 'NY'].map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+              {showErrors && errors.clientState && <div className="form-error">{errors.clientState}</div>}
+            </div>
+            
+            <div className="form-group">
+              <label className="form-label">
+                Zip Code {field.required && <span className="required">*</span>}
+              </label>
+              <input
+                type="text"
+                className={`form-input ${showErrors && errors.clientZipCode ? 'error' : ''}`}
+                value={formData.clientZipCode || ''}
+                onChange={(e) => handleInputChange('clientZipCode', e.target.value)}
+                placeholder="Zip/Postal Code"
+                required={field.required}
+              />
+              {showErrors && errors.clientZipCode && <div className="form-error">{errors.clientZipCode}</div>}
+            </div>
+          </div>
+        );
+      }
+      
+      // Skip state and zip fields since they're handled in the city render
+      return null;
+    }
+    
     if (field.type === 'select') {
       return (
         <div key={field.name} className="form-group">
@@ -1235,6 +1394,9 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
               onChange={(e) => handleInputChange('employeeEmail', e.target.value)}
               placeholder="Enter employee email"
             />
+            {showErrors && errors.invitedEmployees && (
+              <div className="form-error">{errors.invitedEmployees}</div>
+            )}
           </div>
           
           <div className="form-group half-width">
@@ -2027,10 +2189,9 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                           </>
                         ) : (
                           // Other steps: Use dynamic form rendering
-                          currentStepData.formFields.map(field => renderFormField(field))
+                          currentStepData.formFields.map(field => renderFormField(field)).filter(Boolean)
                         )}
                       </div>
-                  )}
                   
                   {/* Form actions for step 1 only */}
                   {currentStep === 1 && (
@@ -2048,7 +2209,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                         Back
                       </button>
                       <button 
-                        className={`btn-next ${currentStep === 3 || currentStep === 4 ? 'active' : (isStepValid ? 'active' : 'disabled')}`}
+                        className={`btn-next ${currentStep === 3 || currentStep === 4 ? 'active' : (currentStep === 2 ? (invitedEmployees.length > 0 ? 'active' : 'disabled') : (isStepValid ? 'active' : 'disabled'))}`}
                         onClick={handleContinueClick}
                       >
                         {currentStep === 3 ? 'Add a Client' : currentStep === 4 ? 'Create Service Call' : 'Continue'}
