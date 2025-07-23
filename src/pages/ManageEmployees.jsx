@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Pagination from '../components/Pagination'
 
 const ManageEmployees = () => {
   const navigate = useNavigate()
@@ -580,37 +581,16 @@ const ManageEmployees = () => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="pagination-container">
-            <div className="pagination-info">
-              Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} {activeTab === 'active' ? 'employees' : 'invitations'}
-            </div>
-            <div className="pagination">
-              <button
-                className="pagination-btn"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1 || isPageLoading}
-              >
-                ← Previous
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  className={`pagination-btn ${currentPage === page ? 'active' : ''}`}
-                  onClick={() => handlePageChange(page)}
-                  disabled={isPageLoading}
-                >
-                  {page}
-                </button>
-              ))}
-              <button
-                className="pagination-btn"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages || isPageLoading}
-              >
-                Next →
-              </button>
-            </div>
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            isLoading={isPageLoading}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={filteredData.length}
+            itemsLabel={activeTab === 'active' ? 'employees' : 'invitations'}
+          />
         )}
       </div>
 

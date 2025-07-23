@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Pagination from '../components/Pagination'
 
 const ManageClients = () => {
   const navigate = useNavigate()
@@ -419,37 +420,16 @@ const ManageClients = () => {
             </>
           )}
         </div>
-        <div className="pagination-container">
-          <div className="pagination-info">
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredClients.length)} of {filteredClients.length} results
-          </div>
-          <div className="pagination">
-            <button 
-              className="pagination-btn" 
-              disabled={currentPage === 1 || isPageLoading}
-              onClick={() => handlePageChange(currentPage - 1)}
-            >
-              ← Previous
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                className={`pagination-btn ${page === currentPage ? 'active' : ''}`}
-                disabled={isPageLoading}
-                onClick={() => handlePageChange(page)}
-              >
-                {page}
-              </button>
-            ))}
-            <button 
-              className="pagination-btn" 
-              disabled={currentPage === totalPages || isPageLoading}
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              Next →
-            </button>
-          </div>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          isLoading={isPageLoading}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          totalItems={filteredClients.length}
+          itemsLabel="results"
+        />
       </div>
     </>
   )

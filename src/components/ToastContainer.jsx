@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import Toast from './Toast';
+import StatusBarContainer from './StatusBarContainer';
 import './Toast.css';
 
 const ToastContainer = () => {
   const [toasts, setToasts] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Global function to add a new toast
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+
+  // Global function to add a new toast/notification
   const addToast = (message, type = 'info') => {
     const id = Date.now() + Math.random(); // Unique ID for each toast
     const newToast = {
@@ -44,6 +60,12 @@ const ToastContainer = () => {
     };
   }, []);
 
+  // On mobile, show status bar notifications instead of toasts
+  if (isMobile) {
+    return <StatusBarContainer />;
+  }
+
+  // On desktop, show regular toasts
   return (
     <div className="toast-container">
       {toasts.map((toast, index) => (

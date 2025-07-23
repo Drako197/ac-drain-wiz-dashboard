@@ -1,0 +1,190 @@
+.status-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  pointer-events: none;
+}
+
+.status-bar-notification {
+  height: 44px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: status-bar-slide-down 0.3s ease-out;
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+/* Staggered entrance animation for multiple notifications */
+.status-bar-notification:nth-child(1) { animation-delay: 0ms; }
+.status-bar-notification:nth-child(2) { animation-delay: 100ms; }
+.status-bar-notification:nth-child(3) { animation-delay: 200ms; }
+.status-bar-notification:nth-child(4) { animation-delay: 300ms; }
+.status-bar-notification:nth-child(5) { animation-delay: 400ms; }
+
+.status-bar-success {
+  border-left: 3px solid #16B884;
+}
+
+.status-bar-error {
+  border-left: 3px solid #ef4444;
+}
+
+.status-bar-warning {
+  border-left: 3px solid #f59e0b;
+}
+
+.status-bar-info {
+  border-left: 3px solid #3b82f6;
+}
+
+.status-bar-content {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 100%;
+  gap: 12px;
+}
+
+.status-bar-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.status-bar-success .status-bar-icon {
+  color: #16B884;
+  background: #D2FAE6;
+}
+
+.status-bar-error .status-bar-icon {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+.status-bar-warning .status-bar-icon {
+  color: #f59e0b;
+  background: #fef3c7;
+}
+
+.status-bar-info .status-bar-icon {
+  color: #3b82f6;
+  background: #dbeafe;
+}
+
+.status-bar-message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  line-height: 1.3;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-bar-close {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-bar-close:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+@keyframes status-bar-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation for notification removal */
+.status-bar-notification.status-bar-exit {
+  animation: status-bar-slide-up 0.3s ease-in forwards;
+}
+
+@keyframes status-bar-slide-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+/* Desktop styles - hide on desktop, show toasts instead */
+@media (min-width: 769px) {
+  .status-bar-container {
+    display: none;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .status-bar-notification {
+    height: 40px;
+  }
+  
+  .status-bar-content {
+    padding: 0 12px;
+  }
+  
+  .status-bar-message {
+    font-size: 13px;
+  }
+  
+  .status-bar-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .status-bar-close {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Extra small mobile adjustments */
+@media (max-width: 480px) {
+  .status-bar-notification {
+    height: 38px;
+  }
+  
+  .status-bar-content {
+    padding: 0 10px;
+    gap: 10px;
+  }
+  
+  .status-bar-message {
+    font-size: 12px;
+  }
+} 

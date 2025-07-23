@@ -80,7 +80,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     serviceCallPriority: 'Medium',
     assignedClient: '',
     assignedTechnician: 'Awaiting Technicians',
-    contractorLogo: null,
     firstName: '',
     lastName: '',
     mobileNumber: '',
@@ -230,7 +229,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         serviceCallPriority: 'Medium',
         assignedClient: '',
         assignedTechnician: 'Awaiting Technicians',
-        contractorLogo: null,
         firstName: '',
         lastName: '',
         mobileNumber: '',
@@ -333,8 +331,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         { name: 'address2', label: 'Address 2 Optional', type: 'text', placeholder: '', required: false },
         { name: 'city', label: 'City', type: 'text', placeholder: '', required: true },
         { name: 'state', label: 'State', type: 'select', options: ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'], required: true },
-        { name: 'zipCode', label: 'Zip Code', type: 'text', placeholder: 'Zip/Postal Code', required: true },
-        { name: 'contractorLogo', label: 'Contractor Logo', type: 'file', placeholder: '', hint: 'This logo is optional and will be used to customize your in app experience', required: false }
+        { name: 'zipCode', label: 'Zip Code', type: 'text', placeholder: 'Zip/Postal Code', required: true }
       ]
     },
     {
@@ -394,6 +391,29 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     if (window.showToastMessage) {
       window.showToastMessage(message, type);
     }
+  };
+
+  // Scroll to first error field on mobile
+  const scrollToFirstError = (errorFields = null) => {
+    // Only run on mobile
+    if (window.innerWidth > 480) return;
+    
+    // Use provided error fields or fall back to current errors state
+    const fieldsToCheck = errorFields || errors;
+    const firstErrorField = Object.keys(fieldsToCheck)[0];
+    if (!firstErrorField) return;
+    
+    // Find the error field element
+    const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
+    if (!errorElement) return;
+    
+    // Scroll to the field with offset for mobile header
+    setTimeout(() => {
+      errorElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    }, 100);
   };
 
 
@@ -508,7 +528,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         } else {
           // console.log('Custom address name is provided:', formData.customAddressName);
         }
-      } else {
+        } else {
         // console.log('Non-custom address type selected:', formData.addressNameType);
       }
     }
@@ -537,6 +557,15 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     
     const isValid = Object.keys(newErrors).length === 0;
     setIsStepValid(isValid);
+    
+    // Scroll to first error on mobile if validation fails
+    if (!isValid) {
+      // Use setTimeout to ensure errors are set before scrolling
+      setTimeout(() => {
+        scrollToFirstError(newErrors);
+      }, 50);
+    }
+    
     // console.log('Validation result:', isValid);
     return isValid;
   };
@@ -565,10 +594,28 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     showToastMessage(`Invitation sent to ${newEmployee.email} for ${newEmployee.role} role!`, "success");
   };
 
+  // Function to scroll onboarding-right to top on mobile
+  const scrollToTop = () => {
+    // Only run on mobile
+    if (window.innerWidth > 480) return;
+    
+    // Find the onboarding-right element
+    const onboardingRight = document.querySelector('.onboarding-right');
+    if (onboardingRight) {
+      // Scroll to top with smooth behavior
+      onboardingRight.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const handleNext = () => {
     if (currentStep === 0) {
       // Welcome step - just move to next step
       setCurrentStep(1);
+      // Scroll to top on mobile
+      setTimeout(scrollToTop, 100);
       return;
     }
 
@@ -576,6 +623,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       // Contractor step - move to employee step
       setCurrentStep(2);
       showToastMessage("Contractor created successfully", "success");
+      // Scroll to top on mobile
+      setTimeout(scrollToTop, 100);
       return;
     }
 
@@ -595,6 +644,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       } else {
         showToastMessage(`${employeeCount} employee invitations processed successfully`, "success");
       }
+      // Scroll to top on mobile
+      setTimeout(scrollToTop, 100);
       return;
     }
 
@@ -615,6 +666,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       
       setCurrentStep(4);
       showToastMessage("Client added successfully", "success");
+      // Scroll to top on mobile
+      setTimeout(scrollToTop, 100);
       return;
     }
 
@@ -629,6 +682,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         setIsLoading(false);
         console.log('Moving to step 5');
         setCurrentStep(5);
+        // Scroll to top on mobile after loading completes
+        setTimeout(scrollToTop, 100);
       }, 5000);
       return;
     }
@@ -652,6 +707,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         { message: "Service call created successfully", type: "success" }
       ];
       showToastMessage(stepMessages[nextStep - 3].message, stepMessages[nextStep - 3].type);
+      // Scroll to top on mobile
+      setTimeout(scrollToTop, 100);
     } else {
       // Use random name for fullName construction
       const fullName = formData.randomFirstName && formData.randomLastName ? `${formData.randomFirstName} ${formData.randomLastName}` : '';
@@ -1338,30 +1395,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       );
     }
 
-    if (field.type === 'file') {
-      return (
-        <div key={field.name} className="form-group">
-          <label className="form-label">
-            {field.label}
-            {field.hint && <span className="help-icon" title={field.hint}>?</span>}
-            {!field.required && <span className="optional">Optional</span>}
-          </label>
-          <div className="file-upload-area">
-            <div className="upload-icon">📁</div>
-            <div className="upload-text">
-              <span className="upload-link">Click to upload</span> or drag and drop
-            </div>
-            <div className="upload-formats">SVG, PNG, JPG or GIF (max. 5MB)</div>
-            <input 
-              accept=".svg,.png,.jpg,.jpeg,.gif" 
-              type="file" 
-              className="file-input"
-              onChange={(e) => handleInputChange(field.name, e.target.files[0])}
-            />
-          </div>
-        </div>
-      );
-    }
+
 
     return (
       <div key={field.name} className="form-group">
@@ -1473,12 +1507,20 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       </div>
 
       <div className="content-actions">
-        <button className="btn-back" onClick={() => setCurrentStep(1)}>
+        <button className="btn-back" onClick={() => {
+          setCurrentStep(1);
+          // Scroll to top on mobile when going back
+          setTimeout(scrollToTop, 100);
+        }}>
           Back
         </button>
         <button 
           className={`btn-next ${invitedEmployees.length > 0 ? 'active' : 'disabled'}`}
-          onClick={handleNext}
+          onClick={() => {
+            handleNext();
+            // Scroll to top on mobile when continuing from employee step
+            setTimeout(scrollToTop, 100);
+          }}
         >
           Continue with {invitedEmployees.length} Employee{invitedEmployees.length !== 1 ? 's' : ''}
         </button>
@@ -1533,7 +1575,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
             </div>
           ) : (
             <>
-              <div className="onboarding-left">
+          <div className="onboarding-left">
                 {/* Mobile Header */}
                 <div className="mobile-onboarding-header">
                   <img className="mobile-logo" src="/images/acdrainwiz_logo.png" alt="AC Drain Wiz" />
@@ -1546,7 +1588,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                     <div 
                       className="mobile-progress-line"
                       style={{
-                        width: `${Math.max(0, (currentStep - 1) / (steps.length - 2)) * 100}%`
+                        width: `${Math.max(0, (currentStep - 1) / (steps.length - 2)) * 85}%`
                       }}
                     />
                     
@@ -1590,258 +1632,236 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                       );
                     })}
                   </div>
-                </div>
-                
+            </div>
+            
                 {/* Desktop Steps (hidden on mobile) */}
-                <div className={`onboarding-steps ${isWelcomeStep ? 'preview-mode' : ''}`}>
-                  <div className="steps-preview-header">
-                    <h3>Setup Steps</h3>
-                    <p>Here's what we'll help you set up:</p>
-                  </div>
-                  
-                  {steps.slice(1).map((step, index) => {
-                    const stepIcons = [
-                      // Star icon for Step 1
-                      <svg key="star" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M11.2827 3.45332C11.5131 2.98638 11.6284 2.75291 11.7848 2.67831C11.9209 2.61341 12.0791 2.61341 12.2152 2.67831C12.3717 2.75291 12.4869 2.98638 12.7174 3.45332L14.9041 7.88328C14.9721 8.02113 15.0061 8.09006 15.0558 8.14358C15.0999 8.19096 15.1527 8.22935 15.2113 8.25662C15.2776 8.28742 15.3536 8.29854 15.5057 8.32077L20.397 9.03571C20.9121 9.11099 21.1696 9.14863 21.2888 9.27444C21.3925 9.38389 21.4412 9.5343 21.4215 9.68377C21.3988 9.85558 21.2124 10.0372 20.8395 10.4004L17.3014 13.8464C17.1912 13.9538 17.136 14.0076 17.1004 14.0715C17.0689 14.128 17.0487 14.1902 17.0409 14.2545C17.0321 14.3271 17.0451 14.403 17.0711 14.5547L17.906 19.4221C17.994 19.9355 18.038 20.1922 17.9553 20.3445C17.8833 20.477 17.7554 20.57 17.6071 20.5975C17.4366 20.6291 17.2061 20.5078 16.7451 20.2654L12.3724 17.9658C12.2361 17.8942 12.168 17.8584 12.0962 17.8443C12.0327 17.8318 11.9673 17.8318 11.9038 17.8443C11.832 17.8584 11.7639 17.8942 11.6277 17.9658L7.25492 20.2654C6.79392 20.5078 6.56341 20.6291 6.39297 20.5975C6.24468 20.57 6.11672 20.477 6.04474 20.3445C5.962 20.1922 6.00603 19.9355 6.09407 19.4221L6.92889 14.5547C6.95491 14.403 6.96793 14.3271 6.95912 14.2545C6.95132 14.1902 6.93111 14.128 6.89961 14.0715C6.86402 14.0076 6.80888 13.9538 6.69859 13.8464L3.16056 10.4004C2.78766 10.0372 2.60121 9.85558 2.57853 9.68377C2.55879 9.5343 2.60755 9.38389 2.71125 9.27444C2.83044 9.14863 3.08797 9.11099 3.60304 9.03571L8.49431 8.32077C8.64642 8.29854 8.72248 8.28742 8.78872 8.25662C8.84736 8.22935 8.90016 8.19096 8.94419 8.14358C8.99391 8.09006 9.02793 8.02113 9.09597 7.88328L11.2827 3.45332Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                      </svg>,
-                      // Person icon for Step 2
+            <div className={`onboarding-steps ${isWelcomeStep ? 'preview-mode' : ''}`}>
+              <div className="steps-preview-header">
+                <h3>Setup Steps</h3>
+                <p>Here's what we'll help you set up:</p>
+              </div>
+              
+              {steps.slice(1).map((step, index) => {
+                const stepIcons = [
+                  // Star icon for Step 1
+                  <svg key="star" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.2827 3.45332C11.5131 2.98638 11.6284 2.75291 11.7848 2.67831C11.9209 2.61341 12.0791 2.61341 12.2152 2.67831C12.3717 2.75291 12.4869 2.98638 12.7174 3.45332L14.9041 7.88328C14.9721 8.02113 15.0061 8.09006 15.0558 8.14358C15.0999 8.19096 15.1527 8.22935 15.2113 8.25662C15.2776 8.28742 15.3536 8.29854 15.5057 8.32077L20.397 9.03571C20.9121 9.11099 21.1696 9.14863 21.2888 9.27444C21.3925 9.38389 21.4412 9.5343 21.4215 9.68377C21.3988 9.85558 21.2124 10.0372 20.8395 10.4004L17.3014 13.8464C17.1912 13.9538 17.136 14.0076 17.1004 14.0715C17.0689 14.128 17.0487 14.1902 17.0409 14.2545C17.0321 14.3271 17.0451 14.403 17.0711 14.5547L17.906 19.4221C17.994 19.9355 18.038 20.1922 17.9553 20.3445C17.8833 20.477 17.7554 20.57 17.6071 20.5975C17.4366 20.6291 17.2061 20.5078 16.7451 20.2654L12.3724 17.9658C12.2361 17.8942 12.168 17.8584 12.0962 17.8443C12.0327 17.8318 11.9673 17.8318 11.9038 17.8443C11.832 17.8584 11.7639 17.8942 11.6277 17.9658L7.25492 20.2654C6.79392 20.5078 6.56341 20.6291 6.39297 20.5975C6.24468 20.57 6.11672 20.477 6.04474 20.3445C5.962 20.1922 6.00603 19.9355 6.09407 19.4221L6.92889 14.5547C6.95491 14.403 6.96793 14.3271 6.95912 14.2545C6.95132 14.1902 6.93111 14.128 6.89961 14.0715C6.86402 14.0076 6.80888 13.9538 6.69859 13.8464L3.16056 10.4004C2.78766 10.0372 2.60121 9.85558 2.57853 9.68377C2.55879 9.5343 2.60755 9.38389 2.71125 9.27444C2.83044 9.14863 3.08797 9.11099 3.60304 9.03571L8.49431 8.32077C8.64642 8.29854 8.72248 8.28742 8.78872 8.25662C8.84736 8.22935 8.90016 8.19096 8.94419 8.14358C8.99391 8.09006 9.02793 8.02113 9.09597 7.88328L11.2827 3.45332Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                  </svg>,
+                  // Person icon for Step 2
                       <svg key="person" width="20" height="20" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4.62638 14.9238C5.06995 13.8788 6.10559 13.1458 7.31242 13.1458H11.6874C12.8942 13.1458 13.9299 13.8788 14.3735 14.9238M12.4166 7.67706C12.4166 9.28789 11.1107 10.5937 9.49992 10.5937C7.88909 10.5937 6.58325 9.28789 6.58325 7.67706C6.58325 6.06623 7.88909 4.7604 9.49992 4.7604C11.1107 4.7604 12.4166 6.06623 12.4166 7.67706ZM16.7916 9.49998C16.7916 13.5271 13.527 16.7916 9.49992 16.7916C5.47284 16.7916 2.20825 13.5271 2.20825 9.49998C2.20825 5.4729 5.47284 2.20831 9.49992 2.20831C13.527 2.20831 16.7916 5.4729 16.7916 9.49998Z" stroke="currentColor" strokeWidth="1.45833" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>,
-                      // Wrench and screwdriver icon for Step 3
+                  </svg>,
+                  // Wrench and screwdriver icon for Step 3
                       <svg key="tools" width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4.12492 4.12498L7.40617 7.40623M4.12492 4.12498H1.93742L1.20825 1.93748L1.93742 1.20831L4.12492 1.93748V4.12498ZM13.7929 1.74863L11.877 3.6646C11.5882 3.95337 11.4438 4.09775 11.3897 4.26424C11.3421 4.41069 11.3421 4.56844 11.3897 4.71489C11.4438 4.88138 11.5882 5.02576 11.877 5.31452L12.05 5.48752C12.3387 5.77628 12.4831 5.92066 12.6496 5.97476C12.796 6.02234 12.9538 6.02234 13.1002 5.97476C13.2667 5.92066 13.4111 5.77628 13.6999 5.48752L15.4921 3.69529C15.6851 4.165 15.7916 4.67943 15.7916 5.21873C15.7916 7.43362 13.9961 9.22915 11.7812 9.22915C11.5141 9.22915 11.2532 9.20305 11.0008 9.15327C10.6463 9.08335 10.4691 9.0484 10.3616 9.05911C10.2474 9.07049 10.1911 9.08762 10.0899 9.14178C9.99467 9.19273 9.89917 9.28823 9.70817 9.47923L4.4895 14.6979C3.88544 15.3019 2.90606 15.3019 2.302 14.6979C1.69794 14.0938 1.69794 13.1144 2.302 12.5104L7.52067 7.29173C7.71167 7.10073 7.80717 7.00523 7.85812 6.91002C7.91228 6.80881 7.92941 6.75251 7.94079 6.63828C7.9515 6.53083 7.91654 6.35359 7.84663 5.99911C7.79685 5.74669 7.77075 5.48576 7.77075 5.21873C7.77075 3.00384 9.56628 1.20831 11.7812 1.20831C12.5143 1.20831 13.2016 1.40506 13.7929 1.74863ZM8.49996 10.6874L12.5103 14.6978C13.1144 15.3019 14.0938 15.3019 14.6978 14.6978C15.3019 14.0938 15.3019 13.1144 14.6978 12.5103L11.3986 9.21113C11.165 9.18903 10.9373 9.1469 10.7172 9.08647C10.4335 9.00861 10.1223 9.06512 9.91426 9.27314L8.49996 10.6874Z" stroke="currentColor" strokeWidth="1.45833" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>,
-                      // Map pin icon for Step 4
-                      <svg key="pin" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>,
-                      // Star icon for Step 5 (Setup Complete)
-                      <svg key="star-complete" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M11.2827 3.45332C11.5131 2.98638 11.6284 2.75291 11.7848 2.67831C11.9209 2.61341 12.0791 2.61341 12.2152 2.67831C12.3717 2.75291 12.4869 2.98638 12.7174 3.45332L14.9041 7.88328C14.9721 8.02113 15.0061 8.09006 15.0558 8.14358C15.0999 8.19096 15.1527 8.22935 15.2113 8.25662C15.2776 8.28742 15.3536 8.29854 15.5057 8.32077L20.397 9.03571C20.9121 9.11099 21.1696 9.14863 21.2888 9.27444C21.3925 9.38389 21.4412 9.5343 21.4215 9.68377C21.3988 9.85558 21.2124 10.0372 20.8395 10.4004L17.3014 13.8464C17.1912 13.9538 17.136 14.0076 17.1004 14.0715C17.0689 14.128 17.0487 14.1902 17.0409 14.2545C17.0321 14.3271 17.0451 14.403 17.0711 14.5547L17.906 19.4221C17.994 19.9355 18.038 20.1922 17.9553 20.3445C17.8833 20.477 17.7554 20.57 17.6071 20.5975C17.4366 20.6291 17.2061 20.5078 16.7451 20.2654L12.3724 17.9658C12.2361 17.8942 12.168 17.8584 12.0962 17.8443C12.0327 17.8318 11.9673 17.8318 11.9038 17.8443C11.832 17.8584 11.7639 17.8942 11.6277 17.9658L7.25492 20.2654C6.79392 20.5078 6.56341 20.6291 6.39297 20.5975C6.24468 20.57 6.11672 20.477 6.04474 20.3445C5.962 20.1922 6.00603 19.9355 6.09407 19.4221L6.92889 14.5547C6.95491 14.403 6.96793 14.3271 6.95912 14.2545C6.95132 14.1902 6.93111 14.128 6.89961 14.0715C6.86402 14.0076 6.80888 13.9538 6.69859 13.8464L3.16056 10.4004C2.78766 10.0372 2.60121 9.85558 2.57853 9.68377C2.55879 9.5343 2.60755 9.38389 2.71125 9.27444C2.83044 9.14863 3.08797 9.11099 3.60304 9.03571L8.49431 8.32077C8.64642 8.29854 8.72248 8.28742 8.78872 8.25662C8.84736 8.22935 8.90016 8.19096 8.94419 8.14358C8.99391 8.09006 9.02793 8.02113 9.09597 7.88328L11.2827 3.45332Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                      </svg>
-                    ];
-                    
-                    return (
-                      <div 
-                        key={index + 1} 
-                        className={`step-item ${index + 1 < currentStep ? 'completed' : index + 1 === currentStep ? 'active' : 'disabled-preview'} ${isWelcomeStep ? 'muted' : ''}`}
-                      >
-                        <div className="step-icon">
-                          {stepIcons[index]}
-                        </div>
-                        <div className="step-content">
-                          <span className="step-number">Step {index + 1}:</span>
-                          <span className="step-title">{step.title}</span>
-                        </div>
-                        {index + 1 < steps.length - 1 && (
-                          <div className={`step-connector ${index + 1 < currentStep ? 'active' : 'disabled'}`}></div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+                  </svg>,
+                  // Map pin icon for Step 4
+                  <svg key="pin" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>,
+                  // Star icon for Step 5 (Setup Complete)
+                  <svg key="star-complete" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.2827 3.45332C11.5131 2.98638 11.6284 2.75291 11.7848 2.67831C11.9209 2.61341 12.0791 2.61341 12.2152 2.67831C12.3717 2.75291 12.4869 2.98638 12.7174 3.45332L14.9041 7.88328C14.9721 8.02113 15.0061 8.09006 15.0558 8.14358C15.0999 8.19096 15.1527 8.22935 15.2113 8.25662C15.2776 8.28742 15.3536 8.29854 15.5057 8.32077L20.397 9.03571C20.9121 9.11099 21.1696 9.14863 21.2888 9.27444C21.3925 9.38389 21.4412 9.5343 21.4215 9.68377C21.3988 9.85558 21.2124 10.0372 20.8395 10.4004L17.3014 13.8464C17.1912 13.9538 17.136 14.0076 17.1004 14.0715C17.0689 14.128 17.0487 14.1902 17.0409 14.2545C17.0321 14.3271 17.0451 14.403 17.0711 14.5547L17.906 19.4221C17.994 19.9355 18.038 20.1922 17.9553 20.3445C17.8833 20.477 17.7554 20.57 17.6071 20.5975C17.4366 20.6291 17.2061 20.5078 16.7451 20.2654L12.3724 17.9658C12.2361 17.8942 12.168 17.8584 12.0962 17.8443C12.0327 17.8318 11.9673 17.8318 11.9038 17.8443C11.832 17.8584 11.7639 17.8942 11.6277 17.9658L7.25492 20.2654C6.79392 20.5078 6.56341 20.6291 6.39297 20.5975C6.24468 20.57 6.11672 20.477 6.04474 20.3445C5.962 20.1922 6.00603 19.9355 6.09407 19.4221L6.92889 14.5547C6.95491 14.403 6.96793 14.3271 6.95912 14.2545C6.95132 14.1902 6.93111 14.128 6.89961 14.0715C6.86402 14.0076 6.80888 13.9538 6.69859 13.8464L3.16056 10.4004C2.78766 10.0372 2.60121 9.85558 2.57853 9.68377C2.55879 9.5343 2.60755 9.38389 2.71125 9.27444C2.83044 9.14863 3.08797 9.11099 3.60304 9.03571L8.49431 8.32077C8.64642 8.29854 8.72248 8.28742 8.78872 8.25662C8.84736 8.22935 8.90016 8.19096 8.94419 8.14358C8.99391 8.09006 9.02793 8.02113 9.09597 7.88328L11.2827 3.45332Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                  </svg>
+                ];
+                
+                return (
+                  <div 
+                    key={index + 1} 
+                    className={`step-item ${index + 1 < currentStep ? 'completed' : index + 1 === currentStep ? 'active' : 'disabled-preview'} ${isWelcomeStep ? 'muted' : ''}`}
+                  >
+                    <div className="step-icon">
+                      {stepIcons[index]}
+                    </div>
+                    <div className="step-content">
+                      <span className="step-number">Step {index + 1}:</span>
+                      <span className="step-title">{step.title}</span>
+                    </div>
+                    {index + 1 < steps.length - 1 && (
+                      <div className={`step-connector ${index + 1 < currentStep ? 'active' : 'disabled'}`}></div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
               <div className={`onboarding-right ${isWelcomeStep ? '' : `step-${currentStep}`}`}>
-                {isWelcomeStep ? (
-                  <div className="onboarding-content">
-                    <div className="content-header">
-                      <h1>Welcome to AC Drain Wiz sensor monitoring</h1>
-                      <h2>{userName}</h2>
-                    </div>
-                    <p className="content-description">Before you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything—and sets you up for smarter service and smoother installs.</p>
-                    <div className="content-image">
-                      <img alt="Technician Hero" src="/images/technician-hero.png" />
-                    </div>
-                    <div className="content-actions">
-                      <button className="btn-next" onClick={handleNext}>
-                        Get Started
-                      </button>
-                    </div>
+            {isWelcomeStep ? (
+              <div className="onboarding-content">
+                <div className="content-header">
+                  <h1>Welcome to AC Drain Wiz sensor monitoring</h1>
+                  <h2>{userName}</h2>
+                </div>
+                <p className="content-description">Before you can track clients, manage jobs, or deploy sensors, you'll create your primary contractor account. This quick step unlocks everything—and sets you up for smarter service and smoother installs.</p>
+                <div className="content-image">
+                  <img alt="Technician Hero" src="/images/technician-hero.png" />
+                </div>
+                <div className="content-actions">
+                  <button className="btn-next" onClick={handleNext}>
+                    Get Started
+                  </button>
+                </div>
+              </div>
+            ) : isEmployeeInviteStep ? (
+              renderEmployeeInviteStep()
+            ) : currentStepData.formFields && currentStepData.formFields.length > 0 ? (
+              <div className="onboarding-content">
+                {currentStep !== 1 && (
+                  <div className="content-header">
+                    <h1>{currentStepData.title}</h1>
+                    <p>{currentStepData.description}</p>
                   </div>
-                ) : isEmployeeInviteStep ? (
-                  renderEmployeeInviteStep()
-                ) : currentStepData.formFields && currentStepData.formFields.length > 0 ? (
-                  <div className="onboarding-content">
-                    {currentStep !== 1 && (
-                      <div className="content-header">
-                        <h1>{currentStepData.title}</h1>
-                        <p>{currentStepData.description}</p>
-                      </div>
-                    )}
-                    
-                    <form className="onboarding-form" onSubmit={(e) => {
-                      e.preventDefault();
-                      // Only allow form submission for step 1
-                      if (currentStep === 1) {
-                        const isValid = validateStep(1);
-                        if (isValid) {
-                          handleNext();
-                        }
-                        // Don't show toast message - let inline errors show instead
-                      }
-                    }}>
-                      <div className="form-container">
+                )}
+                
+                <form className="onboarding-form" onSubmit={(e) => {
+                  e.preventDefault();
+                  // Only allow form submission for step 1
+                  if (currentStep === 1) {
+                    const isValid = validateStep(1);
+                    if (isValid) {
+                      handleNext();
+                    }
+                    // Don't show toast message - let inline errors show instead
+                  }
+                }}>
+                    <div className="form-container">
                         {currentStep === 1 ? (
                           // Step 1: Contractor form
                           <>
-                            <div className="form-header">
-                              <h1>Create Your Contractor Profile</h1>
+                      <div className="form-header">
+                        <h1>Create Your Contractor Profile</h1>
                               <p>This will be your primary account for managing clients, employees, and service calls.</p>
-                            </div>
-                            
-                            <div className="form-row">
-                              <div className="form-group half-width">
-                                <label className="form-label">
-                                  Contractor Name
+                      </div>
+                      
+                      <div className="form-row">
+                        <div className="form-group half-width">
+                          <label className="form-label">
+                            Contractor Name
                                   <span className="required">*</span>
-                                </label>
-                                <input
-                                  type="text"
+                          </label>
+                          <input
+                            type="text" 
                                   name="contractorName"
                                   className={`form-input ${showErrors && errors.contractorName ? 'error' : ''}`}
-                                  value={formData.contractorName || ''}
-                                  onChange={(e) => handleInputChange('contractorName', e.target.value)}
+                            value={formData.contractorName || ''}
+                            onChange={(e) => handleInputChange('contractorName', e.target.value)}
                                   placeholder="Contractor Name"
-                                />
-                                {showErrors && errors.contractorName && (
-                                  <div className="form-error">{errors.contractorName}</div>
-                                )}
-                              </div>
-                              <div className="form-group half-width">
+                          />
+                          {showErrors && errors.contractorName && (
+                            <div className="form-error">{errors.contractorName}</div>
+                          )}
+                        </div>
+                        <div className="form-group half-width">
                                 <label className="form-label">
                                   Contractor Email
                                   <span className="required">*</span>
                                 </label>
-                                <input
-                                  type="email"
+                          <input
+                            type="email" 
                                   name="contractorEmail"
                                   className={`form-input ${showErrors && errors.contractorEmail ? 'error' : ''}`}
-                                  value={formData.contractorEmail || ''}
-                                  onChange={(e) => handleInputChange('contractorEmail', e.target.value)}
+                            value={formData.contractorEmail || ''}
+                            onChange={(e) => handleInputChange('contractorEmail', e.target.value)}
                                   placeholder="name@domain.com"
-                                />
-                                {showErrors && errors.contractorEmail && (
-                                  <div className="form-error">{errors.contractorEmail}</div>
-                                )}
-                              </div>
-                            </div>
+                          />
+                          {showErrors && errors.contractorEmail && (
+                            <div className="form-error">{errors.contractorEmail}</div>
+                          )}
+                        </div>
+                      </div>
                             
-                            <div className="form-row">
-                              <div className="form-group half-width">
+                      <div className="form-row">
+                        <div className="form-group half-width">
                                 <label className="form-label">
                                   Address 1
                                   <span className="required">*</span>
                                 </label>
-                                <input
-                                  type="text"
+                          <input
+                            type="text" 
                                   name="address1"
                                   className={`form-input ${showErrors && errors.address1 ? 'error' : ''}`}
-                                  value={formData.address1 || ''}
-                                  onChange={(e) => handleInputChange('address1', e.target.value)}
+                            value={formData.address1 || ''}
+                            onChange={(e) => handleInputChange('address1', e.target.value)}
                                   placeholder="123 Main Street"
-                                />
-                                {showErrors && errors.address1 && (
-                                  <div className="form-error">{errors.address1}</div>
-                                )}
-                              </div>
-                              <div className="form-group half-width">
-                                <label className="form-label">
-                                  Address 2
+                          />
+                          {showErrors && errors.address1 && (
+                            <div className="form-error">{errors.address1}</div>
+                          )}
+                        </div>
+                        <div className="form-group half-width">
+                          <label className="form-label">
+                            Address 2 
                                   <span className="optional">(Optional)</span>
-                                </label>
-                                <input
-                                  type="text"
+                          </label>
+                          <input
+                            type="text"
                                   name="address2"
                                   className="form-input"
-                                  value={formData.address2 || ''}
-                                  onChange={(e) => handleInputChange('address2', e.target.value)}
+                            value={formData.address2 || ''}
+                            onChange={(e) => handleInputChange('address2', e.target.value)}
                                   placeholder=""
-                                />
-                              </div>
-                            </div>
+                          />
+                        </div>
+                      </div>
                             
-                            <div className="form-row three-col">
-                              <div className="form-group">
+                      <div className="form-row three-col">
+                        <div className="form-group">
                                 <label className="form-label">
                                   City
                                   <span className="required">*</span>
                                 </label>
-                                <input
-                                  type="text"
+                          <input
+                            type="text" 
                                   name="city"
                                   className={`form-input ${showErrors && errors.city ? 'error' : ''}`}
-                                  value={formData.city || ''}
-                                  onChange={(e) => handleInputChange('city', e.target.value)}
+                            value={formData.city || ''}
+                            onChange={(e) => handleInputChange('city', e.target.value)}
                                   placeholder=""
-                                />
-                                {showErrors && errors.city && (
-                                  <div className="form-error">{errors.city}</div>
-                                )}
-                              </div>
-                              <div className="form-group">
+                          />
+                          {showErrors && errors.city && (
+                            <div className="form-error">{errors.city}</div>
+                          )}
+                        </div>
+                        <div className="form-group">
                                 <label className="form-label">
                                   State
                                   <span className="required">*</span>
                                 </label>
-                                <select
-                                  name="state"
-                                  className={`form-select ${showErrors && errors.state ? 'error' : ''}`}
-                                  value={formData.state || ''}
-                                  onChange={(e) => handleInputChange('state', e.target.value)}
-                                >
-                                  <option value="">Select</option>
-                                  {['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'].map(option => (
-                                    <option key={option} value={option}>{option}</option>
-                                  ))}
-                                </select>
-                                {showErrors && errors.state && (
-                                  <div className="form-error">{errors.state}</div>
-                                )}
-                              </div>
-                              <div className="form-group">
+                          <select
+                            name="state" 
+                            className={`form-select ${showErrors && errors.state ? 'error' : ''}`}
+                            value={formData.state || ''}
+                            onChange={(e) => handleInputChange('state', e.target.value)}
+                          >
+                            <option value="">Select</option>
+                            {['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'].map(option => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                          {showErrors && errors.state && (
+                            <div className="form-error">{errors.state}</div>
+                          )}
+                        </div>
+                        <div className="form-group">
                                 <label className="form-label">
                                   Zip Code
                                   <span className="required">*</span>
                                 </label>
-                                <input
-                                  type="text"
+                          <input
+                            type="text" 
                                   name="zipCode"
                                   className={`form-input ${showErrors && errors.zipCode ? 'error' : ''}`}
-                                  value={formData.zipCode || ''}
-                                  onChange={(e) => handleInputChange('zipCode', e.target.value)}
+                            value={formData.zipCode || ''}
+                            onChange={(e) => handleInputChange('zipCode', e.target.value)}
                                   placeholder="Zip/Postal Code"
-                                />
-                                {showErrors && errors.zipCode && (
-                                  <div className="form-error">{errors.zipCode}</div>
-                                )}
-                              </div>
-                            </div>
-                            
-                            <div className="form-group">
-                              <label className="form-label">
-                                Contractor Logo
-                                <span className="optional">(Optional)</span>
-                              </label>
-                              <div className="file-upload-area">
-                                <div className="file-upload-content">
-                                  <div className="upload-icon">📁</div>
-                                  <div className="upload-text">
-                                    <span className="upload-link">Click to upload</span> or drag and drop
-                                  </div>
-                                  <div className="upload-formats">SVG, PNG, JPG or GIF (max. 5MB)</div>
-                                </div>
-                                <input
-                                  type="file"
-                                  className="file-input"
-                                  onChange={(e) => handleInputChange('contractorLogo', e.target.files[0])}
-                                  accept="image/*"
-                                />
-                              </div>
-                            </div>
+                          />
+                          {showErrors && errors.zipCode && (
+                            <div className="form-error">{errors.zipCode}</div>
+                          )}
+                        </div>
+                                                  </div>
                           </>
                         ) : currentStep === 3 ? (
                           // Step 3: Client form
@@ -2101,166 +2121,166 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                               </div>
                             </div>
 
-                            {/* Assign Technician and Priority */}
-                            <div className="form-row">
-                              <div className="form-group half-width">
-                                <label className="form-label">Assign technician:</label>
-                                <select
-                                  name="assignedTechnician"
-                                  className="form-select"
-                                  value={formData.assignedTechnician || 'Awaiting Technicians'}
-                                  disabled
-                                >
-                                  <option value="Awaiting Technicians">Awaiting Technicians</option>
-                                  <option value="John Smith">John Smith</option>
-                                  <option value="Jane Doe">Jane Doe</option>
-                                  <option value="Mike Johnson">Mike Johnson</option>
-                                </select>
-                              </div>
-                              <div className="form-group half-width">
-                                <label className="form-label">Priority:</label>
-                                <select
-                                  name="priority"
-                                  className={`form-select ${showErrors && errors.priority ? 'error' : ''}`}
-                                  value={formData.priority || ''}
-                                  onChange={(e) => handleInputChange('priority', e.target.value)}
-                                >
-                                  <option value="">Select priority</option>
-                                  <option value="Low">Low</option>
-                                  <option value="Medium">Medium</option>
-                                  <option value="High">High</option>
-                                  <option value="Emergency">Emergency</option>
-                                </select>
-                                {showErrors && errors.priority && (
-                                  <div className="form-error">{errors.priority}</div>
-                                )}
-                              </div>
-                            </div>
+                                  {/* Assign Technician and Priority */}
+                                  <div className="form-row">
+                                    <div className="form-group half-width">
+                                      <label className="form-label">Assign technician:</label>
+                                      <select
+                                        name="assignedTechnician"
+                                        className="form-select"
+                                        value={formData.assignedTechnician || 'Awaiting Technicians'}
+                                        disabled
+                                      >
+                                        <option value="Awaiting Technicians">Awaiting Technicians</option>
+                                        <option value="John Smith">John Smith</option>
+                                        <option value="Jane Doe">Jane Doe</option>
+                                        <option value="Mike Johnson">Mike Johnson</option>
+                                      </select>
+                                    </div>
+                                    <div className="form-group half-width">
+                                      <label className="form-label">Priority:</label>
+                                      <select
+                                        name="priority"
+                                        className={`form-select ${showErrors && errors.priority ? 'error' : ''}`}
+                                        value={formData.priority || ''}
+                                        onChange={(e) => handleInputChange('priority', e.target.value)}
+                                      >
+                                        <option value="">Select priority</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="Emergency">Emergency</option>
+                                      </select>
+                                      {showErrors && errors.priority && (
+                                        <div className="form-error">{errors.priority}</div>
+                                      )}
+                                    </div>
+                                  </div>
 
-                            {/* Sensors to Service */}
-                            <div className="form-group">
-                              <label className="form-label">
-                                Sensors to service
-                                <small className="assistive-text-inline">Select at least one</small>
-                              </label>
-                              <div className={`sensors-badges ${showErrors && errors.selectedSensors ? 'error' : ''}`}>
-                                <span 
-                                  className={`sensor-badge ${formData.sensor1 ? 'selected' : ''}`}
-                                  onClick={() => handleInputChange('sensor1', !formData.sensor1)}
-                                >
-                                  <span className={`sensor-check-icon ${formData.sensor1 ? 'selected' : 'unselected'}`}>✓</span>
-                                  Sensor 1 - Aft Deck
-                                </span>
-                                <span 
-                                  className={`sensor-badge ${formData.sensor2 ? 'selected' : ''}`}
-                                  onClick={() => handleInputChange('sensor2', !formData.sensor2)}
-                                >
-                                  <span className={`sensor-check-icon ${formData.sensor2 ? 'selected' : 'unselected'}`}>✓</span>
-                                  Sensor 2 - Starboard
-                                </span>
-                                <span 
-                                  className={`sensor-badge ${formData.sensor3 ? 'selected' : ''}`}
-                                  onClick={() => handleInputChange('sensor3', !formData.sensor3)}
-                                >
-                                  <span className={`sensor-check-icon ${formData.sensor3 ? 'selected' : 'unselected'}`}>✓</span>
-                                  Sensor 3 - Port
-                                </span>
-                              </div>
-                              {showErrors && errors.selectedSensors && (
-                                <div className="form-error">{errors.selectedSensors}</div>
+                                  {/* Sensors to Service */}
+                                  <div className="form-group">
+                                    <label className="form-label">
+                                      Sensors to service
+                                      <small className="assistive-text-inline">Select at least one</small>
+                                    </label>
+                                    <div className={`sensors-badges ${showErrors && errors.selectedSensors ? 'error' : ''}`}>
+                                      <span 
+                                        className={`sensor-badge ${formData.sensor1 ? 'selected' : ''}`}
+                                        onClick={() => handleInputChange('sensor1', !formData.sensor1)}
+                                      >
+                                        <span className={`sensor-check-icon ${formData.sensor1 ? 'selected' : 'unselected'}`}>✓</span>
+                                        Sensor 1 - Aft Deck
+                                      </span>
+                                      <span 
+                                        className={`sensor-badge ${formData.sensor2 ? 'selected' : ''}`}
+                                        onClick={() => handleInputChange('sensor2', !formData.sensor2)}
+                                      >
+                                        <span className={`sensor-check-icon ${formData.sensor2 ? 'selected' : 'unselected'}`}>✓</span>
+                                        Sensor 2 - Starboard
+                                      </span>
+                                      <span 
+                                        className={`sensor-badge ${formData.sensor3 ? 'selected' : ''}`}
+                                        onClick={() => handleInputChange('sensor3', !formData.sensor3)}
+                                      >
+                                        <span className={`sensor-check-icon ${formData.sensor3 ? 'selected' : 'unselected'}`}>✓</span>
+                                        Sensor 3 - Port
+                                      </span>
+                                    </div>
+                                    {showErrors && errors.selectedSensors && (
+                                      <div className="form-error">{errors.selectedSensors}</div>
+                                    )}
+                                  </div>
+
+                                  {/* Date and Time Fields */}
+                                  <div className="form-row three-col">
+                                    <div className="form-group">
+                                      <label className="form-label">Select date:</label>
+                                      <div className="date-input-container">
+                                        <input
+                                          type="text"
+                                          className={`form-input date-input ${showErrors && errors.serviceDate ? 'error' : ''}`}
+                                          value={formData.serviceDate ? formatDisplayDate(new Date(formData.serviceDate)) : ''}
+                                          placeholder="Select date"
+                                          readOnly
+                                          onClick={() => setIsCalendarOpen(true)}
+                                        />
+                                        <button
+                                          type="button"
+                                          className="calendar-trigger-btn"
+                                          onClick={() => setIsCalendarOpen(true)}
+                                        >
+                                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M21 10H3M16 2V6M8 2V6M7.8 22H16.2C17.8802 22 18.7202 22 19.362 21.673C19.9265 21.3854 20.3854 20.9265 20.673 20.362C21 19.7202 21 18.8802 21 17.2V8.8C21 7.11984 21 6.27976 20.673 5.63803C20.3854 5.07354 19.9265 4.6146 19.362 4.32698C18.7202 4 17.8802 4 16.2 4H7.8C6.11984 4 5.27976 4 4.63803 4.32698C4.07354 4.6146 3.6146 5.07354 3.32698 5.63803C3 6.27976 3 7.11984 3 8.8V17.2C3 18.8802 3 19.7202 3.32698 20.362C3.6146 20.9265 4.07354 21.3854 4.63803 21.673C5.27976 22 6.11984 22 7.8 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      {showErrors && errors.serviceDate && (
+                                        <div className="form-error">{errors.serviceDate}</div>
+                                      )}
+                                    </div>
+                                    <div className="form-group">
+                                      <label className="form-label">Start time:</label>
+                                      <select
+                                        name="startTime"
+                                        className={`form-select ${showErrors && errors.startTime ? 'error' : ''}`}
+                                        value={formData.startTime || ''}
+                                        onChange={(e) => handleInputChange('startTime', e.target.value)}
+                                      >
+                                        <option value="">Select time</option>
+                                        {['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'].map(time => {
+                                          const busySlots = getBusyTimeSlots(selectedDate);
+                                          const isDisabled = busySlots.includes(time);
+                                          return (
+                                            <option 
+                                              key={time} 
+                                              value={time}
+                                              disabled={isDisabled}
+                                              style={isDisabled ? { color: '#9ca3af' } : {}}
+                                            >
+                                              {time} {isDisabled ? '(Booked)' : ''}
+                                            </option>
+                                          );
+                                        })}
+                                      </select>
+                                      {showErrors && errors.startTime && (
+                                        <div className="form-error">{errors.startTime}</div>
+                                      )}
+                                    </div>
+                                    <div className="form-group">
+                                      <label className="form-label">End time:</label>
+                                      <select
+                                        name="endTime"
+                                        className={`form-select ${showErrors && errors.endTime ? 'error' : ''}`}
+                                        value={formData.endTime || ''}
+                                        onChange={(e) => handleInputChange('endTime', e.target.value)}
+                                      >
+                                        <option value="">Select time</option>
+                                        {['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'].map(time => {
+                                          const busySlots = getBusyTimeSlots(selectedDate);
+                                          const isDisabled = busySlots.includes(time);
+                                          return (
+                                            <option 
+                                              key={time} 
+                                              value={time}
+                                              disabled={isDisabled}
+                                              style={isDisabled ? { color: '#9ca3af' } : {}}
+                                            >
+                                              {time} {isDisabled ? '(Booked)' : ''}
+                                            </option>
+                                          );
+                                        })}
+                                      </select>
+                                      {showErrors && errors.endTime && (
+                                        <div className="form-error">{errors.endTime}</div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </>
+                              ) : (
+                                // Other steps: Use dynamic form rendering
+                          currentStepData.formFields.map(field => renderFormField(field)).filter(Boolean)
                               )}
                             </div>
-
-                            {/* Date and Time Fields */}
-                            <div className="form-row three-col">
-                              <div className="form-group">
-                                <label className="form-label">Select date:</label>
-                                <div className="date-input-container">
-                                  <input
-                                    type="text"
-                                    className={`form-input date-input ${showErrors && errors.serviceDate ? 'error' : ''}`}
-                                    value={formData.serviceDate ? formatDisplayDate(new Date(formData.serviceDate)) : ''}
-                                    placeholder="Select date"
-                                    readOnly
-                                    onClick={() => setIsCalendarOpen(true)}
-                                  />
-                                  <button
-                                    type="button"
-                                    className="calendar-trigger-btn"
-                                    onClick={() => setIsCalendarOpen(true)}
-                                  >
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M21 10H3M16 2V6M8 2V6M7.8 22H16.2C17.8802 22 18.7202 22 19.362 21.673C19.9265 21.3854 20.3854 20.9265 20.673 20.362C21 19.7202 21 18.8802 21 17.2V8.8C21 7.11984 21 6.27976 20.673 5.63803C20.3854 5.07354 19.9265 4.6146 19.362 4.32698C18.7202 4 17.8802 4 16.2 4H7.8C6.11984 4 5.27976 4 4.63803 4.32698C4.07354 4.6146 3.6146 5.07354 3.32698 5.63803C3 6.27976 3 7.11984 3 8.8V17.2C3 18.8802 3 19.7202 3.32698 20.362C3.6146 20.9265 4.07354 21.3854 4.63803 21.673C5.27976 22 6.11984 22 7.8 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
-                                  </button>
-                                </div>
-                                {showErrors && errors.serviceDate && (
-                                  <div className="form-error">{errors.serviceDate}</div>
-                                )}
-                              </div>
-                              <div className="form-group">
-                                <label className="form-label">Start time:</label>
-                                <select
-                                  name="startTime"
-                                  className={`form-select ${showErrors && errors.startTime ? 'error' : ''}`}
-                                  value={formData.startTime || ''}
-                                  onChange={(e) => handleInputChange('startTime', e.target.value)}
-                                >
-                                  <option value="">Select time</option>
-                                  {['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'].map(time => {
-                                    const busySlots = getBusyTimeSlots(selectedDate);
-                                    const isDisabled = busySlots.includes(time);
-                                    return (
-                                      <option 
-                                        key={time} 
-                                        value={time}
-                                        disabled={isDisabled}
-                                        style={isDisabled ? { color: '#9ca3af' } : {}}
-                                      >
-                                        {time} {isDisabled ? '(Booked)' : ''}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
-                                {showErrors && errors.startTime && (
-                                  <div className="form-error">{errors.startTime}</div>
-                                )}
-                              </div>
-                              <div className="form-group">
-                                <label className="form-label">End time:</label>
-                                <select
-                                  name="endTime"
-                                  className={`form-select ${showErrors && errors.endTime ? 'error' : ''}`}
-                                  value={formData.endTime || ''}
-                                  onChange={(e) => handleInputChange('endTime', e.target.value)}
-                                >
-                                  <option value="">Select time</option>
-                                  {['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'].map(time => {
-                                    const busySlots = getBusyTimeSlots(selectedDate);
-                                    const isDisabled = busySlots.includes(time);
-                                    return (
-                                      <option 
-                                        key={time} 
-                                        value={time}
-                                        disabled={isDisabled}
-                                        style={isDisabled ? { color: '#9ca3af' } : {}}
-                                      >
-                                        {time} {isDisabled ? '(Booked)' : ''}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
-                                {showErrors && errors.endTime && (
-                                  <div className="form-error">{errors.endTime}</div>
-                                )}
-                              </div>
-                            </div>
-                          </>
-                        ) : (
-                          // Other steps: Use dynamic form rendering
-                          currentStepData.formFields.map(field => renderFormField(field)).filter(Boolean)
-                        )}
-                      </div>
                   
                   {/* Form actions for step 1 only */}
                   {currentStep === 1 && (
@@ -2351,20 +2371,20 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
           </div>
         </>
       )}
-    </div>
-  </div>
-
-  {/* Calendar Popup */}
-  {isCalendarOpen && (
-    <div className="calendar-overlay" onClick={() => setIsCalendarOpen(false)}>
-      <div className="calendar-modal" onClick={(e) => e.stopPropagation()}>
-        {renderCalendar()}
+        </div>
       </div>
-    </div>
-  )}
 
-</>
-);
+      {/* Calendar Popup */}
+      {isCalendarOpen && (
+        <div className="calendar-overlay" onClick={() => setIsCalendarOpen(false)}>
+          <div className="calendar-modal" onClick={(e) => e.stopPropagation()}>
+            {renderCalendar()}
+          </div>
+        </div>
+      )}
+
+    </>
+  );
 };
 
 export default OnboardingModal;

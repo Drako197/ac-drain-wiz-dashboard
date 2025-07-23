@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import MobileHeader from './components/MobileHeader';
+import MobileNavigation from './components/MobileNavigation';
 import Dashboard from './pages/Dashboard';
 import ManageClients from './pages/ManageClients';
 import ManageEmployees from './pages/ManageEmployees';
@@ -16,6 +18,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Always show onboarding first on refresh
   useEffect(() => {
@@ -53,13 +56,37 @@ function App() {
     setCurrentPage(page);
   };
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <Router>
       <div className="App">
         <div className={`dashboard-container ${showOnboarding ? 'onboarding-active' : ''}`}>
+          {/* Mobile Header */}
+          <MobileHeader 
+            isMenuOpen={isMobileMenuOpen}
+            onToggleMenu={handleMobileMenuToggle}
+            currentPage={currentPage}
+          />
+          
+          {/* Desktop Sidebar */}
           <aside className="sidebar">
             <Sidebar currentPage={currentPage} onPageChange={handlePageChange} onboardingCompleted={onboardingCompleted} />
           </aside>
+          
+          {/* Mobile Navigation */}
+          <MobileNavigation 
+            isOpen={isMobileMenuOpen}
+            onClose={handleMobileMenuClose}
+            onPageChange={handlePageChange}
+            onboardingCompleted={onboardingCompleted}
+          />
           
           <main className="main-content">
             <Routes>
@@ -88,19 +115,7 @@ function App() {
 
         {/* Onboarding Trigger Button */}
         <button 
-          className={showOnboarding ? 'onboarding-active' : ''}
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            padding: '12px 24px',
-            background: 'rgb(59, 130, 246)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            zIndex: 999
-          }}
+          className={`onboarding-trigger-btn ${showOnboarding ? 'onboarding-active' : ''}`}
           onClick={handleShowOnboarding}
         >
           Show Onboarding
