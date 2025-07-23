@@ -2162,6 +2162,12 @@ button.onboarding-active {
     margin-left: 12px;
   }
   
+  /* Special styling for cancelled service calls tab */
+  .service-call-cards-container .service-call-info-item .service-call-info-value {
+    text-align: left;
+    align-self: flex-start;
+  }
+  
   .service-call-card-actions {
     display: flex;
     gap: 8px;

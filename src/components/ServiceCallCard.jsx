@@ -45,6 +45,22 @@ const ServiceCallCard = ({ serviceCall, activeTab, onEdit, onView, onDelete }) =
             <span className="service-call-info-value">{serviceCall.assignedSensor}</span>
           </div>
         )}
+        {activeTab === 'cancelled' && (
+          <>
+            <div className="service-call-info-item">
+              <span className="service-call-info-label">Cancellation Date:</span>
+              <span className="service-call-info-value">{serviceCall.cancellationDate}</span>
+            </div>
+            <div className="service-call-info-item">
+              <span className="service-call-info-label">Reason:</span>
+              <span className="service-call-info-value">{serviceCall.reason}</span>
+            </div>
+            <div className="service-call-info-item">
+              <span className="service-call-info-label">Cancellation Note:</span>
+              <span className="service-call-info-value">{serviceCall.cancellationNote}</span>
+            </div>
+          </>
+        )}
       </div>
       
       <div className="service-call-card-actions">
