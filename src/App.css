@@ -762,6 +762,11 @@ body {
   overflow: hidden;
 }
 
+/* Hide service call cards on desktop */
+.service-call-cards-container {
+  display: none;
+}
+
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -2048,6 +2053,139 @@ button.onboarding-active {
   .dashboard-table-section:has(.btn-manage-roles) .tabs-container {
     width: 100%;
     margin-top: 35px;
+  }
+  
+  /* Mobile tabs for ManageServiceCalls */
+  .dashboard-table-section:has(.service-call-cards-container) .tabs-section {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .dashboard-table-section:has(.service-call-cards-container) .tabs-container {
+    width: 100%;
+    margin-top: 35px;
+  }
+  
+  /* Mobile Service Call Cards */
+  .service-call-cards-container {
+    display: none; /* Hidden by default on desktop */
+  }
+  
+  .service-call-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .service-call-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  .service-call-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 12px;
+  }
+  
+  .service-call-address {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 16px;
+    line-height: 1.4;
+    flex: 1;
+  }
+  
+  .service-call-priority {
+    flex-shrink: 0;
+  }
+  
+  .priority-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .priority-badge.high {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+  
+  .priority-badge.medium {
+    background: #fffbeb;
+    color: #d97706;
+  }
+  
+  .priority-badge.low {
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+  
+  .service-call-card-content {
+    margin-bottom: 16px;
+  }
+  
+  .service-call-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .service-call-info-item:last-child {
+    border-bottom: none;
+  }
+  
+  .service-call-info-label {
+    font-weight: 700;
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .service-call-info-value {
+    color: #374151;
+    font-size: 14px;
+    text-align: right;
+    flex: 1;
+    margin-left: 12px;
+  }
+  
+  .service-call-card-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 12px;
+  }
+  
+  .service-call-card-actions .icon-wrapper {
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .service-call-card-actions .icon-wrapper:hover {
+    background: #f3f4f6;
+  }
+  
+  /* Show service call cards on mobile, hide table */
+  .service-call-cards-container {
+    display: block;
+    margin-top: 16px; /* Reduce spacing between search and first card */
+  }
+  
+  .dashboard-table-section:has(.service-call-cards-container) .dashboard-table {
+    display: none;
   }
 } 
 

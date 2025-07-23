@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './ManageServiceCalls.css'
 import Pagination from '../components/Pagination'
+import ServiceCallCard from '../components/ServiceCallCard'
 
 const ManageServiceCalls = () => {
   const navigate = useNavigate()
@@ -713,6 +714,22 @@ const ManageServiceCalls = () => {
     }, 800) // 0.8 second loading time for page changes
   }
 
+  // Action handlers for service call cards
+  const handleEditServiceCall = (serviceCall) => {
+    console.log('Edit service call:', serviceCall)
+    // Add your edit logic here
+  }
+
+  const handleViewServiceCall = (serviceCall) => {
+    console.log('View service call:', serviceCall)
+    // Add your view logic here
+  }
+
+  const handleDeleteServiceCall = (serviceCall) => {
+    console.log('Delete service call:', serviceCall)
+    // Add your delete logic here
+  }
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -835,8 +852,7 @@ const ManageServiceCalls = () => {
           </div>
       </div>
 
-        <div className="table-container" style={{ position: 'relative' }}>
-
+        <div className="table-container">
           <table className={`dashboard-table ${searchTerm.trim() !== '' ? 'compact-results' : ''}`}>
             <thead>
               <tr>
@@ -969,7 +985,52 @@ const ManageServiceCalls = () => {
               <div className="loading-text">Loading page...</div>
             </div>
           )}
+        </div>
 
+        {/* Mobile Service Call Cards */}
+        <div className="service-call-cards-container">
+          {isPageLoading ? (
+            // Skeleton loading placeholders for cards
+            Array.from({ length: 5 }, (_, index) => (
+              <div key={`skeleton-card-${index}`} className="service-call-card">
+                <div className="service-call-card-header">
+                  <div className="skeleton-placeholder skeleton-address"></div>
+                  {(activeTab === 'my-calls' || activeTab === 'history') && (
+                    <div className="skeleton-placeholder skeleton-priority"></div>
+                  )}
+                </div>
+                <div className="service-call-card-content">
+                  {activeTab !== 'cancelled' && (
+                    <>
+                      <div className="service-call-info-item">
+                        <div className="skeleton-placeholder skeleton-name"></div>
+                      </div>
+                      <div className="service-call-info-item">
+                        <div className="skeleton-placeholder skeleton-phone"></div>
+                      </div>
+                    </>
+                  )}
+                  {(activeTab === 'required' || activeTab === 'my-calls' || activeTab === 'history') && (
+                    <div className="service-call-info-item">
+                      <div className="skeleton-placeholder skeleton-sensor"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
+            // Actual service call cards
+            currentData.map((call) => (
+              <ServiceCallCard
+                key={call.id}
+                serviceCall={call}
+                activeTab={activeTab}
+                onEdit={handleEditServiceCall}
+                onView={handleViewServiceCall}
+                onDelete={handleDeleteServiceCall}
+              />
+            ))
+          )}
         </div>
 
         <Pagination
