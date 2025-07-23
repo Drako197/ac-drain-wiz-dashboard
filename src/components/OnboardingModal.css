@@ -979,12 +979,23 @@
   .mobile-onboarding-header {
     text-align: center;
     background: white;
+    display: none;
   }
   
-  .mobile-logo {
+  .mobile-onboarding-logo {
     width: 150px;
     height: auto;
     margin-bottom: 8px;
+  }
+  
+  /* Show mobile header only on mobile */
+  .mobile-onboarding-header {
+    display: block;
+  }
+  
+  /* Hide desktop logo on mobile */
+  .onboarding-logo {
+    display: none;
   }
   
   .mobile-step-title {
@@ -2560,27 +2571,38 @@
 
 @media (max-width: 768px) {
   .completion-content {
-    padding: 30px 16px;
+    padding: 20px 16px;
   }
   
   .completion-content h3 {
-    font-size: 28px;
+    font-size: 24px;
+    margin-bottom: 6px;
   }
   
   .completion-subtitle {
     font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .completion-illustration {
+    margin-bottom: 20px;
   }
   
   .completion-illustration img {
-    max-width: 250px;
+    max-width: 180px;
+  }
+  
+  .completion-steps {
+    margin-bottom: 20px;
+    gap: 10px;
   }
   
   .completion-step {
-    padding: 14px 16px;
+    padding: 10px 14px;
   }
   
   .completion-step span {
-    font-size: 15px;
+    font-size: 14px;
   }
 }
 

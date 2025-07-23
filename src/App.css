@@ -767,6 +767,11 @@ body {
   display: none;
 }
 
+/* Hide dashboard client cards on desktop */
+.dashboard-client-cards-container {
+  display: none;
+}
+
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -2193,6 +2198,95 @@ button.onboarding-active {
   }
   
   .dashboard-table-section:has(.service-call-cards-container) .dashboard-table {
+    display: none;
+  }
+  
+  /* Dashboard Client Cards */
+  .dashboard-client-cards-container {
+    display: none;
+  }
+  
+  .dashboard-client-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .dashboard-client-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  .dashboard-client-card-header {
+    margin-bottom: 12px;
+  }
+  
+  .dashboard-client-address {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  
+  .dashboard-client-card-content {
+    margin-bottom: 16px;
+  }
+  
+  .dashboard-client-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .dashboard-client-info-item:last-child {
+    border-bottom: none;
+  }
+  
+  .dashboard-client-info-label {
+    font-weight: 700;
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .dashboard-client-info-value {
+    color: #374151;
+    font-size: 14px;
+    text-align: right;
+    flex: 1;
+    margin-left: 12px;
+  }
+  
+  .dashboard-client-card-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 12px;
+  }
+  
+  .dashboard-client-card-actions .icon-wrapper {
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .dashboard-client-card-actions .icon-wrapper:hover {
+    background: #f3f4f6;
+  }
+  
+  /* Show dashboard client cards on mobile, hide table */
+  .dashboard-client-cards-container {
+    display: block;
+    margin-top: 16px;
+  }
+  
+  .dashboard-table-section:has(.dashboard-client-cards-container) .dashboard-table {
     display: none;
   }
 } 

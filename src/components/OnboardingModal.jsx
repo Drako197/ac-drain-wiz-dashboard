@@ -1576,9 +1576,14 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
           ) : (
             <>
           <div className="onboarding-left">
+                {/* Desktop Logo */}
+                <div className="onboarding-logo">
+                  <img className="logo-img" src="/images/acdrainwiz_logo.png" alt="AC Drain Wiz" />
+                </div>
+                
                 {/* Mobile Header */}
                 <div className="mobile-onboarding-header">
-                  <img className="mobile-logo" src="/images/acdrainwiz_logo.png" alt="AC Drain Wiz" />
+                  <img className="mobile-onboarding-logo" src="/images/acdrainwiz_logo.png" alt="AC Drain Wiz" />
                   <div className="mobile-step-title">{steps[currentStep]?.title || 'Welcome'}</div>
                   {/* <div className="mobile-step-description">{steps[currentStep]?.description || 'Let\'s get you set up'}</div> */}
                   

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Dashboard.css';
 import Pagination from '../components/Pagination';
+import DashboardClientCard from '../components/DashboardClientCard';
 
 const Dashboard = ({ onShowOnboarding, onboardingCompleted }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -522,6 +523,40 @@ const Dashboard = ({ onShowOnboarding, onboardingCompleted }) => {
             </>
           )}
         </div>
+
+        {/* Mobile Dashboard Client Cards */}
+        <div className="dashboard-client-cards-container">
+          {isPageLoading ? (
+            // Skeleton loading placeholders for cards
+            Array.from({ length: 5 }, (_, index) => (
+              <div key={`skeleton-card-${index}`} className="dashboard-client-card">
+                <div className="dashboard-client-card-header">
+                  <div className="skeleton-placeholder skeleton-address"></div>
+                </div>
+                <div className="dashboard-client-card-content">
+                  <div className="dashboard-client-info-item">
+                    <div className="skeleton-placeholder skeleton-name"></div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            // Actual dashboard client cards
+            currentAddresses.map((client) => (
+              <DashboardClientCard
+                key={client.id}
+                client={client}
+                onView={(client) => {
+                  // Handle view action - could navigate to client details
+                  console.log('View client:', client);
+                }}
+                handleTooltipPosition={handleTooltipPosition}
+                handleTooltipHide={handleTooltipHide}
+              />
+            ))
+          )}
+        </div>
+
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
