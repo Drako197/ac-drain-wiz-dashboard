@@ -1,13 +1,25 @@
 import React from 'react'
 
 const ServiceCallCard = ({ serviceCall, activeTab, onEdit, onView, onDelete }) => {
+  const getPriorityClass = (priority) => {
+    switch (priority?.toLowerCase()) {
+      case 'open':
+        return 'priority-open'
+      case 'in progress':
+        return 'priority-in-progress'
+      case 'closed':
+        return 'priority-closed'
+      default:
+        return 'priority-in-progress'
+    }
+  }
   return (
     <div className="service-call-card">
       <div className="service-call-card-header">
         <div className="service-call-address">{serviceCall.address}</div>
         {(activeTab === 'my-calls' || activeTab === 'history') && (
           <div className="service-call-priority">
-            <span className={`priority-badge ${serviceCall.priority?.toLowerCase() || 'medium'}`}>
+            <span className={`priority-badge ${getPriorityClass(serviceCall.priority)}`}>
               {serviceCall.priority || 'Medium'}
             </span>
           </div>
