@@ -388,23 +388,6 @@ const ManageEmployees = () => {
           <h1>Manage Employees</h1>
         </div>
         
-        <div className="table-header">
-          <div className="header-actions">
-            <button className="btn-manage-roles">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 1V15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Manage Employee Roles
-            </button>
-            <button className="btn-add-employee">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 1V15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Add A New Employee
-            </button>
-          </div>
-        </div>
-        
         <div className="tabs-section">
           <div className="tabs-container">
             {tabs.map((tab) => (
@@ -419,6 +402,14 @@ const ManageEmployees = () => {
                 )}
               </button>
             ))}
+          </div>
+          <div className="header-actions">
+            <button className="btn-manage-roles">
+              Manage Employee Roles
+            </button>
+            <button className="btn-add-employee">
+              Add A New Employee
+            </button>
           </div>
         </div>
 

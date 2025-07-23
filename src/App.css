@@ -51,6 +51,9 @@ body {
 /* Tabs Section */
 .tabs-section {
   margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .tabs-container {
@@ -1668,14 +1671,14 @@ button.onboarding-active {
   }
   
   .btn-add-client {
-    background: #3b82f6;
+    background: #ff5733;
     color: white;
-    border-color: #3b82f6;
+    border-color: #ff5733;
   }
   
   .btn-add-client:hover {
-    background: #2563eb;
-    border-color: #2563eb;
+    background: #e04527;
+    border-color: #e04527;
   }
   
   .btn-manage-roles,
@@ -1703,14 +1706,14 @@ button.onboarding-active {
   }
   
   .btn-add-employee {
-    background: #3b82f6;
+    background: #ff5733;
     color: white;
-    border-color: #3b82f6;
+    border-color: #ff5733;
   }
   
   .btn-add-employee:hover {
-    background: #2563eb;
-    border-color: #2563eb;
+    background: #e04527;
+    border-color: #e04527;
   }
   
   .search-wrapper {
@@ -1908,6 +1911,143 @@ button.onboarding-active {
   
   .employee-card-actions .icon-wrapper:hover {
     background: #f3f4f6;
+  }
+  
+  /* Mobile Tabs Section Layout */
+  .tabs-section {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .btn-manage-roles,
+  .btn-add-employee {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .btn-manage-roles:hover,
+  .btn-add-employee:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+  
+  .btn-add-employee {
+    background: #ff5733;
+    color: white;
+    border-color: #ff5733;
+  }
+  
+  .btn-add-employee:hover {
+    background: #e04527;
+    border-color: #e04527;
+  }
+  
+  /* Mobile Segmented Control Tabs */
+  .tabs-container {
+    display: flex;
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    padding: 4px;
+  }
+  
+  .tab-button {
+    flex: 1;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    text-align: center;
+    border-radius: 8px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .tab-button:hover {
+    background: #e5e7eb;
+    color: #374151;
+  }
+  
+  .tab-button.active {
+    background: white;
+    color: #7c3aed;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #a78bfa;
+  }
+  
+  .tab-button:not(.active):not(:has(.tab-count)) {
+    color: #6b7280;
+  }
+  
+  .tab-button:not(.active):not(:has(.tab-count)):hover {
+    color: #374151;
+  }
+  
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    background: #dc2626;
+  }
+  
+  .tab-button.active .tab-count {
+    background: #7c3aed;
+  }
+  
+  /* Mobile ManageEmployees specific layout */
+  .dashboard-table-section:has(.btn-manage-roles) .tabs-section {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .dashboard-table-section:has(.btn-manage-roles) .header-actions {
+    order: -1;
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .dashboard-table-section:has(.btn-manage-roles) .tabs-container {
+    width: 100%;
+    margin-top: 35px;
   }
 } 
 

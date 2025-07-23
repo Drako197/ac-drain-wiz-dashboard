@@ -698,6 +698,13 @@
   margin-bottom: 20px;
 }
 
+/* Desktop-only form actions spacing */
+@media (min-width: 481px) {
+  .form-actions {
+    margin-top: 45px;
+  }
+}
+
 .form-actions .assistive-text {
   align-self: flex-start;
   width: 100%;
@@ -1273,6 +1280,21 @@
   justify-content: center;
   gap: 8px;
   margin-top: 32px;
+}
+
+/* Desktop-only progress indicator spacing */
+@media (min-width: 481px) {
+  .progress-indicator {
+    margin-top: 16px;
+  }
+  
+  /* Steps 2-5 specific progress indicator spacing */
+  .onboarding-right.step-2 .progress-indicator,
+  .onboarding-right.step-3 .progress-indicator,
+  .onboarding-right.step-4 .progress-indicator,
+  .onboarding-right.step-5 .progress-indicator {
+    margin-top: 45px;
+  }
 }
 
 /* Hide mobile elements on desktop only */
