@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Pagination from '../components/Pagination'
+import ClientCard from '../components/ClientCard'
 
 const ManageClients = () => {
   const navigate = useNavigate()
@@ -224,6 +225,22 @@ const ManageClients = () => {
     }
   }
 
+  // Action handlers for client cards
+  const handleEditClient = (client) => {
+    console.log('Edit client:', client)
+    // Add your edit logic here
+  }
+
+  const handleViewClient = (client) => {
+    console.log('View client:', client)
+    // Add your view logic here
+  }
+
+  const handleDeleteClient = (client) => {
+    console.log('Delete client:', client)
+    // Add your delete logic here
+  }
+
   return (
     <>
       {/* Breadcrumb Navigation */}
@@ -264,9 +281,15 @@ const ManageClients = () => {
           <h2>Clients</h2>
           <div className="header-actions">
             <button className="btn-import-clients">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 1V15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
               Import Clients
             </button>
             <button className="btn-add-client">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 1V15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
               Add A New Client
             </button>
             <div className="search-wrapper">
@@ -327,17 +350,18 @@ const ManageClients = () => {
             </div>
           ) : (
             <>
+              {/* Desktop Table */}
               <table className={`dashboard-table ${searchTerm.trim() !== '' ? 'compact-results' : ''}`}>
-            <thead>
-              <tr>
+                <thead>
+                  <tr>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Mobile Number</th>
-                <th>Email</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+                    <th>Email</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {isPageLoading ? (
                     // Skeleton loading placeholders
                     Array.from({ length: 10 }, (_, index) => (
@@ -362,11 +386,11 @@ const ManageClients = () => {
                   ) : (
                     // Actual data
                     currentClients.map((client) => (
-                <tr key={client.id}>
+                      <tr key={client.id}>
                         <td>{client.firstName}</td>
                         <td>{client.lastName}</td>
                         <td>{client.mobileNumber}</td>
-                  <td>{client.email}</td>
+                        <td>{client.email}</td>
                         <td>
                           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                             <div 
@@ -402,13 +426,58 @@ const ManageClients = () => {
                                 <path d="M13.3333 4.99999V4.33332C13.3333 3.3999 13.3333 2.93319 13.1517 2.57667C12.9919 2.26307 12.7369 2.0081 12.4233 1.84831C12.0668 1.66666 11.6001 1.66666 10.6667 1.66666H9.33333C8.39991 1.66666 7.9332 1.66666 7.57668 1.84831C7.26308 2.0081 7.00811 2.26307 6.84832 2.57667C6.66667 2.93319 6.66667 3.3999 6.66667 4.33332V4.99999M8.33333 9.58332V13.75M11.6667 9.58332V13.75M2.5 4.99999H17.5M15.8333 4.99999V14.3333C15.8333 15.7335 15.8333 16.4335 15.5608 16.9683C15.3212 17.4387 14.9387 17.8212 14.4683 18.0608C13.9335 18.3333 13.2335 18.3333 11.8333 18.3333H8.16667C6.76654 18.3333 6.06647 18.3333 5.53169 18.0608C5.06129 17.8212 4.67883 17.4387 4.43915 16.9683C4.16667 16.4335 4.16667 15.7335 4.16667 14.3333V4.99999" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"></path>
                               </svg>
                             </div>
-                    </div>
-                  </td>
-                </tr>
+                          </div>
+                        </td>
+                      </tr>
                     ))
                   )}
-            </tbody>
-          </table>
+                </tbody>
+              </table>
+
+              {/* Mobile Cards */}
+              <div className="client-cards-container">
+                {isPageLoading ? (
+                  // Skeleton loading placeholders for cards
+                  Array.from({ length: 10 }, (_, index) => (
+                    <div key={`skeleton-card-${index}`} className="client-card skeleton-row">
+                      <div className="client-card-header">
+                        <div className="client-name">
+                          <div className="skeleton-placeholder skeleton-name"></div>
+                        </div>
+                      </div>
+                      <div className="client-card-content">
+                        <div className="client-info-item">
+                          <span className="client-info-label">📧 Email:</span>
+                          <div className="skeleton-placeholder skeleton-email"></div>
+                        </div>
+                        <div className="client-info-item">
+                          <span className="client-info-label">📱 Mobile:</span>
+                          <div className="skeleton-placeholder skeleton-phone"></div>
+                        </div>
+                      </div>
+                      <div className="client-card-actions">
+                        <div className="skeleton-placeholder skeleton-action"></div>
+                        <div className="skeleton-placeholder skeleton-action"></div>
+                        <div className="skeleton-placeholder skeleton-action"></div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  // Actual client cards
+                  currentClients.map((client) => (
+                    <ClientCard
+                      key={client.id}
+                      client={client}
+                      onEdit={handleEditClient}
+                      onView={handleViewClient}
+                      onDelete={handleDeleteClient}
+                      handleTooltipPosition={handleTooltipPosition}
+                      handleTooltipHide={handleTooltipHide}
+                    />
+                  ))
+                )}
+              </div>
+
               {isPageLoading && (
                 <div className="loading-overlay">
                   <div className="loading-spinner">

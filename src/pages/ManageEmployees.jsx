@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Pagination from '../components/Pagination'
+import EmployeeCard from '../components/EmployeeCard'
 
 const ManageEmployees = () => {
   const navigate = useNavigate()
@@ -337,6 +338,17 @@ const ManageEmployees = () => {
     setShowRoleTooltip(false)
   }
 
+  // Action handlers for employee cards
+  const handleEditEmployee = (employee) => {
+    console.log('Edit employee:', employee)
+    // Add your edit logic here
+  }
+
+  const handleDeleteEmployee = (employee) => {
+    console.log('Delete employee:', employee)
+    // Add your delete logic here
+  }
+
   return (
     <div className="page">
       {/* Breadcrumb Navigation */}
@@ -374,11 +386,20 @@ const ManageEmployees = () => {
       <div className="dashboard-table-section">
         <div className="page-header-with-actions">
           <h1>Manage Employees</h1>
+        </div>
+        
+        <div className="table-header">
           <div className="header-actions">
             <button className="btn-manage-roles">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 1V15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
               Manage Employee Roles
             </button>
             <button className="btn-add-employee">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 1V15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
               Add A New Employee
             </button>
           </div>
@@ -466,9 +487,10 @@ const ManageEmployees = () => {
             </div>
           ) : (
             <>
+              {/* Desktop Table */}
               <table className={`dashboard-table ${searchTerm.trim() !== '' ? 'compact-results' : ''}`}>
-            <thead>
-              <tr>
+                <thead>
+                  <tr>
                     {activeTab === 'active' ? (
                       <>
                         <th>Employee Name</th>
@@ -480,15 +502,15 @@ const ManageEmployees = () => {
                     ) : (
                       <>
                         <th>Employee Name</th>
-                <th>Email</th>
-                <th>Role</th>
+                        <th>Email</th>
+                        <th>Role</th>
                         <th>Invited Date</th>
-                <th>Actions</th>
+                        <th>Actions</th>
                       </>
                     )}
-              </tr>
-            </thead>
-            <tbody>
+                  </tr>
+                </thead>
+                <tbody>
                   {isPageLoading ? (
                     // Skeleton loading placeholders
                     Array.from({ length: 10 }, (_, index) => (
@@ -526,8 +548,8 @@ const ManageEmployees = () => {
                                 onMouseLeave={handleRoleHoverHide}
                               >
                                 {item.role}
-                    </span>
-                  </td>
+                              </span>
+                            </td>
                           </>
                         ) : (
                           <>
@@ -560,13 +582,86 @@ const ManageEmployees = () => {
                                 <path d="M13.3333 4.99999V4.33332C13.3333 3.3999 13.3333 2.93319 13.1517 2.57667C12.9919 2.26307 12.7369 2.0081 12.4233 1.84831C12.0668 1.66666 11.6001 1.66666 10.6667 1.66666H9.33333C8.39991 1.66666 7.9332 1.66666 7.57668 1.84831C7.26308 2.0081 7.00811 2.26307 6.84832 2.57667C6.66667 2.93319 6.66667 3.3999 6.66667 4.33332V4.99999M8.33333 9.58332V13.75M11.6667 9.58332V13.75M2.5 4.99999H17.5M15.8333 4.99999V14.3333C15.8333 15.7335 15.8333 16.4335 15.5608 16.9683C15.3212 17.4387 14.9387 17.8212 14.4683 18.0608C13.9335 18.3333 13.2335 18.3333 11.8333 18.3333H8.16667C6.76654 18.3333 6.06647 18.3333 5.53169 18.0608C5.06129 17.8212 4.67883 17.4387 4.43915 16.9683C4.16667 16.4335 4.16667 15.7335 4.16667 14.3333V4.99999" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"></path>
                               </svg>
                             </div>
-                    </div>
-                  </td>
-                </tr>
+                          </div>
+                        </td>
+                      </tr>
                     ))
                   )}
-            </tbody>
-          </table>
+                </tbody>
+              </table>
+
+              {/* Mobile Cards */}
+              <div className="employee-cards-container">
+                {isPageLoading ? (
+                  // Skeleton loading placeholders for cards
+                  Array.from({ length: 10 }, (_, index) => (
+                    <div key={`skeleton-card-${index}`} className="employee-card skeleton-row">
+                      <div className="employee-card-header">
+                        <div className="employee-name">
+                          <div className="skeleton-placeholder skeleton-name"></div>
+                        </div>
+                        {activeTab === 'active' && (
+                          <div className="employee-status">
+                            <div className="skeleton-placeholder skeleton-status"></div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="employee-card-content">
+                        {activeTab === 'active' ? (
+                          <>
+                            <div className="employee-info-item">
+                              <span className="employee-info-label">📍 Address:</span>
+                              <div className="skeleton-placeholder skeleton-address"></div>
+                            </div>
+                            <div className="employee-info-item">
+                              <span className="employee-info-label">📱 Contact:</span>
+                              <div className="skeleton-placeholder skeleton-phone"></div>
+                            </div>
+                            <div className="employee-info-item">
+                              <span className="employee-info-label">👤 Role:</span>
+                              <div className="skeleton-placeholder skeleton-name"></div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="employee-info-item">
+                              <span className="employee-info-label">📧 Email:</span>
+                              <div className="skeleton-placeholder skeleton-email"></div>
+                            </div>
+                            <div className="employee-info-item">
+                              <span className="employee-info-label">👤 Role:</span>
+                              <div className="skeleton-placeholder skeleton-name"></div>
+                            </div>
+                            <div className="employee-info-item">
+                              <span className="employee-info-label">📅 Invited:</span>
+                              <div className="skeleton-placeholder skeleton-date"></div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <div className="employee-card-actions">
+                        <div className="skeleton-placeholder skeleton-action"></div>
+                        <div className="skeleton-placeholder skeleton-action"></div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  // Actual employee cards
+                  currentData.map((employee) => (
+                    <EmployeeCard
+                      key={employee.id}
+                      employee={employee}
+                      activeTab={activeTab}
+                      onEdit={handleEditEmployee}
+                      onDelete={handleDeleteEmployee}
+                      handleTooltipPosition={handleTooltipPosition}
+                      handleTooltipHide={handleTooltipHide}
+                      handleRoleHover={handleRoleHover}
+                      handleRoleHoverHide={handleRoleHoverHide}
+                    />
+                  ))
+                )}
+              </div>
               {isPageLoading && (
                 <div className="loading-overlay">
                   <div className="loading-spinner">

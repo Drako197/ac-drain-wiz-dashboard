@@ -1,25 +1,13 @@
 import React from 'react';
 
 const MobileHeader = ({ isMenuOpen, onToggleMenu, currentPage }) => {
-  const getPageTitle = () => {
-    switch (currentPage) {
-      case '/':
-      case '/dashboard':
-        return 'Dashboard';
-      case '/manage-service-calls':
-        return 'Service Calls';
-      case '/manage-clients':
-        return 'Clients';
-      case '/manage-employees':
-        return 'Employees';
-      default:
-        return 'Dashboard';
-    }
-  };
-
   return (
     <header className="mobile-header">
       <div className="mobile-header-content">
+        <div className="mobile-logo">
+          <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
+        </div>
+        
         <button 
           className={`hamburger-menu ${isMenuOpen ? 'open' : ''}`}
           onClick={onToggleMenu}
@@ -29,12 +17,6 @@ const MobileHeader = ({ isMenuOpen, onToggleMenu, currentPage }) => {
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
         </button>
-        
-        <div className="mobile-page-title">
-          <h1>{getPageTitle()}</h1>
-        </div>
-        
-        <div className="mobile-header-spacer"></div>
       </div>
     </header>
   );

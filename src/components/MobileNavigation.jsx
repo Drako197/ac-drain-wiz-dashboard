@@ -26,12 +26,14 @@ const MobileNavigation = ({ isOpen, onClose, onPageChange, onboardingCompleted }
   }, [onboardingCompleted]);
 
   const handleNavigation = (path) => {
+    console.log('Mobile Navigation - Navigating to:', path);
     navigate(path);
     if (onPageChange) {
       const pageId = path === '/' || path === '/dashboard' ? 'dashboard' : 
                     path === '/manage-service-calls' ? 'service-calls' :
                     path === '/manage-clients' ? 'clients' :
                     path === '/manage-employees' ? 'employees' : 'dashboard';
+      console.log('Mobile Navigation - Setting page to:', pageId);
       onPageChange(pageId);
     }
     onClose(); // Close menu after navigation
@@ -54,7 +56,10 @@ const MobileNavigation = ({ isOpen, onClose, onPageChange, onboardingCompleted }
       ></div>
       
       {/* Navigation Panel */}
-      <nav className={`mobile-navigation ${isOpen ? 'open' : ''}`}>
+      <nav 
+        className={`mobile-navigation ${isOpen ? 'open' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="mobile-nav-header">
           <div className="mobile-nav-logo">
             <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
@@ -82,6 +87,7 @@ const MobileNavigation = ({ isOpen, onClose, onPageChange, onboardingCompleted }
                 href="/" 
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   handleNavigation('/');
                 }}
               >
@@ -97,6 +103,7 @@ const MobileNavigation = ({ isOpen, onClose, onPageChange, onboardingCompleted }
                 href="/manage-service-calls" 
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   handleNavigation('/manage-service-calls');
                 }}
               >
@@ -113,6 +120,7 @@ const MobileNavigation = ({ isOpen, onClose, onPageChange, onboardingCompleted }
                 href="/manage-clients" 
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   handleNavigation('/manage-clients');
                 }}
               >
@@ -135,6 +143,7 @@ const MobileNavigation = ({ isOpen, onClose, onPageChange, onboardingCompleted }
                 href="/manage-employees" 
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   handleNavigation('/manage-employees');
                 }}
               >

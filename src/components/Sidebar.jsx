@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const Sidebar = ({ onPageChange, onboardingCompleted }) => {
+const Sidebar = ({ currentPage, onPageChange, onboardingCompleted }) => {
   const [contractorName, setContractorName] = useState('Acme HVAC and Cooling');
   const [contractorEmail, setContractorEmail] = useState('ariddle@acdrainwiz.com');
   const [fullName, setFullName] = useState('Diana Rivera');
@@ -26,12 +26,14 @@ const Sidebar = ({ onPageChange, onboardingCompleted }) => {
   const location = useLocation();
 
   const handleNavigation = (path) => {
+    console.log('Navigating to:', path);
     navigate(path);
     if (onPageChange) {
       const pageId = path === '/' || path === '/dashboard' ? 'dashboard' : 
                     path === '/manage-service-calls' ? 'service-calls' :
                     path === '/manage-clients' ? 'clients' :
                     path === '/manage-employees' ? 'employees' : 'dashboard';
+      console.log('Setting page to:', pageId);
       onPageChange(pageId);
     }
   };
