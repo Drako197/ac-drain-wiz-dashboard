@@ -1203,6 +1203,7 @@ body {
   .dashboard-contact {
     min-width: 0 !important;
     flex-shrink: 1 !important;
+    width: 100% !important;
   }
   
   .contact-card {
@@ -1211,6 +1212,8 @@ body {
     width: 100% !important;
     flex: 1 1 0 !important;
     flex-shrink: 1 !important;
+    margin: 0 !important;
+    padding: 18px 16px !important;
   }
   
   .dashboard-table th,
