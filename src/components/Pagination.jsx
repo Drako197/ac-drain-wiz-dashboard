@@ -1,4 +1,5 @@
 import React from 'react';
+import useMobileDetection from '../hooks/useMobileDetection';
 
 const Pagination = ({ 
   currentPage, 
@@ -10,21 +11,40 @@ const Pagination = ({
   totalItems,
   itemsLabel = 'results'
 }) => {
-  // Calculate which 3 pages to show
+  const isMobile = useMobileDetection();
+
+  // Calculate which pages to show based on device
   const getVisiblePages = () => {
     if (totalPages <= 3) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
     
-    if (currentPage <= 2) {
-      return [1, 2, 3];
+    if (isMobile) {
+      // Mobile: Show only 3 pages at a time
+      if (currentPage <= 2) {
+        return [1, 2, 3];
+      }
+      
+      if (currentPage >= totalPages - 1) {
+        return [totalPages - 2, totalPages - 1, totalPages];
+      }
+      
+      return [currentPage - 1, currentPage, currentPage + 1];
+    } else {
+      // Desktop: Show more pages (up to 7 pages)
+      const maxVisiblePages = 7;
+      const halfVisible = Math.floor(maxVisiblePages / 2);
+      
+      let startPage = Math.max(1, currentPage - halfVisible);
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      // Adjust if we're near the end
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
     }
-    
-    if (currentPage >= totalPages - 1) {
-      return [totalPages - 2, totalPages - 1, totalPages];
-    }
-    
-    return [currentPage - 1, currentPage, currentPage + 1];
   };
 
   const visiblePages = getVisiblePages();
