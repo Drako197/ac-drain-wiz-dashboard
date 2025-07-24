@@ -1878,8 +1878,11 @@ button.onboarding-active {
     background: #f3f4f6;
   }
   
-  /* Hide table on mobile */
-  .dashboard-table {
+  /* Hide table on mobile when cards are present */
+  .dashboard-table-section:has(.client-cards-container) .dashboard-table,
+  .dashboard-table-section:has(.dashboard-client-cards-container) .dashboard-table,
+  .dashboard-table-section:has(.service-call-cards-container) .dashboard-table,
+  .dashboard-table-section:has(.employee-cards-container) .dashboard-table {
     display: none;
   }
   
