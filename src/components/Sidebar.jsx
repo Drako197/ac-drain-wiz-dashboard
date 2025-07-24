@@ -49,7 +49,16 @@ const Sidebar = ({ currentPage, onPageChange, onboardingCompleted }) => {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
+        <a 
+          href="/" 
+          onClick={(e) => {
+            e.preventDefault();
+            handleNavigation('/');
+          }}
+          style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
+        </a>
         </div>
         
       <div className="contractor-card">

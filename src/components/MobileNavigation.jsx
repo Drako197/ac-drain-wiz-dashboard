@@ -62,7 +62,17 @@ const MobileNavigation = ({ isOpen, onClose, onPageChange, onboardingCompleted }
       >
         <div className="mobile-nav-header">
           <div className="mobile-nav-logo">
-            <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
+            <a 
+              href="/" 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleNavigation('/');
+              }}
+              style={{ textDecoration: 'none', display: 'flex', justifyContent: 'flex-start' }}
+            >
+              <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
+            </a>
           </div>
           
           {/* Close Button */}

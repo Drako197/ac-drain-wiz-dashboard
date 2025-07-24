@@ -1,11 +1,25 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MobileHeader = ({ isMenuOpen, onToggleMenu, currentPage }) => {
+  const navigate = useNavigate();
+
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    navigate('/');
+  };
+
   return (
     <header className="mobile-header">
       <div className="mobile-header-content">
         <div className="mobile-logo">
-          <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
+          <a 
+            href="/" 
+            onClick={handleLogoClick}
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
+          >
+            <img alt="AC Drain Wiz Logo" className="logo-img" src="/images/acdrainwiz_logo.png" />
+          </a>
         </div>
         
         <button 
