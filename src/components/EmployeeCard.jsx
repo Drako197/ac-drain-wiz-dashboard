@@ -1,6 +1,8 @@
 import React from 'react';
+import useMobileDetection from '../hooks/useMobileDetection';
 
 const EmployeeCard = ({ employee, activeTab, onEdit, onDelete, handleTooltipPosition, handleTooltipHide, handleRoleHover, handleRoleHoverHide }) => {
+  const isMobile = useMobileDetection();
   return (
     <div className="employee-card">
       <div className="employee-card-header">
@@ -64,8 +66,8 @@ const EmployeeCard = ({ employee, activeTab, onEdit, onDelete, handleTooltipPosi
         <div 
           className="icon-wrapper" 
           title={activeTab === 'active' ? "Edit employee" : "Edit invitation"}
-          onMouseEnter={handleTooltipPosition}
-          onMouseLeave={handleTooltipHide}
+          onMouseEnter={!isMobile ? handleTooltipPosition : undefined}
+          onMouseLeave={!isMobile ? handleTooltipHide : undefined}
           onClick={() => onEdit(employee)}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
@@ -76,8 +78,8 @@ const EmployeeCard = ({ employee, activeTab, onEdit, onDelete, handleTooltipPosi
         <div 
           className="icon-wrapper" 
           title={activeTab === 'active' ? "Delete employee" : "Delete invitation"}
-          onMouseEnter={handleTooltipPosition}
-          onMouseLeave={handleTooltipHide}
+          onMouseEnter={!isMobile ? handleTooltipPosition : undefined}
+          onMouseLeave={!isMobile ? handleTooltipHide : undefined}
           onClick={() => onDelete(employee)}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">

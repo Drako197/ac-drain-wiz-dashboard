@@ -1,6 +1,8 @@
 import React from 'react';
+import useMobileDetection from '../hooks/useMobileDetection';
 
 const ClientCard = ({ client, onEdit, onView, onDelete, handleTooltipPosition, handleTooltipHide }) => {
+  const isMobile = useMobileDetection();
   return (
     <div className="client-card">
       <div className="client-card-header">
@@ -25,8 +27,8 @@ const ClientCard = ({ client, onEdit, onView, onDelete, handleTooltipPosition, h
         <div 
           className="icon-wrapper" 
           title="Edit client"
-          onMouseEnter={handleTooltipPosition}
-          onMouseLeave={handleTooltipHide}
+          onMouseEnter={!isMobile ? handleTooltipPosition : undefined}
+          onMouseLeave={!isMobile ? handleTooltipHide : undefined}
           onClick={() => onEdit(client)}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
@@ -37,8 +39,8 @@ const ClientCard = ({ client, onEdit, onView, onDelete, handleTooltipPosition, h
         <div 
           className="icon-wrapper" 
           title="View address"
-          onMouseEnter={handleTooltipPosition}
-          onMouseLeave={handleTooltipHide}
+          onMouseEnter={!isMobile ? handleTooltipPosition : undefined}
+          onMouseLeave={!isMobile ? handleTooltipHide : undefined}
           onClick={() => onView(client)}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
@@ -49,8 +51,8 @@ const ClientCard = ({ client, onEdit, onView, onDelete, handleTooltipPosition, h
         <div 
           className="icon-wrapper" 
           title="Delete client"
-          onMouseEnter={handleTooltipPosition}
-          onMouseLeave={handleTooltipHide}
+          onMouseEnter={!isMobile ? handleTooltipPosition : undefined}
+          onMouseLeave={!isMobile ? handleTooltipHide : undefined}
           onClick={() => onDelete(client)}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">

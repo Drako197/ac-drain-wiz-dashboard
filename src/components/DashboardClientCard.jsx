@@ -1,6 +1,8 @@
 import React from 'react'
+import useMobileDetection from '../hooks/useMobileDetection'
 
 const DashboardClientCard = ({ client, onView, handleTooltipPosition, handleTooltipHide }) => {
+  const isMobile = useMobileDetection();
   return (
     <div className="dashboard-client-card">
       <div className="dashboard-client-card-header">
@@ -18,8 +20,8 @@ const DashboardClientCard = ({ client, onView, handleTooltipPosition, handleTool
         <div 
           className="icon-wrapper" 
           title="Manage address sensor detail"
-          onMouseEnter={handleTooltipPosition}
-          onMouseLeave={handleTooltipHide}
+          onMouseEnter={!isMobile ? handleTooltipPosition : undefined}
+          onMouseLeave={!isMobile ? handleTooltipHide : undefined}
           onClick={() => onView(client)}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">

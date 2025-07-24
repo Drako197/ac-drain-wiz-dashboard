@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Pagination from '../components/Pagination'
 import ClientCard from '../components/ClientCard'
+import useMobileDetection from '../hooks/useMobileDetection'
 
 const ManageClients = () => {
   const navigate = useNavigate()
@@ -169,7 +170,14 @@ const ManageClients = () => {
   }, [])
 
   // Tooltip positioning function
+  const isMobile = useMobileDetection();
+
   const handleTooltipPosition = (event) => {
+    // Don't show tooltips on mobile
+    if (isMobile) {
+      return;
+    }
+    
     const iconWrapper = event.currentTarget
     const rect = iconWrapper.getBoundingClientRect()
     

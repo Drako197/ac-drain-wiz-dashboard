@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './Dashboard.css';
 import Pagination from '../components/Pagination';
 import DashboardClientCard from '../components/DashboardClientCard';
+import useMobileDetection from '../hooks/useMobileDetection';
 
 const Dashboard = ({ onShowOnboarding, onboardingCompleted }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -249,6 +250,8 @@ const Dashboard = ({ onShowOnboarding, onboardingCompleted }) => {
     }, 800); // 0.8 second loading time for page changes
   };
 
+  const isMobile = useMobileDetection();
+
   const handleOnboardingClick = () => {
     if (onShowOnboarding) {
       onShowOnboarding();
@@ -257,6 +260,11 @@ const Dashboard = ({ onShowOnboarding, onboardingCompleted }) => {
 
   // Tooltip positioning function
   const handleTooltipPosition = (event) => {
+    // Don't show tooltips on mobile
+    if (isMobile) {
+      return;
+    }
+    
     const iconWrapper = event.currentTarget
     const rect = iconWrapper.getBoundingClientRect()
     
@@ -309,6 +317,18 @@ const Dashboard = ({ onShowOnboarding, onboardingCompleted }) => {
     const tooltip = document.getElementById('custom-tooltip')
     if (tooltip) {
       tooltip.style.opacity = '0'
+    }
+  }
+
+  // Mobile action handler
+  const handleMobileAction = (action, item) => {
+    if (isMobile) {
+      // For now, just log the action - we'll implement action sheets in Phase 2
+      console.log(`${action} action for:`, item);
+      // You can add haptic feedback here if needed
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
     }
   }
 

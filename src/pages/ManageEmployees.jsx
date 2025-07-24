@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Pagination from '../components/Pagination'
 import EmployeeCard from '../components/EmployeeCard'
+import useMobileDetection from '../hooks/useMobileDetection'
 
 const ManageEmployees = () => {
   const navigate = useNavigate()
@@ -267,8 +268,15 @@ const ManageEmployees = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const isMobile = useMobileDetection();
+
   // Tooltip positioning
   const handleTooltipPosition = (event) => {
+    // Don't show tooltips on mobile
+    if (isMobile) {
+      return;
+    }
+    
     const iconWrapper = event.currentTarget
     
     // Create tooltip element if it doesn't exist

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import './ManageServiceCalls.css'
 import Pagination from '../components/Pagination'
 import ServiceCallCard from '../components/ServiceCallCard'
+import useMobileDetection from '../hooks/useMobileDetection'
 
 const ManageServiceCalls = () => {
   const navigate = useNavigate()
@@ -649,7 +650,14 @@ const ManageServiceCalls = () => {
   }
 
   // Tooltip positioning function
+  const isMobile = useMobileDetection();
+
   const handleTooltipPosition = (event) => {
+    // Don't show tooltips on mobile
+    if (isMobile) {
+      return;
+    }
+    
     const iconWrapper = event.currentTarget
     const rect = iconWrapper.getBoundingClientRect()
     

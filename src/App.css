@@ -968,6 +968,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .icon-wrapper:hover {
@@ -983,10 +984,26 @@ body {
   color: #374151;
 }
 
-/* Tooltip styles for action icons */
-.icon-wrapper {
-  position: relative;
-  cursor: pointer;
+/* Mobile touch target improvements */
+@media (max-width: 768px) {
+  .icon-wrapper {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .icon-wrapper:active {
+    background: #f3f4f6;
+    transform: scale(0.95);
+  }
+  
+  .icon.action {
+    font-size: 20px;
+  }
 }
 
 /* Custom tooltip styles */
@@ -1014,6 +1031,22 @@ body {
   transform: translateX(-50%);
   border: 4px solid transparent;
   border-top-color: #1f2937;
+}
+
+/* Mobile tooltip improvements */
+@media (max-width: 768px) {
+  #custom-tooltip {
+    display: none !important;
+  }
+  
+  /* Hide tooltips on mobile - we'll use action sheets instead */
+  .icon-wrapper[title] {
+    cursor: pointer;
+  }
+  
+  .icon-wrapper[title]:active {
+    background: #f3f4f6;
+  }
 }
 
 /* Status badge styles */
