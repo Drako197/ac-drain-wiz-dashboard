@@ -746,7 +746,6 @@ const CancelledServiceCalls = () => {
                 <th>Cancelled Date</th>
                 <th>Reason</th>
                 <th>Cancelled By</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -775,9 +774,6 @@ const CancelledServiceCalls = () => {
                     <td>
                       <div className="skeleton-placeholder skeleton-cancelled-by"></div>
                     </td>
-                    <td>
-                      <div className="skeleton-placeholder skeleton-action"></div>
-                    </td>
                   </tr>
                 ))
               ) : (
@@ -795,14 +791,6 @@ const CancelledServiceCalls = () => {
                       </span>
                     </td>
                     <td>{call.cancelledBy}</td>
-                    <td>
-                      <div className="icon-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon action">
-                          <path d="M10 12.5C11.3807 12.5 12.5 11.3807 12.5 10C12.5 8.61929 11.3807 7.5 10 7.5C8.61929 7.5 7.5 8.61929 7.5 10C7.5 11.3807 8.61929 12.5 10 12.5Z" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" stroke="#475467" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
-                    </td>
                   </tr>
                 ))
               )}
