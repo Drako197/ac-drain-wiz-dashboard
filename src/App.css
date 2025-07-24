@@ -1201,9 +1201,11 @@ body {
   
   /* Mobile contact card width fix */
   .contact-card {
-    min-width: auto !important;
+    min-width: 0 !important;
     max-width: none !important;
     width: 100% !important;
+    flex: 1 1 0 !important;
+    flex-shrink: 1 !important;
   }
   
   .dashboard-table th,
