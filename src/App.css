@@ -1199,6 +1199,13 @@ body {
     grid-template-columns: 1fr;
   }
   
+  /* Mobile contact card width fix */
+  .contact-card {
+    min-width: auto !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
   .dashboard-table th,
   .dashboard-table td {
     padding: 12px 16px;
