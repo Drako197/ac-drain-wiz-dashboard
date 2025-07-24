@@ -724,3 +724,67 @@
 ---
 
 *This document serves as a comprehensive blueprint for creating visual user flow diagrams in tools like Visio, Figma, or Lucidchart.* 
+
+## 🖥️ **Desktop Applications:**
+
+### **1. Typora** (Recommended)
+- **Platform:** macOS, Windows, Linux
+- **Features:** Live preview, direct PDF export
+- **Cost:** $14.99 (one-time purchase)
+- **Pros:** WYSIWYG editor, excellent formatting
+- **Download:** https://typora.io/
+
+### **2. Marked 2** (macOS only)
+- **Platform:** macOS
+- **Features:** Real-time preview, multiple export formats
+- **Cost:** $13.99
+- **Pros:** Beautiful interface, great for technical docs
+
+### **3. MacDown** (Free)
+- **Platform:** macOS
+- **Features:** Live preview, PDF export
+- **Cost:** Free
+- **Pros:** Open source, lightweight
+
+## 🌐 **Online Tools:**
+
+### **1. Pandoc** (Command Line)
+```bash
+# Install via Homebrew
+brew install pandoc
+
+# Convert to PDF
+pandoc USER_FLOW_DOCUMENTATION.md -o user_flow.pdf
+```
+
+### **2. Markdown to PDF Online**
+- **URL:** https://md-to-pdf.fly.dev/
+- **Features:** Drag & drop, instant conversion
+- **Cost:** Free
+
+### **3. Dillinger.io**
+- **URL:** https://dillinger.io/
+- **Features:** Live preview, export to PDF
+- **Cost:** Free
+
+## 📱 **VS Code Extensions:**
+
+### **1. Markdown PDF**
+- **Extension ID:** `yzane.markdown-pdf`
+- **Features:** Direct PDF export from VS Code
+- **Cost:** Free
+
+### **2. Markdown All in One**
+- **Extension ID:** `yzhang.markdown-all-in-one`
+- **Features:** Preview, export, formatting
+- **Cost:** Free
+
+## 🚀 **Quick Recommendation:**
+
+For your user flow document, I'd recommend:
+
+1. **Typora** - Best overall experience
+2. **VS Code + Markdown PDF extension** - If you're already using VS Code
+3. **Pandoc** - If you prefer command line tools
+
+Would you like me to help you set up any of these options? 
