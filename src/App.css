@@ -2368,4 +2368,52 @@ button.onboarding-active {
     padding: 6px 12px;
     font-size: 11px;
   }
+  
+  /* Mobile navigation optimizations for smaller phones */
+  .mobile-nav-menu {
+    padding: 12px;
+  }
+  
+  .mobile-nav-menu li {
+    margin-bottom: 4px;
+  }
+  
+  .mobile-nav-link {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .mobile-nav-bottom {
+    padding: 8px;
+  }
+  
+  .mobile-nav-support,
+  .mobile-nav-settings {
+    padding: 6px 10px;
+    margin-bottom: 3px;
+    font-size: 12px;
+  }
+  
+  .mobile-nav-legal {
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+  
+  .mobile-nav-legal-link {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .mobile-nav-user {
+    padding: 8px;
+    margin-top: 4px;
+  }
+  
+  .mobile-nav-user .user-name {
+    font-size: 12px;
+  }
+  
+  .mobile-nav-user .user-email {
+    font-size: 10px;
+  }
 } 
