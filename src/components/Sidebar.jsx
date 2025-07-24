@@ -7,20 +7,48 @@ const Sidebar = ({ currentPage, onPageChange, onboardingCompleted }) => {
   const [fullName, setFullName] = useState('Diana Rivera');
 
   useEffect(() => {
-    const storedContractorName = localStorage.getItem('acdrainwiz_contractor_name');
-    if (storedContractorName && storedContractorName.trim()) {
-      setContractorName(storedContractorName.trim());
-    }
+    const updateContractorInfo = () => {
+      const storedContractorName = localStorage.getItem('acdrainwiz_contractor_name');
+      if (storedContractorName && storedContractorName.trim()) {
+        setContractorName(storedContractorName.trim());
+      }
+      
+      const storedContractorEmail = localStorage.getItem('acdrainwiz_contractor_email');
+      if (storedContractorEmail && storedContractorEmail.trim()) {
+        setContractorEmail(storedContractorEmail.trim());
+      }
+      
+      const storedFullName = localStorage.getItem('acdrainwiz_full_name');
+      if (storedFullName && storedFullName.trim()) {
+        setFullName(storedFullName.trim());
+      }
+    };
+
+    // Update immediately
+    updateContractorInfo();
+
+    // Listen for storage changes
+    const handleStorageChange = (e) => {
+      if (e.key === 'acdrainwiz_contractor_name' || 
+          e.key === 'acdrainwiz_contractor_email' || 
+          e.key === 'acdrainwiz_full_name') {
+        updateContractorInfo();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
     
-    const storedContractorEmail = localStorage.getItem('acdrainwiz_contractor_email');
-    if (storedContractorEmail && storedContractorEmail.trim()) {
-      setContractorEmail(storedContractorEmail.trim());
-    }
+    // Also listen for custom events
+    const handleOnboardingComplete = () => {
+      updateContractorInfo();
+    };
     
-    const storedFullName = localStorage.getItem('acdrainwiz_full_name');
-    if (storedFullName && storedFullName.trim()) {
-      setFullName(storedFullName.trim());
-    }
+    window.addEventListener('onboardingCompleted', handleOnboardingComplete);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('onboardingCompleted', handleOnboardingComplete);
+    };
   }, [onboardingCompleted]);
   const navigate = useNavigate();
   const location = useLocation();

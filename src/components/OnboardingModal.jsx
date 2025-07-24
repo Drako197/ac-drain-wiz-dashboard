@@ -325,7 +325,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       icon: "⭐",
       content: "STEP 1: Create your primary contractor account to unlock all features.",
       formFields: [
-        { name: 'contractorName', label: 'Contractor Name', type: 'text', placeholder: 'Contractor Name', hint: 'Your Company Name', required: true },
+        { name: 'contractorName', label: 'Contractor Company Name', type: 'text', placeholder: 'Contractor Company Name', hint: 'Your Company Name', required: true },
         { name: 'contractorEmail', label: 'Contractor Email', type: 'email', placeholder: 'name@domain.com', required: true },
         { name: 'address1', label: 'Address 1', type: 'text', placeholder: '123 Main Street', required: true },
         { name: 'address2', label: 'Address 2 Optional', type: 'text', placeholder: '', required: false },
@@ -1743,7 +1743,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                       <div className="form-row">
                         <div className="form-group half-width">
                           <label className="form-label">
-                            Contractor Name
+                            Contractor Company Name
                                   <span className="required">*</span>
                           </label>
                           <input
@@ -1752,7 +1752,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                   className={`form-input ${showErrors && errors.contractorName ? 'error' : ''}`}
                             value={formData.contractorName || ''}
                             onChange={(e) => handleInputChange('contractorName', e.target.value)}
-                                  placeholder="Contractor Name"
+                                  placeholder="Contractor Company Name"
                           />
                           {showErrors && errors.contractorName && (
                             <div className="form-error">{errors.contractorName}</div>

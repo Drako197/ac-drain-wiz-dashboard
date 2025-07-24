@@ -23,7 +23,7 @@ function AppContent() {
 
   // Check if onboarding is completed on mount
   useEffect(() => {
-    const isCompleted = localStorage.getItem('acdrainwiz_onboarding_completed') === 'true';
+    const isCompleted = sessionStorage.getItem('acdrainwiz_onboarding_completed') === 'true';
     setOnboardingCompleted(isCompleted);
     
     if (!isCompleted) {
@@ -34,7 +34,7 @@ function AppContent() {
   const handleOnboardingComplete = (contractorName, contractorEmail, fullName) => {
     setShowOnboarding(false);
     setOnboardingCompleted(true);
-    localStorage.setItem('acdrainwiz_onboarding_completed', 'true');
+    sessionStorage.setItem('acdrainwiz_onboarding_completed', 'true');
     if (contractorName && contractorName.trim()) {
       localStorage.setItem('acdrainwiz_contractor_name', contractorName.trim());
     }
@@ -45,6 +45,13 @@ function AppContent() {
       localStorage.setItem('acdrainwiz_full_name', fullName.trim());
     }
     
+    // Dispatch custom event to notify components
+    window.dispatchEvent(new CustomEvent('onboardingCompleted'));
+    
+    // Navigate to dashboard page
+    setCurrentPage('dashboard');
+    navigate('/');
+    
     if (window.showToastMessage) {
       window.showToastMessage('Your setup is complete, feel free to navigate the application to learn how to manage your clients, employees and service calls.', 'success');
     }
@@ -53,11 +60,17 @@ function AppContent() {
   const handleOnboardingClose = () => {
     setShowOnboarding(false);
     setOnboardingCompleted(true);
-    localStorage.setItem('acdrainwiz_onboarding_completed', 'true');
+    sessionStorage.setItem('acdrainwiz_onboarding_completed', 'true');
+    
+    // Navigate to dashboard page
+    setCurrentPage('dashboard');
+    navigate('/');
   };
 
   const handleShowOnboarding = () => {
     setShowOnboarding(true);
+    // Reset session storage when manually triggered so onboarding can be completed again
+    sessionStorage.removeItem('acdrainwiz_onboarding_completed');
   };
 
   const handlePageChange = (page) => {

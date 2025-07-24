@@ -20,22 +20,50 @@ const Dashboard = ({ onShowOnboarding, onboardingCompleted }) => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const storedContractorName = localStorage.getItem('acdrainwiz_contractor_name');
-    if (storedContractorName && storedContractorName.trim()) {
-      setContractorName(storedContractorName.trim());
-    }
+    const updateContractorInfo = () => {
+      const storedContractorName = localStorage.getItem('acdrainwiz_contractor_name');
+      if (storedContractorName && storedContractorName.trim()) {
+        setContractorName(storedContractorName.trim());
+      }
+      
+      const storedContractorEmail = localStorage.getItem('acdrainwiz_contractor_email');
+      if (storedContractorEmail && storedContractorEmail.trim()) {
+        setContractorEmail(storedContractorEmail.trim());
+      }
+      
+      const storedFullName = localStorage.getItem('acdrainwiz_full_name');
+      if (storedFullName && storedFullName.trim()) {
+        const nameParts = storedFullName.trim().split(' ');
+        const firstName = nameParts[0] || 'Diana';
+        setFirstName(firstName);
+      }
+    };
+
+    // Update immediately
+    updateContractorInfo();
+
+    // Listen for storage changes
+    const handleStorageChange = (e) => {
+      if (e.key === 'acdrainwiz_contractor_name' || 
+          e.key === 'acdrainwiz_contractor_email' || 
+          e.key === 'acdrainwiz_full_name') {
+        updateContractorInfo();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
     
-    const storedContractorEmail = localStorage.getItem('acdrainwiz_contractor_email');
-    if (storedContractorEmail && storedContractorEmail.trim()) {
-      setContractorEmail(storedContractorEmail.trim());
-    }
+    // Also listen for custom events
+    const handleOnboardingComplete = () => {
+      updateContractorInfo();
+    };
     
-    const storedFullName = localStorage.getItem('acdrainwiz_full_name');
-    if (storedFullName && storedFullName.trim()) {
-      const nameParts = storedFullName.trim().split(' ');
-      const firstName = nameParts[0] || 'Diana';
-      setFirstName(firstName);
-    }
+    window.addEventListener('onboardingCompleted', handleOnboardingComplete);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('onboardingCompleted', handleOnboardingComplete);
+    };
   }, [onboardingCompleted]);
 
   // Expanded mock data for demonstration (100 entries for 10 pages)
