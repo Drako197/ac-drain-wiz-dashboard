@@ -3,6 +3,8 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import './OnboardingModal.css';
 
 const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) => {
+  // Configuration flag to show/hide step 4 (Service Call step)
+  const SHOW_SERVICE_CALL_STEP = false;
   const [currentStep, setCurrentStep] = useState(0);
 
   const [userName, setUserName] = useState('');
@@ -297,10 +299,13 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       formData[field.name] && formData[field.name].trim() !== ''
     );
 
-    // Special validation for Step 4: Check that at least one sensor is selected
+    // Special validation for Step 4: Check that at least one sensor is selected (only if step 4 is visible)
     if (currentStep === 4) {
-      const hasSelectedSensor = formData.sensor1 || formData.sensor2 || formData.sensor3;
-      isValid = isValid && hasSelectedSensor;
+      // Only apply step 4 validation if the SHOW_SERVICE_CALL_STEP flag is true
+      if (SHOW_SERVICE_CALL_STEP) {
+        const hasSelectedSensor = formData.sensor1 || formData.sensor2 || formData.sensor3;
+        isValid = isValid && hasSelectedSensor;
+      }
     }
 
     setIsStepValid(isValid);
@@ -342,14 +347,14 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       isEmployeeInviteStep: true
     },
     {
-      title: "Add Your First Client",
-      description: "Get started by adding your first client with their contact information and address details.",
+      title: "Add Your Clients",
+      description: "Get started by adding your clients with their contact information and address details.",
       icon: (
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4.12492 4.12498L7.40617 7.40623M4.12492 4.12498H1.93742L1.20825 1.93748L1.93742 1.20831L4.12492 1.93748V4.12498ZM13.7929 1.74863L11.877 3.6646C11.5882 3.95337 11.4438 4.09775 11.3897 4.26424C11.3421 4.41069 11.3421 4.56844 11.3897 4.71489C11.4438 4.88138 11.5882 5.02576 11.877 5.31452L12.05 5.48752C12.3387 5.77628 12.4831 5.92066 12.6496 5.97476C12.796 6.02234 12.9538 6.02234 13.1002 5.97476C13.2667 5.92066 13.4111 5.77628 13.6999 5.48752L15.4921 3.69529C15.6851 4.165 15.7916 4.67943 15.7916 5.21873C15.7916 7.43362 13.9961 9.22915 11.7812 9.22915C11.5141 9.22915 11.2532 9.20305 11.0008 9.15327C10.6463 9.08335 10.4691 9.0484 10.3616 9.05911C10.2474 9.07049 10.1911 9.08762 10.0899 9.14178C9.99467 9.19273 9.89917 9.28823 9.70817 9.47923L4.4895 14.6979C3.88544 15.3019 2.90606 15.3019 2.302 14.6979C1.69794 14.0938 1.69794 13.1144 2.302 12.5104L7.52067 7.29173C7.71167 7.10073 7.80717 7.00523 7.85812 6.91002C7.91228 6.80881 7.92941 6.75251 7.94079 6.63828C7.9515 6.53083 7.91654 6.35359 7.84663 5.99911C7.79685 5.74669 7.77075 5.48576 7.77075 5.21873C7.77075 3.00384 9.56628 1.20831 11.7812 1.20831C12.5143 1.20831 13.2016 1.40506 13.7929 1.74863ZM8.49996 10.6874L12.5103 14.6978C13.1144 15.3019 14.0938 15.3019 14.6978 14.6978C15.3019 14.0938 15.3019 13.1144 14.6978 12.5103L11.3986 9.21113C11.165 9.18903 10.9373 9.1469 10.7172 9.08647C10.4335 9.00861 10.1223 9.06512 9.91426 9.27314L8.49996 10.6874Z" stroke="currentColor" strokeWidth="1.45833" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       ),
-      content: "STEP 3: Import or add client information for better tracking.",
+      content: "STEP 3: Add your clients for better tracking and management.",
       formFields: [
         { name: 'firstName', label: 'First Name', type: 'text', placeholder: 'First Name', required: true },
         { name: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Last Name', required: true },
@@ -368,6 +373,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       title: "Create Your First Service Call",
       icon: "📍",
       content: "STEP 4: Create your first service call to start tracking jobs.",
+      hidden: !SHOW_SERVICE_CALL_STEP,
       formFields: [
         { name: 'priority', label: 'Priority', type: 'select', options: ['Low', 'Medium', 'High', 'Emergency'], required: true },
         { name: 'sensor1', label: 'Sensor 1 - Aft Deck', type: 'checkbox', required: false },
@@ -386,6 +392,25 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       formFields: []
     }
   ];
+
+  // Helper functions to work with visible/hidden steps
+  const getVisibleSteps = () => {
+    return steps.filter(step => !step.hidden);
+  };
+
+  const getVisibleStepIndex = (stepIndex) => {
+    const visibleSteps = getVisibleSteps();
+    return visibleSteps.findIndex(step => steps.indexOf(step) === stepIndex);
+  };
+
+  const getNextVisibleStep = (currentVisibleIndex) => {
+    const visibleSteps = getVisibleSteps();
+    return currentVisibleIndex + 1 < visibleSteps.length ? currentVisibleIndex + 1 : null;
+  };
+
+  const isStepHidden = (stepIndex) => {
+    return steps[stepIndex] && steps[stepIndex].hidden;
+  };
 
   const showToastMessage = (message, type = 'info') => {
     if (window.showToastMessage) {
@@ -664,15 +689,21 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         }
       }
       
-      setCurrentStep(4);
-      showToastMessage("Client added successfully", "success");
+      // Check if step 4 is hidden, if so skip directly to step 5 (completion)
+      if (!SHOW_SERVICE_CALL_STEP) {
+        setCurrentStep(5);
+        showToastMessage("Client added successfully", "success");
+      } else {
+        setCurrentStep(4);
+        showToastMessage("Client added successfully", "success");
+      }
       // Scroll to top on mobile
       setTimeout(scrollToTop, 100);
       return;
     }
 
-    if (currentStep === 4) {
-      // Service operations step - show loading animation before moving to completion
+    if (currentStep === 4 && SHOW_SERVICE_CALL_STEP) {
+      // Service operations step - show loading animation before moving to completion (only if step 4 is visible)
       console.log('=== HANDLE NEXT STEP 4 DEBUG ===');
       console.log('Setting isLoading to true');
       setIsLoading(true);
@@ -764,7 +795,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         handleNext();
       }
       // Don't show toast message for Step 3 - let inline errors show instead
-    } else if (currentStep === 4) {
+    } else if (currentStep === 4 && SHOW_SERVICE_CALL_STEP) {
       console.log('=== STEP 4 VALIDATION DEBUG ===');
       console.log('Step 4 validation called');
       console.log('Current form data:', formData);
@@ -1527,9 +1558,13 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       </div>
       {/* Progress Indicator for steps 2-5 */}
       <div className="progress-indicator">
-        {[1,2,3,4,5].map((dot) => (
-          <div key={dot} className={`progress-dot${dot <= currentStep ? ' active' : ''}`}></div>
-        ))}
+        {getVisibleSteps().slice(1).map((step, index) => {
+          const originalStepIndex = steps.indexOf(step);
+          const isActive = originalStepIndex <= currentStep && originalStepIndex > 0;
+          return (
+            <div key={index} className={`progress-dot${isActive ? ' active' : ''}`}></div>
+          );
+        })}
       </div>
     </div>
   );
@@ -1597,14 +1632,15 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                       }}
                     />
                     
-                    {steps.slice(1).map((step, index) => {
-                      const stepNumber = index + 1;
-                      const isCompleted = stepNumber < currentStep;
-                      const isActive = stepNumber === currentStep;
-                      const isDisabled = stepNumber > currentStep;
+                    {getVisibleSteps().slice(1).map((step, index) => {
+                      const originalStepNumber = steps.indexOf(step);
+                      const visibleStepNumber = index + 1;
+                      const isCompleted = originalStepNumber < currentStep;
+                      const isActive = originalStepNumber === currentStep;
+                      const isDisabled = originalStepNumber > currentStep;
                       
                       return (
-                        <div key={stepNumber} className="mobile-step-item">
+                        <div key={originalStepNumber} className="mobile-step-item">
                           <div 
                             className={`mobile-step-circle ${
                               isCompleted ? 'completed' : 
@@ -1617,7 +1653,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                 <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                               </svg>
                             ) : (
-                              stepNumber
+                              visibleStepNumber
                             )}
                           </div>
                           <div 
@@ -1627,11 +1663,11 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                               isDisabled ? 'disabled' : ''
                             }`}
                           >
-                            {stepNumber === 1 ? 'Setup' :
-                             stepNumber === 2 ? 'Team' :
-                             stepNumber === 3 ? 'Client' :
-                             stepNumber === 4 ? 'Service' :
-                             stepNumber === 5 ? 'Done' : step.title}
+                            {originalStepNumber === 1 ? 'Setup' :
+                             originalStepNumber === 2 ? 'Team' :
+                             originalStepNumber === 3 ? 'Client' :
+                             originalStepNumber === 4 ? 'Service' :
+                             originalStepNumber === 5 ? 'Done' : step.title}
                           </div>
                         </div>
                       );
@@ -1646,7 +1682,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                 <p>Here's what we'll help you set up:</p>
               </div>
               
-              {steps.slice(1).map((step, index) => {
+              {getVisibleSteps().slice(1).map((step, index) => {
                 const stepIcons = [
                   // Star icon for Step 1
                   <svg key="star" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2084,7 +2120,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                               </div>
                             </div>
                           </>
-                        ) : currentStep === 4 ? (
+                        ) : currentStep === 4 && SHOW_SERVICE_CALL_STEP ? (
                           // Step 4: Service call form
                           <>
                             {/* Client Contact Information */}
@@ -2303,10 +2339,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                         Back
                       </button>
                       <button 
-                        className={`btn-next ${currentStep === 3 || currentStep === 4 ? 'active' : (currentStep === 2 ? (invitedEmployees.length > 0 ? 'active' : 'disabled') : (isStepValid ? 'active' : 'disabled'))}`}
+                        className={`btn-next ${currentStep === 3 || (currentStep === 4 && SHOW_SERVICE_CALL_STEP) ? 'active' : (currentStep === 2 ? (invitedEmployees.length > 0 ? 'active' : 'disabled') : (isStepValid ? 'active' : 'disabled'))}`}
                         onClick={handleContinueClick}
                       >
-                        {currentStep === 3 ? 'Add a Client' : currentStep === 4 ? 'Create Service Call' : 'Continue'}
+                        {currentStep === 3 ? 'Add Client' : (currentStep === 4 && SHOW_SERVICE_CALL_STEP) ? 'Create Service Call' : 'Continue'}
                       </button>
                     </div>
                   )}
@@ -2314,9 +2350,15 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                 
                 {/* Progress Indicator for all steps */}
                 <div className="progress-indicator">
-                  {[1,2,3,4,5].map((dot) => (
-                    <div key={dot} className={`progress-dot${dot <= currentStep ? ' active' : ''}`}></div>
-                  ))}
+                  {getVisibleSteps().slice(1).map((step, index) => {
+                    const originalStepIndex = steps.indexOf(step);
+                    // Progress dot should be active if we've reached this step or beyond
+                    // Since we excluded the Welcome step (index 0), we only show steps 1, 2, 3, 5
+                    const isActive = originalStepIndex <= currentStep && originalStepIndex > 0;
+                    return (
+                      <div key={index} className={`progress-dot${isActive ? ' active' : ''}`}></div>
+                    );
+                  })}
                 </div>
               </div>
             ) : (
@@ -2354,16 +2396,18 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                         <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </div>
-                    <span>First client added</span>
+                    <span>Clients added</span>
                   </div>
-                  <div className="completion-step">
-                    <div className="step-check">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                  {SHOW_SERVICE_CALL_STEP && (
+                    <div className="completion-step">
+                      <div className="step-check">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <span>First service call created</span>
                     </div>
-                    <span>First service call created</span>
-                  </div>
+                  )}
                 </div>
                 
                 <div className="form-actions">
