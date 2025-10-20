@@ -16,6 +16,14 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
   const [selectedDate, setSelectedDate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   
+  // Client input mode state for Step 3
+  const [clientInputMode, setClientInputMode] = useState('single'); // 'single' or 'csv'
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvUploadResults, setCsvUploadResults] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [showUploadResults, setShowUploadResults] = useState(false);
+  const [showFormatTooltip, setShowFormatTooltip] = useState(false);
+  
   // Generate consistent appointments across multiple months
   const generateAppointments = () => {
     const appointments = [];
@@ -260,6 +268,14 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       setInvitedEmployees([]); // Clear all past employee invites
       setExistingCustomAddressNames(['main office', 'warehouse a', 'downtown location']);
       
+      // Reset Step 3 (Client Input) states to initial display settings
+      setClientInputMode('single');
+      setCsvFile(null);
+      setCsvUploadResults(null);
+      setIsDragging(false);
+      setShowUploadResults(false);
+      setShowFormatTooltip(false);
+      
       // Generate a random name when modal opens
       const randomNameObj = names[Math.floor(Math.random() * names.length)];
       setUserName(randomNameObj.firstName);
@@ -282,34 +298,63 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       return;
     }
 
-    const requiredFields = currentStepData.formFields.filter(field => {
-      // Check if field is required
-      if (!field.required) return false;
-      
-      // Check conditional requirements
-      if (field.conditional) {
-        const { field: conditionalField, value: conditionalValue } = field.conditional;
-        return formData[conditionalField] === conditionalValue;
+    let isValid = true;
+
+    // Special validation for Step 3: Check based on active tab
+    if (currentStep === 3) {
+      if (clientInputMode === 'single') {
+        // Single client mode: validate form fields
+        const requiredFields = currentStepData.formFields.filter(field => {
+          // Check if field is required
+          if (!field.required) return false;
+          
+          // Check conditional requirements
+          if (field.conditional) {
+            const { field: conditionalField, value: conditionalValue } = field.conditional;
+            return formData[conditionalField] === conditionalValue;
+          }
+          
+          return true;
+        });
+        
+        isValid = requiredFields.every(field => 
+          formData[field.name] && formData[field.name].trim() !== ''
+        );
+      } else if (clientInputMode === 'csv') {
+        // CSV mode: check if at least 2 valid rows uploaded
+        isValid = csvUploadResults && csvUploadResults.success && csvUploadResults.success.length >= 2;
       }
+    } else {
+      // Default validation for other steps
+      const requiredFields = currentStepData.formFields.filter(field => {
+        // Check if field is required
+        if (!field.required) return false;
+        
+        // Check conditional requirements
+        if (field.conditional) {
+          const { field: conditionalField, value: conditionalValue } = field.conditional;
+          return formData[conditionalField] === conditionalValue;
+        }
+        
+        return true;
+      });
       
-      return true;
-    });
-    
-    let isValid = requiredFields.every(field => 
-      formData[field.name] && formData[field.name].trim() !== ''
-    );
+      isValid = requiredFields.every(field => 
+        formData[field.name] && formData[field.name].trim() !== ''
+      );
+    }
 
     // Special validation for Step 4: Check that at least one sensor is selected (only if step 4 is visible)
     if (currentStep === 4) {
       // Only apply step 4 validation if the SHOW_SERVICE_CALL_STEP flag is true
       if (SHOW_SERVICE_CALL_STEP) {
-        const hasSelectedSensor = formData.sensor1 || formData.sensor2 || formData.sensor3;
-        isValid = isValid && hasSelectedSensor;
+      const hasSelectedSensor = formData.sensor1 || formData.sensor2 || formData.sensor3;
+      isValid = isValid && hasSelectedSensor;
       }
     }
 
     setIsStepValid(isValid);
-  }, [currentStep, formData]);
+  }, [currentStep, formData, csvUploadResults, clientInputMode]);
 
   // Debug isLoading state changes
   useEffect(() => {
@@ -416,6 +461,117 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     if (window.showToastMessage) {
       window.showToastMessage(message, type);
     }
+  };
+
+  // CSV Helper Functions
+  const downloadCSVTemplate = () => {
+    const template = [
+      ['firstName', 'lastName', 'mobileNumber', 'email', 'addressNameType', 'clientAddress1', 'clientAddress2', 'clientCity', 'clientState', 'clientZipCode'],
+      ['John', 'Doe', '(555) 123-4567', 'john.doe@example.com', 'Home', '123 Main St', 'Apt 4B', 'Miami', 'Florida', '33101'],
+      ['Jane', 'Smith', '(555) 987-6543', 'jane.smith@example.com', 'Office', '456 Oak Ave', '', 'Orlando', 'Florida', '32801']
+    ];
+    
+    const csvContent = template.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'client_import_template.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
+  const parseCSV = (csvText) => {
+    const lines = csvText.split('\n').filter(line => line.trim());
+    if (lines.length < 2) return { success: [], errors: [], skipped: [] };
+    
+    const headers = lines[0].split(',').map(h => h.trim());
+    const results = { success: [], errors: [], skipped: [] };
+    
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].split(',').map(v => v.trim());
+      const client = {};
+      let hasError = false;
+      const errors = [];
+      
+      headers.forEach((header, index) => {
+        client[header] = values[index] || '';
+      });
+      
+      // Validation
+      if (!client.firstName) errors.push('Missing first name');
+      if (!client.lastName) errors.push('Missing last name');
+      if (!client.email || !client.email.includes('@')) errors.push('Invalid email');
+      if (!client.mobileNumber) errors.push('Missing mobile number');
+      if (!client.clientAddress1) errors.push('Missing address');
+      if (!client.clientCity) errors.push('Missing city');
+      if (!client.clientState) errors.push('Missing state');
+      if (!client.clientZipCode) errors.push('Missing zip code');
+      
+      if (errors.length > 0) {
+        results.errors.push({ row: i + 1, client, errors });
+      } else {
+        results.success.push(client);
+      }
+    }
+    
+    return results;
+  };
+
+  const handleCSVUpload = (file) => {
+    if (!file) return;
+    
+    if (!file.name.endsWith('.csv')) {
+      showToastMessage('Please upload a CSV file', 'error');
+      return;
+    }
+    
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      showToastMessage('File size must be less than 5MB', 'error');
+      return;
+    }
+    
+    setCsvFile(file);
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const csvText = e.target.result;
+      const results = parseCSV(csvText);
+      setCsvUploadResults(results);
+      setShowUploadResults(true);
+    };
+    reader.onerror = () => {
+      showToastMessage('Error reading file', 'error');
+    };
+    reader.readAsText(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    handleCSVUpload(file);
+  };
+
+  const resetCSVUpload = () => {
+    setCsvFile(null);
+    setCsvUploadResults(null);
+    setShowUploadResults(false);
+    setIsDragging(false);
+    setShowFormatTooltip(false);
+    // Note: We don't reset clientInputMode here as user might want to stay in CSV mode
   };
 
   // Scroll to first error field on mobile
@@ -694,8 +850,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         setCurrentStep(5);
         showToastMessage("Client added successfully", "success");
       } else {
-        setCurrentStep(4);
-        showToastMessage("Client added successfully", "success");
+      setCurrentStep(4);
+      showToastMessage("Client added successfully", "success");
       }
       // Scroll to top on mobile
       setTimeout(scrollToTop, 100);
@@ -1905,9 +2061,234 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                                   </div>
                           </>
                         ) : currentStep === 3 ? (
-                          // Step 3: Client form
+                          // Step 3: Client input with tabs (single or CSV upload)
                           <>
-                            
+                            {/* Tab Navigation */}
+                            <div className="client-input-tabs">
+                              <button
+                                className={`tab-button ${clientInputMode === 'single' ? 'active' : ''}`}
+                                onClick={() => {
+                                  setClientInputMode('single');
+                                  setShowUploadResults(false);
+                                }}
+                              >
+                                <span>Add Single Client</span>
+                              </button>
+                              <button
+                                className={`tab-button ${clientInputMode === 'csv' ? 'active' : ''}`}
+                                onClick={() => {
+                                  setClientInputMode('csv');
+                                  setShowUploadResults(false);
+                                }}
+                              >
+                                <span>Upload Multiple Clients via CSV</span>
+                              </button>
+                            </div>
+
+                            {/* Show upload results if available */}
+                            {showUploadResults && csvUploadResults ? (
+                              <div className="csv-upload-results">
+                                <h3>Upload Results</h3>
+                                
+                                <div className="results-summary-cards">
+                                  {csvUploadResults.success.length > 0 && (
+                                    <div className="result-card success">
+                                      <span className="result-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                      </span>
+                                      <div className="result-card-content">
+                                        <span className="result-count">{csvUploadResults.success.length}</span>
+                                        <span className="result-label">clients added successfully</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {csvUploadResults.skipped && csvUploadResults.skipped.length > 0 && (
+                                    <div className="result-card warning">
+                                      <span className="result-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                          <path d="M12 9v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                          <path d="M12 17h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                      </span>
+                                      <div className="result-card-content">
+                                        <span className="result-count">{csvUploadResults.skipped.length}</span>
+                                        <span className="result-label">clients skipped (duplicates)</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {csvUploadResults.errors.length > 0 && (
+                                    <div className="result-card error">
+                                      <span className="result-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                                          <path d="m15 9-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                          <path d="m9 9 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                      </span>
+                                      <div className="result-card-content">
+                                        <span className="result-count">{csvUploadResults.errors.length}</span>
+                                        <span className="result-label">clients failed validation</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {csvUploadResults.success.length > 0 && (
+                                  <div className="results-detail success-details">
+                                    <h4>
+                                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }}>
+                                        <path d="M3 3v18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      </svg>
+                                      Upload Summary
+                                    </h4>
+                                    <p>Total rows processed: {csvUploadResults.success.length + csvUploadResults.errors.length}</p>
+                                    <p>Success rate: {Math.round((csvUploadResults.success.length / (csvUploadResults.success.length + csvUploadResults.errors.length)) * 100)}%</p>
+                                  </div>
+                                )}
+
+                                {csvUploadResults.errors.length > 0 && (
+                                  <div className="results-detail error-details">
+                                    <h4>
+                                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }}>
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                                        <path d="m15 9-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="m9 9 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      </svg>
+                                      Failed Entries ({csvUploadResults.errors.length})
+                                    </h4>
+                                    {csvUploadResults.errors.slice(0, 5).map((error, index) => (
+                                      <div key={index} className="error-item">
+                                        <p className="error-row">Row {error.row}: {error.client.firstName} {error.client.lastName}</p>
+                                        <ul className="error-list">
+                                          {error.errors.map((err, i) => (
+                                            <li key={i}>{err}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    ))}
+                                    {csvUploadResults.errors.length > 5 && (
+                                      <p className="more-errors">... and {csvUploadResults.errors.length - 5} more errors</p>
+                                    )}
+                                  </div>
+                                )}
+
+                                <div className="results-actions">
+                                  {csvUploadResults.success.length === 0 && csvUploadResults.errors.length > 0 ? (
+                                    <button 
+                                      className="btn-secondary"
+                                      onClick={resetCSVUpload}
+                                    >
+                                      Try Again
+                                    </button>
+                                  ) : null}
+                                  
+                                  {csvUploadResults.success.length > 0 ? (
+                                    <>
+                                      <div className="results-success-message">
+                                        <p>
+                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }}>
+                                            <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                          </svg>
+                                          {csvUploadResults.success.length} clients have been added to your account and are ready to use!
+                                        </p>
+                                      </div>
+                                      <button 
+                                        className="btn-secondary"
+                                        onClick={resetCSVUpload}
+                                      >
+                                        Upload Another File
+                                      </button>
+                                    </>
+                                  ) : null}
+                                </div>
+                              </div>
+                            ) : clientInputMode === 'csv' ? (
+                              // CSV Upload Interface
+                              <div className="csv-upload-container">
+                                <div 
+                                  className={`csv-drop-zone ${isDragging ? 'dragging' : ''}`}
+                                  onDragOver={handleDragOver}
+                                  onDragLeave={handleDragLeave}
+                                  onDrop={handleDrop}
+                                >
+                                  <div className="drop-zone-content">
+                                    <span className="drop-zone-icon">
+                                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <polyline points="10,9 9,9 8,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      </svg>
+                                    </span>
+                                    <p className="drop-zone-text">
+                                      {isDragging ? 'Drop your CSV file here' : 'Drag and drop your CSV file here'}
+                                    </p>
+                                    <p className="drop-zone-or">or</p>
+                                    <label className="file-input-label">
+                                      <input
+                                        type="file"
+                                        accept=".csv"
+                                        onChange={(e) => handleCSVUpload(e.target.files[0])}
+                                        style={{ display: 'none' }}
+                                      />
+                                      <span className="btn-choose-file">Choose File</span>
+                                    </label>
+                                    <p className="drop-zone-hint">Accepted format: .csv (max 5MB)</p>
+                                  </div>
+                                </div>
+
+                                <div className="csv-template-section">
+                                  <button 
+                                    className="btn-download-template"
+                                    onClick={downloadCSVTemplate}
+                                  >
+                                    ↓ Download CSV Template
+                                  </button>
+
+                                  <div className="csv-format-link-container">
+                                    <button 
+                                      className="btn-view-format"
+                                      onMouseEnter={() => setShowFormatTooltip(true)}
+                                      onMouseLeave={() => setShowFormatTooltip(false)}
+                                      onFocus={() => setShowFormatTooltip(true)}
+                                      onBlur={() => setShowFormatTooltip(false)}
+                                    >
+                                      View CSV Format Requirements
+                                    </button>
+                                    
+                                    {showFormatTooltip && (
+                                      <div className="csv-format-tooltip">
+                                        <div className="csv-format-info">
+                                          <div className="format-column">
+                                            <h5>Required Columns:</h5>
+                                            <ul>
+                                              <li>firstName, lastName</li>
+                                              <li>mobileNumber, email</li>
+                                              <li>addressNameType</li>
+                                              <li>clientAddress1, clientCity</li>
+                                              <li>clientState, clientZipCode</li>
+                                            </ul>
+                                          </div>
+                                          <div className="format-column">
+                                            <h5>Optional Columns:</h5>
+                                            <ul>
+                                              <li>clientAddress2</li>
+                                            </ul>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              // Single Client Form (existing form)
+                              <>
                             <div className="form-row">
                               <div className="form-group half-width">
                                 <label className="form-label">
@@ -2119,6 +2500,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                 )}
                               </div>
                             </div>
+                          </>
+                            )}
                           </>
                         ) : currentStep === 4 && SHOW_SERVICE_CALL_STEP ? (
                           // Step 4: Service call form
@@ -2342,7 +2725,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                         className={`btn-next ${currentStep === 3 || (currentStep === 4 && SHOW_SERVICE_CALL_STEP) ? 'active' : (currentStep === 2 ? (invitedEmployees.length > 0 ? 'active' : 'disabled') : (isStepValid ? 'active' : 'disabled'))}`}
                         onClick={handleContinueClick}
                       >
-                        {currentStep === 3 ? 'Add Client' : (currentStep === 4 && SHOW_SERVICE_CALL_STEP) ? 'Create Service Call' : 'Continue'}
+                        {currentStep === 3 ? 'Complete Setup' : (currentStep === 4 && SHOW_SERVICE_CALL_STEP) ? 'Create Service Call' : 'Continue'}
                       </button>
                     </div>
                   )}
@@ -2399,14 +2782,14 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                     <span>Clients added</span>
                   </div>
                   {SHOW_SERVICE_CALL_STEP && (
-                    <div className="completion-step">
-                      <div className="step-check">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
-                      <span>First service call created</span>
+                  <div className="completion-step">
+                    <div className="step-check">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                     </div>
+                    <span>First service call created</span>
+                  </div>
                   )}
                 </div>
                 
