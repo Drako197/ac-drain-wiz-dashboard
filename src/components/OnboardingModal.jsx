@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import './OnboardingModal.css';
 
 const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) => {
   // Configuration flag to show/hide step 4 (Service Call step)
   const SHOW_SERVICE_CALL_STEP = false;
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
 
   const [userName, setUserName] = useState('');
@@ -25,6 +27,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
   const [showUploadResults, setShowUploadResults] = useState(false);
   const [showFormatTooltip, setShowFormatTooltip] = useState(false);
   const [csvValidationError, setCsvValidationError] = useState(false);
+  const [loadingMessages, setLoadingMessages] = useState(null);
+  const [showPersuasiveModal, setShowPersuasiveModal] = useState(false);
   
   // Generate consistent appointments across multiple months
   const generateAppointments = () => {
@@ -280,6 +284,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       setShowUploadResults(false);
       setShowFormatTooltip(false);
       setCsvValidationError(false);
+      setLoadingMessages(null);
+      setShowPersuasiveModal(false);
       
       // Generate a random name when modal opens
       const randomNameObj = names[Math.floor(Math.random() * names.length)];
@@ -309,22 +315,22 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     if (currentStep === 3) {
       if (clientInputMode === 'single') {
         // Single client mode: validate form fields
-        const requiredFields = currentStepData.formFields.filter(field => {
-          // Check if field is required
-          if (!field.required) return false;
-          
-          // Check conditional requirements
-          if (field.conditional) {
-            const { field: conditionalField, value: conditionalValue } = field.conditional;
-            return formData[conditionalField] === conditionalValue;
-          }
-          
-          return true;
-        });
-        
+    const requiredFields = currentStepData.formFields.filter(field => {
+      // Check if field is required
+      if (!field.required) return false;
+      
+      // Check conditional requirements
+      if (field.conditional) {
+        const { field: conditionalField, value: conditionalValue } = field.conditional;
+        return formData[conditionalField] === conditionalValue;
+      }
+      
+      return true;
+    });
+    
         isValid = requiredFields.every(field => 
-          formData[field.name] && formData[field.name].trim() !== ''
-        );
+      formData[field.name] && formData[field.name].trim() !== ''
+    );
       } else if (clientInputMode === 'csv') {
         // CSV mode: check if at least 2 valid rows uploaded across all uploads
         isValid = totalCsvUploadResults && totalCsvUploadResults.success && totalCsvUploadResults.success.length >= 2;
@@ -852,16 +858,16 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         console.log('Step 3 (CSV mode): Proceeding to completion step');
       } else {
         // Single client mode: validate form fields first
-        const isValid = validateStep(3);
-        if (!isValid) {
-          return; // Don't proceed if validation fails
-        }
-        
-        // Add custom address name to existing list if it's custom
-        if (formData.addressNameType === 'Custom' && formData.customAddressName) {
-          const customName = formData.customAddressName.trim().toLowerCase();
-          if (!existingCustomAddressNames.includes(customName)) {
-            setExistingCustomAddressNames(prev => [...prev, customName]);
+      const isValid = validateStep(3);
+      if (!isValid) {
+        return; // Don't proceed if validation fails
+      }
+      
+      // Add custom address name to existing list if it's custom
+      if (formData.addressNameType === 'Custom' && formData.customAddressName) {
+        const customName = formData.customAddressName.trim().toLowerCase();
+        if (!existingCustomAddressNames.includes(customName)) {
+          setExistingCustomAddressNames(prev => [...prev, customName]);
           }
         }
       }
@@ -876,12 +882,12 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
           showToastMessage("Client added successfully", "success");
         }
       } else {
-        setCurrentStep(4);
+      setCurrentStep(4);
         if (clientInputMode === 'csv') {
           const clientCount = totalCsvUploadResults?.success?.length || 0;
           showToastMessage(`${clientCount} clients added successfully`, "success");
         } else {
-          showToastMessage("Client added successfully", "success");
+      showToastMessage("Client added successfully", "success");
         }
       }
       // Scroll to top on mobile
@@ -944,6 +950,85 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     onClose();
   };
 
+  const handleSkipStep2 = () => {
+    console.log('Skipping step 2 - moving to step 3');
+    setCurrentStep(3);
+    setTimeout(scrollToTop, 100);
+  };
+
+  const handleSkipStep3 = () => {
+    console.log('Skipping step 3 - showing loading and going to dashboard');
+    
+    // Reset CSV results when skipping
+    setTotalCsvUploadResults({ success: [], errors: [], skipped: [] });
+    setCsvUploadResults(null);
+    setCsvFile(null);
+    setShowUploadResults(false);
+    
+    // Set contractor-focused loading messages
+    setLoadingMessages({
+      title: "Creating Your Profile",
+      messages: [
+        "Setting up your contractor account...",
+        "Configuring your dashboard...",
+        "Preparing your workspace...",
+        "Almost ready..."
+      ]
+    });
+    
+    setIsLoading(true);
+    setTimeout(() => {
+      console.log('Loading complete - showing persuasive modal');
+      setIsLoading(false);
+      setShowPersuasiveModal(true);
+    }, 5000);
+  };
+
+  const handlePersuasiveModalClose = () => {
+    console.log('Closing persuasive modal and completing onboarding');
+    setShowPersuasiveModal(false);
+    // Complete onboarding and go to dashboard
+    setTimeout(() => {
+      onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
+    }, 100);
+  };
+
+  const handleNavigateToEmployees = (e) => {
+    e.stopPropagation();
+    console.log('Navigating to employees page');
+    setShowPersuasiveModal(false);
+    setTimeout(() => {
+      onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
+      setTimeout(() => {
+        navigate('/manage-employees');
+      }, 200);
+    }, 100);
+  };
+
+  const handleNavigateToClients = (e) => {
+    e.stopPropagation();
+    console.log('Navigating to clients page');
+    setShowPersuasiveModal(false);
+    setTimeout(() => {
+      onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
+      setTimeout(() => {
+        navigate('/manage-clients');
+      }, 200);
+    }, 100);
+  };
+
+  const handleNavigateToDashboard = (e) => {
+    e.stopPropagation();
+    console.log('Navigating to dashboard');
+    setShowPersuasiveModal(false);
+    setTimeout(() => {
+      onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 200);
+    }, 100);
+  };
+
   const handleContinueClick = () => {
     console.log('=== handleContinueClick called ===');
     console.log('Current step:', currentStep);
@@ -991,6 +1076,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         
         // CSV validation passed - show loading and proceed to next step
         console.log('CSV validation passed - starting loading sequence');
+        setLoadingMessages(null); // Reset to use default messages
         setIsLoading(true);
         setTimeout(() => {
           console.log('Loading complete - moving to completion step');
@@ -1014,6 +1100,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       if (isValid) {
         // Single client validation passed - show loading and proceed to next step
         console.log('Single client validation passed - starting loading sequence');
+        setLoadingMessages(null); // Reset to use default messages
         setIsLoading(true);
         setTimeout(() => {
           console.log('Loading complete - moving to completion step');
@@ -1768,7 +1855,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         )}
       </div>
 
-      <div className="content-actions">
+      <div className="content-actions has-skip-buttons">
         <button className="btn-back" onClick={() => {
           setCurrentStep(1);
           // Scroll to top on mobile when going back
@@ -1776,6 +1863,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         }}>
           Back
         </button>
+        
         <button 
           className={`btn-next ${invitedEmployees.length > 0 ? 'active' : 'disabled'}`}
           onClick={() => {
@@ -1785,6 +1873,14 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
           }}
         >
           Continue with {invitedEmployees.length} Employee{invitedEmployees.length !== 1 ? 's' : ''}
+        </button>
+        
+        {/* Skip button for step 2 - positioned on right */}
+        <button 
+          className="btn-skip"
+          onClick={handleSkipStep2}
+        >
+          No employees to add, skip this step
         </button>
       </div>
       {/* Progress Indicator for steps 2-5 */}
@@ -1808,6 +1904,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         <div className="mobile-step-text">{steps[currentStep]?.title || 'Setup'}</div>
       </div> */}
       
+      {!showPersuasiveModal && (
       <div className="onboarding-overlay">
         <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
           {isLoading ? (
@@ -1830,12 +1927,16 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                 </div>
               
               <div className="loading-text-rocket">
-                <h2>Finalizing Your Setup</h2>
+                <h2>{loadingMessages?.title || 'Finalizing Your Setup'}</h2>
                 <div className="loading-messages-rocket">
-                  <div className="loading-message-rocket">Preparing your dashboard...</div>
-                  <div className="loading-message-rocket">Configuring sensors...</div>
-                  <div className="loading-message-rocket">Setting up service tracking...</div>
-                  <div className="loading-message-rocket">Almost ready...</div>
+                  {(loadingMessages?.messages || [
+                    'Preparing your dashboard...',
+                    'Configuring sensors...',
+                    'Setting up service tracking...',
+                    'Almost ready...'
+                  ]).map((message, index) => (
+                    <div key={index} className="loading-message-rocket">{message}</div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -2805,17 +2906,38 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                   )}
                   
                   {/* Back and Continue buttons for steps 2-5 */}
-                  {currentStep > 1 && currentStep < steps.length - 1 && (
-                    <div className="content-actions">
+                  {(currentStep === 2 || currentStep === 3 || (currentStep === 4 && SHOW_SERVICE_CALL_STEP)) && (
+                    <div className={`content-actions ${(currentStep === 2 || currentStep === 3) ? 'has-skip-buttons' : ''}`}>
                       <button className="btn-back" onClick={() => setCurrentStep(currentStep - 1)}>
                         Back
                       </button>
+                      
                       <button 
                         className={`btn-next ${currentStep === 3 || (currentStep === 4 && SHOW_SERVICE_CALL_STEP) ? 'active' : (currentStep === 2 ? (invitedEmployees.length > 0 ? 'active' : 'disabled') : (isStepValid ? 'active' : 'disabled'))}`}
                         onClick={handleContinueClick}
                       >
                         {currentStep === 3 ? 'Complete Setup' : (currentStep === 4 && SHOW_SERVICE_CALL_STEP) ? 'Create Service Call' : 'Continue'}
                       </button>
+                      
+                      {/* Skip button for step 2 - positioned on right */}
+                      {currentStep === 2 && (
+                        <button 
+                          className="btn-skip"
+                          onClick={handleSkipStep2}
+                        >
+                          No employees to add, skip this step
+                        </button>
+                      )}
+                      
+                      {/* Skip button for step 3 - positioned on right */}
+                      {currentStep === 3 && (
+                        <button 
+                          className="btn-skip"
+                          onClick={handleSkipStep3}
+                        >
+                          Skip adding clients
+                        </button>
+                      )}
                     </div>
                   )}
                 </form>
@@ -2894,6 +3016,83 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       )}
         </div>
       </div>
+      )}
+
+      {/* Persuasive Modal */}
+      {showPersuasiveModal && (
+        <div className="persuasive-modal-overlay" onClick={handlePersuasiveModalClose}>
+          <div className="persuasive-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="persuasive-modal-header">
+              <h2>Welcome to Your Dashboard!</h2>
+              <button 
+                className="persuasive-modal-close"
+                onClick={handlePersuasiveModalClose}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div className="persuasive-modal-content">
+              <p className="persuasive-modal-description">
+                You're all set up! Now you can start monitoring drain lines and help your customers save thousands in damage and repair costs.
+              </p>
+              
+              <div className="persuasive-modal-actions">
+                <div className="persuasive-modal-actions-row">
+                  <div className="persuasive-action-card" onClick={handleNavigateToEmployees}>
+                    <div className="persuasive-action-icon">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0M21 4v6l-3-3-3 3V4h6z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <h3>Add Employees</h3>
+                    <p>Invite team members to join your crew and assign service calls</p>
+                    <button className="persuasive-action-btn" onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigateToEmployees(e);
+                    }}>Add Employees</button>
+                  </div>
+                  
+                  <div className="persuasive-action-card" onClick={handleNavigateToClients}>
+                    <div className="persuasive-action-icon">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <h3>Add Clients</h3>
+                    <p>Import your customer database to start tracking service calls</p>
+                    <button className="persuasive-action-btn" onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigateToClients(e);
+                    }}>Add Clients</button>
+                  </div>
+                </div>
+                
+                <div className="persuasive-action-card persuasive-action-card-wide" onClick={handleNavigateToDashboard}>
+                  <div className="persuasive-action-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 19H5c-1.1 0-2-.9-2-2V7c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM8 5v14M20 9H8M10 13H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <h3>Install ACDW Sensors</h3>
+                  <p>Set up smart monitoring to prevent costly drain issues</p>
+                </div>
+              </div>
+              
+              <div className="persuasive-modal-footer">
+                <button 
+                  className="btn-dismiss"
+                  onClick={handlePersuasiveModalClose}
+                >
+                  I'll explore later
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Calendar Popup */}
       {isCalendarOpen && (
