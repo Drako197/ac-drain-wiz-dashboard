@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import './OnboardingModal.css';
 
-const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) => {
+const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onShowPersuasiveModal, showPersuasiveModal, onPersuasiveModalClose }) => {
   // Configuration flag to show/hide step 4 (Service Call step)
   const SHOW_SERVICE_CALL_STEP = false;
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
   const [showFormatTooltip, setShowFormatTooltip] = useState(false);
   const [csvValidationError, setCsvValidationError] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(null);
-  const [showPersuasiveModal, setShowPersuasiveModal] = useState(false);
+  const [showPersuasiveModalLocal, setShowPersuasiveModalLocal] = useState(false);
   
   // Generate consistent appointments across multiple months
   const generateAppointments = () => {
@@ -285,7 +285,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       setShowFormatTooltip(false);
       setCsvValidationError(false);
       setLoadingMessages(null);
-      setShowPersuasiveModal(false);
+      setShowPersuasiveModalLocal(false);
       
       // Generate a random name when modal opens
       const randomNameObj = names[Math.floor(Math.random() * names.length)];
@@ -934,9 +934,21 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       // Scroll to top on mobile
       setTimeout(scrollToTop, 100);
     } else {
-      // Use random name for fullName construction
-      const fullName = formData.randomFirstName && formData.randomLastName ? `${formData.randomFirstName} ${formData.randomLastName}` : '';
-      onComplete(formData.contractorName, formData.contractorEmail, fullName);
+      // Completion step - go directly to persuasive modal (skip loading animation since user already saw it)
+      console.log('Completion step - showing persuasive modal directly');
+      
+      // Reset CSV results when completing
+      setTotalCsvUploadResults({ success: [], errors: [], skipped: [] });
+      setCsvUploadResults(null);
+      setCsvFile(null);
+      setShowUploadResults(false);
+      
+      // Go directly to persuasive modal without loading animation
+      if (onShowPersuasiveModal) {
+        onShowPersuasiveModal();
+      } else {
+        setShowPersuasiveModalLocal(true);
+      }
     }
   };
 
@@ -980,23 +992,35 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     setTimeout(() => {
       console.log('Loading complete - showing persuasive modal');
       setIsLoading(false);
-      setShowPersuasiveModal(true);
+      if (onShowPersuasiveModal) {
+        onShowPersuasiveModal();
+      } else {
+        setShowPersuasiveModalLocal(true);
+      }
     }, 5000);
   };
 
   const handlePersuasiveModalClose = () => {
     console.log('Closing persuasive modal and completing onboarding');
-    setShowPersuasiveModal(false);
-    // Complete onboarding and go to dashboard
-    setTimeout(() => {
-      onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
-    }, 100);
+    if (onPersuasiveModalClose) {
+      onPersuasiveModalClose();
+    } else {
+      setShowPersuasiveModalLocal(false);
+      // Complete onboarding and go to dashboard
+      setTimeout(() => {
+        onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
+      }, 100);
+    }
   };
 
   const handleNavigateToEmployees = (e) => {
     e.stopPropagation();
     console.log('Navigating to employees page');
-    setShowPersuasiveModal(false);
+    if (onPersuasiveModalClose) {
+      onPersuasiveModalClose();
+    } else {
+      setShowPersuasiveModalLocal(false);
+    }
     setTimeout(() => {
       onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
       setTimeout(() => {
@@ -1008,7 +1032,11 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
   const handleNavigateToClients = (e) => {
     e.stopPropagation();
     console.log('Navigating to clients page');
-    setShowPersuasiveModal(false);
+    if (onPersuasiveModalClose) {
+      onPersuasiveModalClose();
+    } else {
+      setShowPersuasiveModalLocal(false);
+    }
     setTimeout(() => {
       onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
       setTimeout(() => {
@@ -1020,7 +1048,11 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
   const handleNavigateToDashboard = (e) => {
     e.stopPropagation();
     console.log('Navigating to dashboard');
-    setShowPersuasiveModal(false);
+    if (onPersuasiveModalClose) {
+      onPersuasiveModalClose();
+    } else {
+      setShowPersuasiveModalLocal(false);
+    }
     setTimeout(() => {
       onComplete(formData.contractorName, formData.contractorEmail, `${formData.firstName || ''} ${formData.lastName || ''}`.trim());
       setTimeout(() => {
@@ -1904,7 +1936,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
         <div className="mobile-step-text">{steps[currentStep]?.title || 'Setup'}</div>
       </div> */}
       
-      {!showPersuasiveModal && (
+      {!(showPersuasiveModal || showPersuasiveModalLocal) && (
       <div className="onboarding-overlay">
         <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
           {isLoading ? (
@@ -3018,8 +3050,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       </div>
       )}
 
-      {/* Persuasive Modal */}
-      {showPersuasiveModal && (
+      {/* Persuasive Modal - Only render if not managed at App level */}
+      {showPersuasiveModalLocal && !onShowPersuasiveModal && (
         <div className="persuasive-modal-overlay" onClick={handlePersuasiveModalClose}>
           <div className="persuasive-modal" onClick={(e) => e.stopPropagation()}>
             <div className="persuasive-modal-header">
@@ -3044,7 +3076,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                   <div className="persuasive-action-card" onClick={handleNavigateToEmployees}>
                     <div className="persuasive-action-icon">
                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0M21 4v6l-3-3-3 3V4h6z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M8.5 11a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM20 8v6M23 11h-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </div>
                     <h3>Add Employees</h3>
@@ -3058,7 +3090,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                   <div className="persuasive-action-card" onClick={handleNavigateToClients}>
                     <div className="persuasive-action-icon">
                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M20 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M8 10h8M8 14h6M8 6h2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </div>
                     <h3>Add Clients</h3>
@@ -3073,7 +3106,9 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                 <div className="persuasive-action-card persuasive-action-card-wide" onClick={handleNavigateToDashboard}>
                   <div className="persuasive-action-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M19 19H5c-1.1 0-2-.9-2-2V7c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zM8 5v14M20 9H8M10 13H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M5 12.55a11 11 0 0 1 14.08 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M1.42 9a16 16 0 0 1 21.16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M8.53 16.11a6 6 0 0 1 6.95 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
                   <h3>Install ACDW Sensors</h3>

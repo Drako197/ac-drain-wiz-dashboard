@@ -12,6 +12,7 @@ import ServiceCallHistory from './pages/ServiceCallHistory';
 import CancelledServiceCalls from './pages/CancelledServiceCalls';
 import OnboardingModal from './components/OnboardingModal';
 import ToastContainer from './components/ToastContainer';
+import './components/OnboardingModal.css';
 import './App.css';
 
 function AppContent() {
@@ -19,6 +20,7 @@ function AppContent() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showPersuasiveModal, setShowPersuasiveModal] = useState(false);
   const navigate = useNavigate();
 
   // Check if onboarding is completed on mount
@@ -69,8 +71,44 @@ function AppContent() {
 
   const handleShowOnboarding = () => {
     setShowOnboarding(true);
+    setShowPersuasiveModal(false);
     // Reset session storage when manually triggered so onboarding can be completed again
     sessionStorage.removeItem('acdrainwiz_onboarding_completed');
+  };
+
+  const handleShowPersuasiveModal = () => {
+    setShowPersuasiveModal(true);
+    setShowOnboarding(false); // Hide onboarding modal when showing persuasive modal
+  };
+
+  const handlePersuasiveModalClose = () => {
+    setShowPersuasiveModal(false);
+    // Complete onboarding process
+    handleOnboardingComplete('', '', '');
+  };
+
+  const handleNavigateToEmployees = () => {
+    setShowPersuasiveModal(false);
+    handleOnboardingComplete('', '', '');
+    setTimeout(() => {
+      navigate('/manage-employees');
+    }, 200);
+  };
+
+  const handleNavigateToClients = () => {
+    setShowPersuasiveModal(false);
+    handleOnboardingComplete('', '', '');
+    setTimeout(() => {
+      navigate('/manage-clients');
+    }, 200);
+  };
+
+  const handleNavigateToDashboard = () => {
+    setShowPersuasiveModal(false);
+    handleOnboardingComplete('', '', '');
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 200);
   };
 
   const handlePageChange = (page) => {
@@ -89,7 +127,7 @@ function AppContent() {
 
   return (
     <div className="App">
-      <div className={`dashboard-container ${showOnboarding ? 'onboarding-active' : ''}`}>
+      <div className={`dashboard-container ${showOnboarding && !showPersuasiveModal ? 'onboarding-active' : ''}`}>
         {/* Mobile Header */}
         <MobileHeader 
           isMenuOpen={isMobileMenuOpen}
@@ -130,7 +168,89 @@ function AppContent() {
         onClose={handleOnboardingClose}
         onComplete={handleOnboardingComplete}
         onboardingCompleted={onboardingCompleted}
+        onShowPersuasiveModal={handleShowPersuasiveModal}
+        showPersuasiveModal={showPersuasiveModal}
+        onPersuasiveModalClose={handlePersuasiveModalClose}
       />
+
+      {/* Persuasive Modal */}
+      {showPersuasiveModal && (
+        <div className="persuasive-modal-overlay" onClick={handlePersuasiveModalClose}>
+          <div className="persuasive-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="persuasive-modal-header">
+              <h2>Welcome to Your Dashboard!</h2>
+              <button 
+                className="persuasive-modal-close"
+                onClick={handlePersuasiveModalClose}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div className="persuasive-modal-content">
+              <p className="persuasive-modal-description">
+                You're all set up! Now you can start monitoring drain lines and help your customers save thousands in damage and repair costs.
+              </p>
+              
+              <div className="persuasive-modal-actions">
+                <div className="persuasive-modal-actions-row">
+                  <div className="persuasive-action-card" onClick={handleNavigateToEmployees}>
+                    <div className="persuasive-action-icon">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M8.5 11a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM20 8v6M23 11h-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <h3>Add Employees</h3>
+                    <p>Invite team members to join your crew and assign service calls</p>
+                    <button className="persuasive-action-btn" onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigateToEmployees();
+                    }}>Add Employees</button>
+                  </div>
+                  
+                  <div className="persuasive-action-card" onClick={handleNavigateToClients}>
+                    <div className="persuasive-action-icon">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M8 10h8M8 14h6M8 6h2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <h3>Add Clients</h3>
+                    <p>Import your customer database to start tracking service calls</p>
+                    <button className="persuasive-action-btn" onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigateToClients();
+                    }}>Add Clients</button>
+                  </div>
+                </div>
+                
+                <div className="persuasive-action-card persuasive-action-card-wide" onClick={handleNavigateToDashboard}>
+                  <div className="persuasive-action-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12.55a11 11 0 0 1 14.08 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M1.42 9a16 16 0 0 1 21.16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M8.53 16.11a6 6 0 0 1 6.95 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <h3>Install ACDW Sensors</h3>
+                  <p>Set up smart monitoring to prevent costly drain issues</p>
+                </div>
+              </div>
+              
+              <div className="persuasive-modal-footer">
+                <button 
+                  className="btn-dismiss"
+                  onClick={handlePersuasiveModalClose}
+                >
+                  I'll explore later
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Toast Container */}
       <ToastContainer />
