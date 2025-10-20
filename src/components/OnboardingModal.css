@@ -681,6 +681,13 @@
   text-align: left;
 }
 
+.csv-error-message {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .error-message {
   display: block;
   color: #dc2626;
@@ -3361,6 +3368,12 @@
   border-color: #3B82F6;
   background: #DBEAFE;
   border-width: 3px;
+}
+
+.csv-drop-zone.error {
+  border-color: #DC2626;
+  background: #FEF2F2;
+  box-shadow: 0 0 0 3px #dc26261a;
 }
 
 .drop-zone-content {

@@ -20,9 +20,11 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
   const [clientInputMode, setClientInputMode] = useState('single'); // 'single' or 'csv'
   const [csvFile, setCsvFile] = useState(null);
   const [csvUploadResults, setCsvUploadResults] = useState(null);
+  const [totalCsvUploadResults, setTotalCsvUploadResults] = useState({ success: [], errors: [], skipped: [] });
   const [isDragging, setIsDragging] = useState(false);
   const [showUploadResults, setShowUploadResults] = useState(false);
   const [showFormatTooltip, setShowFormatTooltip] = useState(false);
+  const [csvValidationError, setCsvValidationError] = useState(false);
   
   // Generate consistent appointments across multiple months
   const generateAppointments = () => {
@@ -265,6 +267,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       setErrors({});
       setShowErrors(false);
       setCurrentStep(0);
+      setIsLoading(false);
       setInvitedEmployees([]); // Clear all past employee invites
       setExistingCustomAddressNames(['main office', 'warehouse a', 'downtown location']);
       
@@ -272,9 +275,11 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       setClientInputMode('single');
       setCsvFile(null);
       setCsvUploadResults(null);
+      setTotalCsvUploadResults({ success: [], errors: [], skipped: [] });
       setIsDragging(false);
       setShowUploadResults(false);
       setShowFormatTooltip(false);
+      setCsvValidationError(false);
       
       // Generate a random name when modal opens
       const randomNameObj = names[Math.floor(Math.random() * names.length)];
@@ -321,8 +326,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
           formData[field.name] && formData[field.name].trim() !== ''
         );
       } else if (clientInputMode === 'csv') {
-        // CSV mode: check if at least 2 valid rows uploaded
-        isValid = csvUploadResults && csvUploadResults.success && csvUploadResults.success.length >= 2;
+        // CSV mode: check if at least 2 valid rows uploaded across all uploads
+        isValid = totalCsvUploadResults && totalCsvUploadResults.success && totalCsvUploadResults.success.length >= 2;
       }
     } else {
       // Default validation for other steps
@@ -354,7 +359,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     }
 
     setIsStepValid(isValid);
-  }, [currentStep, formData, csvUploadResults, clientInputMode]);
+  }, [currentStep, formData, csvUploadResults, clientInputMode, totalCsvUploadResults]);
 
   // Debug isLoading state changes
   useEffect(() => {
@@ -541,6 +546,15 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       const results = parseCSV(csvText);
       setCsvUploadResults(results);
       setShowUploadResults(true);
+      // Clear CSV validation error when file is uploaded
+      setCsvValidationError(false);
+      
+      // Accumulate results with previous uploads
+      setTotalCsvUploadResults(prevTotal => ({
+        success: [...prevTotal.success, ...results.success],
+        errors: [...prevTotal.errors, ...results.errors],
+        skipped: [...prevTotal.skipped, ...results.skipped]
+      }));
     };
     reader.onerror = () => {
       showToastMessage('Error reading file', 'error');
@@ -571,6 +585,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     setShowUploadResults(false);
     setIsDragging(false);
     setShowFormatTooltip(false);
+    setCsvValidationError(false);
     // Note: We don't reset clientInputMode here as user might want to stay in CSV mode
   };
 
@@ -831,27 +846,43 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
     }
 
     if (currentStep === 3) {
-      // Client step - validate first, then add custom address name to existing list if it's custom
-      const isValid = validateStep(3);
-      if (!isValid) {
-        return; // Don't proceed if validation fails
-      }
-      
-      // Add custom address name to existing list if it's custom
-      if (formData.addressNameType === 'Custom' && formData.customAddressName) {
-        const customName = formData.customAddressName.trim().toLowerCase();
-        if (!existingCustomAddressNames.includes(customName)) {
-          setExistingCustomAddressNames(prev => [...prev, customName]);
+      // Client step - validate based on input mode
+      if (clientInputMode === 'csv') {
+        // CSV mode: validation already done in handleContinueClick
+        console.log('Step 3 (CSV mode): Proceeding to completion step');
+      } else {
+        // Single client mode: validate form fields first
+        const isValid = validateStep(3);
+        if (!isValid) {
+          return; // Don't proceed if validation fails
+        }
+        
+        // Add custom address name to existing list if it's custom
+        if (formData.addressNameType === 'Custom' && formData.customAddressName) {
+          const customName = formData.customAddressName.trim().toLowerCase();
+          if (!existingCustomAddressNames.includes(customName)) {
+            setExistingCustomAddressNames(prev => [...prev, customName]);
+          }
         }
       }
       
       // Check if step 4 is hidden, if so skip directly to step 5 (completion)
       if (!SHOW_SERVICE_CALL_STEP) {
         setCurrentStep(5);
-        showToastMessage("Client added successfully", "success");
+        if (clientInputMode === 'csv') {
+          const clientCount = totalCsvUploadResults?.success?.length || 0;
+          showToastMessage(`${clientCount} clients added successfully`, "success");
+        } else {
+          showToastMessage("Client added successfully", "success");
+        }
       } else {
-      setCurrentStep(4);
-      showToastMessage("Client added successfully", "success");
+        setCurrentStep(4);
+        if (clientInputMode === 'csv') {
+          const clientCount = totalCsvUploadResults?.success?.length || 0;
+          showToastMessage(`${clientCount} clients added successfully`, "success");
+        } else {
+          showToastMessage("Client added successfully", "success");
+        }
       }
       // Scroll to top on mobile
       setTimeout(scrollToTop, 100);
@@ -941,14 +972,58 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
       handleNext();
     } else if (currentStep === 3) {
       console.log('Step 3 validation called');
+      console.log('Client input mode:', clientInputMode);
       console.log('Current form data:', formData);
+      console.log('CSV upload results:', csvUploadResults);
+      
+      // Clear any previous CSV validation error
+      setCsvValidationError(false);
+      
+      if (clientInputMode === 'csv') {
+        // CSV mode validation - check total accumulated results
+        const hasValidCsvData = totalCsvUploadResults && totalCsvUploadResults.success && totalCsvUploadResults.success.length >= 2;
+        console.log('CSV validation result:', hasValidCsvData, 'Total valid rows:', totalCsvUploadResults?.success?.length);
+        
+        if (!hasValidCsvData) {
+          setCsvValidationError(true);
+          return;
+        }
+        
+        // CSV validation passed - show loading and proceed to next step
+        console.log('CSV validation passed - starting loading sequence');
+        setIsLoading(true);
+        setTimeout(() => {
+          console.log('Loading complete - moving to completion step');
+          setIsLoading(false);
+          setCurrentStep(5);
+          // Show success message
+          const clientCount = totalCsvUploadResults?.success?.length || 0;
+          showToastMessage(`${clientCount} clients added successfully`, "success");
+          // Scroll to top on mobile after loading completes
+          setTimeout(scrollToTop, 100);
+        }, 5000);
+        return;
+      }
+      
+      // Single client mode validation (existing logic)
       console.log('Address type:', formData.addressNameType);
       console.log('Custom address name:', formData.customAddressName);
       const isValid = validateStep(3);
       console.log('Step 3 validation result:', isValid);
       console.log('Current errors after validation:', errors);
       if (isValid) {
-        handleNext();
+        // Single client validation passed - show loading and proceed to next step
+        console.log('Single client validation passed - starting loading sequence');
+        setIsLoading(true);
+        setTimeout(() => {
+          console.log('Loading complete - moving to completion step');
+          setIsLoading(false);
+          setCurrentStep(5);
+          // Show success message
+          showToastMessage("Client added successfully", "success");
+          // Scroll to top on mobile after loading completes
+          setTimeout(scrollToTop, 100);
+        }, 5000);
       }
       // Don't show toast message for Step 3 - let inline errors show instead
     } else if (currentStep === 4 && SHOW_SERVICE_CALL_STEP) {
@@ -2070,6 +2145,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                 onClick={() => {
                                   setClientInputMode('single');
                                   setShowUploadResults(false);
+                                  setCsvValidationError(false);
                                 }}
                               >
                                 <span>Add Single Client</span>
@@ -2079,6 +2155,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                 onClick={() => {
                                   setClientInputMode('csv');
                                   setShowUploadResults(false);
+                                  setCsvValidationError(false);
                                 }}
                               >
                                 <span>Upload Multiple Clients via CSV</span>
@@ -2091,7 +2168,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                 <h3>Upload Results</h3>
                                 
                                 <div className="results-summary-cards">
-                                  {csvUploadResults.success.length > 0 && (
+                                  {totalCsvUploadResults.success.length > 0 && (
                                     <div className="result-card success">
                                       <span className="result-icon">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2099,8 +2176,13 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                         </svg>
                                       </span>
                                       <div className="result-card-content">
-                                        <span className="result-count">{csvUploadResults.success.length}</span>
-                                        <span className="result-label">clients added successfully</span>
+                                        <span className="result-count">{totalCsvUploadResults.success.length}</span>
+                                        <span className="result-label">
+                                          {totalCsvUploadResults.success.length === csvUploadResults.success.length 
+                                            ? 'clients added successfully' 
+                                            : 'clients added successfully this session'
+                                          }
+                                        </span>
                                       </div>
                                     </div>
                                   )}
@@ -2186,14 +2268,14 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                     </button>
                                   ) : null}
                                   
-                                  {csvUploadResults.success.length > 0 ? (
+                                  {totalCsvUploadResults.success.length > 0 ? (
                                     <>
                                       <div className="results-success-message">
                                         <p>
                                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }}>
                                             <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                           </svg>
-                                          {csvUploadResults.success.length} clients have been added to your account and are ready to use!
+                                          {totalCsvUploadResults.success.length} clients have been added to your account and are ready to use!
                                         </p>
                                       </div>
                                       <button 
@@ -2210,7 +2292,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                               // CSV Upload Interface
                               <div className="csv-upload-container">
                                 <div 
-                                  className={`csv-drop-zone ${isDragging ? 'dragging' : ''}`}
+                                  className={`csv-drop-zone ${isDragging ? 'dragging' : ''} ${csvValidationError ? 'error' : ''}`}
                                   onDragOver={handleDragOver}
                                   onDragLeave={handleDragLeave}
                                   onDrop={handleDrop}
@@ -2285,6 +2367,13 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted }) =
                                     )}
                                   </div>
                                 </div>
+                                
+                                {/* CSV Validation Error Message */}
+                                {csvValidationError && (
+                                  <div className="form-error csv-error-message">
+                                    Please upload a CSV file with at least 2 valid client records to continue.
+                                  </div>
+                                )}
                               </div>
                             ) : (
                               // Single Client Form (existing form)
