@@ -226,7 +226,7 @@ function AppContent() {
                   </div>
                 </div>
                 
-                <div className="persuasive-action-card persuasive-action-card-wide" onClick={handleNavigateToDashboard}>
+                <div className="persuasive-action-card persuasive-action-card-wide">
                   <div className="persuasive-action-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 12.55a11 11 0 0 1 14.08 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -235,7 +235,22 @@ function AppContent() {
                     </svg>
                   </div>
                   <h3>Install ACDW Sensors</h3>
-                  <p>Set up smart monitoring to prevent costly drain issues</p>
+                  <p>Access installation guides, troubleshooting tips, and expert support</p>
+                  
+                  <div className="sensor-resource-buttons">
+                    <button className="sensor-resource-btn" onClick={() => window.open('#', '_blank')}>
+                      View Installation Videos
+                    </button>
+                    <button className="sensor-resource-btn" onClick={() => window.open('#', '_blank')}>
+                      Read Setup Guide
+                    </button>
+                    <button className="sensor-resource-btn" onClick={() => window.open('#', '_blank')}>
+                      Contact Support
+                    </button>
+                    <button className="sensor-resource-btn" onClick={() => window.open('#', '_blank')}>
+                      Browse FAQ
+                    </button>
+                  </div>
                 </div>
               </div>
               

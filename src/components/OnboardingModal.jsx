@@ -29,6 +29,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
   const [csvValidationError, setCsvValidationError] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(null);
   const [showPersuasiveModalLocal, setShowPersuasiveModalLocal] = useState(false);
+  const [isProcessingCsv, setIsProcessingCsv] = useState(false);
   
   // Generate consistent appointments across multiple months
   const generateAppointments = () => {
@@ -286,6 +287,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
       setCsvValidationError(false);
       setLoadingMessages(null);
       setShowPersuasiveModalLocal(false);
+      setIsProcessingCsv(false);
       
       // Generate a random name when modal opens
       const randomNameObj = names[Math.floor(Math.random() * names.length)];
@@ -550,17 +552,24 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
     reader.onload = (e) => {
       const csvText = e.target.result;
       const results = parseCSV(csvText);
-      setCsvUploadResults(results);
-      setShowUploadResults(true);
-      // Clear CSV validation error when file is uploaded
+      
+      // Show loading animation for CSV processing
+      setIsProcessingCsv(true);
       setCsvValidationError(false);
       
-      // Accumulate results with previous uploads
-      setTotalCsvUploadResults(prevTotal => ({
-        success: [...prevTotal.success, ...results.success],
-        errors: [...prevTotal.errors, ...results.errors],
-        skipped: [...prevTotal.skipped, ...results.skipped]
-      }));
+      // After 3 seconds, show the results
+      setTimeout(() => {
+        setCsvUploadResults(results);
+        setShowUploadResults(true);
+        setIsProcessingCsv(false);
+        
+        // Accumulate results with previous uploads
+        setTotalCsvUploadResults(prevTotal => ({
+          success: [...prevTotal.success, ...results.success],
+          errors: [...prevTotal.errors, ...results.errors],
+          skipped: [...prevTotal.skipped, ...results.skipped]
+        }));
+      }, 3000);
     };
     reader.onerror = () => {
       showToastMessage('Error reading file', 'error');
@@ -2424,8 +2433,19 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
                             ) : clientInputMode === 'csv' ? (
                               // CSV Upload Interface
                               <div className="csv-upload-container">
-                                <div 
-                                  className={`csv-drop-zone ${isDragging ? 'dragging' : ''} ${csvValidationError ? 'error' : ''}`}
+                                {isProcessingCsv ? (
+                                  // CSV Processing Loading Animation
+                                  <div className="csv-processing-loading">
+                                    <div className="loading-spinner">
+                                      <div className="spinner"></div>
+                                    </div>
+                                    <h3>Processing Your CSV File</h3>
+                                    <p>Please wait while we validate and import your client data...</p>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div 
+                                      className={`csv-drop-zone ${isDragging ? 'dragging' : ''} ${csvValidationError ? 'error' : ''}`}
                                   onDragOver={handleDragOver}
                                   onDragLeave={handleDragLeave}
                                   onDrop={handleDrop}
@@ -2506,6 +2526,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
                                   <div className="form-error csv-error-message">
                                     Please upload a CSV file with at least 2 valid client records to continue.
                                   </div>
+                                )}
+                                  </>
                                 )}
                               </div>
                             ) : (

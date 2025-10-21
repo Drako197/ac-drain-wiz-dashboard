@@ -3903,6 +3903,94 @@
     color: #374151;
 }
 
+/* CSV Processing Loading Styles */
+.csv-processing-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  text-align: center;
+  background: #F9FAFB;
+  border: 2px dashed #D1D5DB;
+  border-radius: 16px;
+  min-height: 300px;
+}
+
+.loading-spinner {
+  margin-bottom: 24px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #E5E7EB;
+  border-top: 4px solid #3B82F6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.csv-processing-loading h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0 0 12px 0;
+}
+
+.csv-processing-loading p {
+  font-size: 16px;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Mobile responsive for CSV processing loading */
+@media (max-width: 768px) {
+  .csv-processing-loading {
+    padding: 40px 20px;
+    min-height: 250px;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+  }
+  
+  .csv-processing-loading h3 {
+    font-size: 18px;
+  }
+  
+  .csv-processing-loading p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .csv-processing-loading {
+    padding: 30px 16px;
+    min-height: 200px;
+  }
+  
+  .spinner {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .csv-processing-loading h3 {
+    font-size: 16px;
+  }
+  
+  .csv-processing-loading p {
+    font-size: 13px;
+  }
+}
+
 /* Persuasive Modal Styles */
 .persuasive-modal-overlay {
   position: fixed;
@@ -4077,6 +4165,35 @@
   color: #374151;
 }
 
+/* Sensor Resource Buttons */
+.sensor-resource-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.sensor-resource-btn {
+  background: #F3F4F6;
+  color: #374151;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.sensor-resource-btn:hover {
+  background: #E5E7EB;
+  border-color: #9CA3AF;
+  color: #1F2937;
+  transform: translateY(-1px);
+}
+
 /* Mobile Responsive for Persuasive Modal */
 @media (max-width: 768px) {
   .persuasive-modal {
@@ -4113,6 +4230,16 @@
   .persuasive-action-card {
     padding: 20px 16px;
   }
+  
+  .sensor-resource-buttons {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .sensor-resource-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -4140,5 +4267,10 @@
   .persuasive-action-btn {
     padding: 8px 12px;
     font-size: 13px;
+  }
+  
+  .sensor-resource-btn {
+    padding: 6px 8px;
+    font-size: 11px;
   }
 }
