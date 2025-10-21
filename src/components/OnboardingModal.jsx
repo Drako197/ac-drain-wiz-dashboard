@@ -30,6 +30,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
   const [loadingMessages, setLoadingMessages] = useState(null);
   const [showPersuasiveModalLocal, setShowPersuasiveModalLocal] = useState(false);
   const [isProcessingCsv, setIsProcessingCsv] = useState(false);
+  const [completionMethod, setCompletionMethod] = useState('complete'); // 'complete' or 'skip'
   
   // Generate consistent appointments across multiple months
   const generateAppointments = () => {
@@ -288,6 +289,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
       setLoadingMessages(null);
       setShowPersuasiveModalLocal(false);
       setIsProcessingCsv(false);
+      setCompletionMethod('complete'); // Reset to default
       
       // Generate a random name when modal opens
       const randomNameObj = names[Math.floor(Math.random() * names.length)];
@@ -946,6 +948,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
       // Completion step - go directly to persuasive modal (skip loading animation since user already saw it)
       console.log('Completion step - showing persuasive modal directly');
       
+      // Set completion method to complete
+      console.log('Setting completion method to complete');
+      setCompletionMethod('complete');
+      
       // Reset CSV results when completing
       setTotalCsvUploadResults({ success: [], errors: [], skipped: [] });
       setCsvUploadResults(null);
@@ -954,7 +960,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
       
       // Go directly to persuasive modal without loading animation
       if (onShowPersuasiveModal) {
-        onShowPersuasiveModal();
+        console.log('Calling onShowPersuasiveModal with completionMethod: complete');
+        onShowPersuasiveModal('complete'); // Pass 'complete' directly since we know this is the complete flow
       } else {
         setShowPersuasiveModalLocal(true);
       }
@@ -980,6 +987,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
   const handleSkipStep3 = () => {
     console.log('Skipping step 3 - showing loading and going to dashboard');
     
+    // Set completion method to skip
+    console.log('Setting completion method to skip');
+    setCompletionMethod('skip');
+    
     // Reset CSV results when skipping
     setTotalCsvUploadResults({ success: [], errors: [], skipped: [] });
     setCsvUploadResults(null);
@@ -1000,10 +1011,13 @@ const OnboardingModal = ({ isOpen, onClose, onComplete, onboardingCompleted, onS
     setIsLoading(true);
     setTimeout(() => {
       console.log('Loading complete - showing persuasive modal');
+      console.log('Current completionMethod state:', completionMethod);
       setIsLoading(false);
       if (onShowPersuasiveModal) {
-        onShowPersuasiveModal();
+        console.log('Calling onShowPersuasiveModal with completionMethod: skip');
+        onShowPersuasiveModal('skip'); // Pass 'skip' directly since we know this is the skip flow
       } else {
+        console.log('Using local persuasive modal state');
         setShowPersuasiveModalLocal(true);
       }
     }, 5000);

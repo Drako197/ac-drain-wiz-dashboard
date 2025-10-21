@@ -21,6 +21,7 @@ function AppContent() {
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showPersuasiveModal, setShowPersuasiveModal] = useState(false);
+  const [persuasiveModalCompletionMethod, setPersuasiveModalCompletionMethod] = useState('complete');
   const navigate = useNavigate();
 
   // Check if onboarding is completed on mount
@@ -76,9 +77,12 @@ function AppContent() {
     sessionStorage.removeItem('acdrainwiz_onboarding_completed');
   };
 
-  const handleShowPersuasiveModal = () => {
+  const handleShowPersuasiveModal = (completionMethod = 'complete') => {
+    console.log('App.jsx: handleShowPersuasiveModal called with completionMethod:', completionMethod);
     setShowPersuasiveModal(true);
     setShowOnboarding(false); // Hide onboarding modal when showing persuasive modal
+    setPersuasiveModalCompletionMethod(completionMethod);
+    console.log('App.jsx: Set persuasiveModalCompletionMethod to:', completionMethod);
   };
 
   const handlePersuasiveModalClose = () => {
@@ -191,40 +195,47 @@ function AppContent() {
             
             <div className="persuasive-modal-content">
               <p className="persuasive-modal-description">
-                You're all set up! Now you can start monitoring drain lines and help your customers save thousands in damage and repair costs.
+                {persuasiveModalCompletionMethod === 'complete' 
+                  ? "You've completed your setup! Now you can start monitoring drain lines and help your customers save thousands in damage and repair costs."
+                  : "You're all set up! Now you can start monitoring drain lines and help your customers save thousands in damage and repair costs."
+                }
               </p>
               
               <div className="persuasive-modal-actions">
-                <div className="persuasive-modal-actions-row">
-                  <div className="persuasive-action-card" onClick={handleNavigateToEmployees}>
-                    <div className="persuasive-action-icon">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M8.5 11a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM20 8v6M23 11h-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                {/* Show first two cards only when completion method is 'skip' */}
+                {console.log('App.jsx: persuasiveModalCompletionMethod is:', persuasiveModalCompletionMethod)}
+                {persuasiveModalCompletionMethod === 'skip' && (
+                  <div className="persuasive-modal-actions-row">
+                    <div className="persuasive-action-card" onClick={handleNavigateToEmployees}>
+                      <div className="persuasive-action-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M8.5 11a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM20 8v6M23 11h-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <h3>Add Employees</h3>
+                      <p>Invite team members to join your crew and assign service calls</p>
+                      <button className="persuasive-action-btn" onClick={(e) => {
+                        e.stopPropagation();
+                        handleNavigateToEmployees();
+                      }}>Add Employees</button>
                     </div>
-                    <h3>Add Employees</h3>
-                    <p>Invite team members to join your crew and assign service calls</p>
-                    <button className="persuasive-action-btn" onClick={(e) => {
-                      e.stopPropagation();
-                      handleNavigateToEmployees();
-                    }}>Add Employees</button>
-                  </div>
-                  
-                  <div className="persuasive-action-card" onClick={handleNavigateToClients}>
-                    <div className="persuasive-action-icon">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M8 10h8M8 14h6M8 6h2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                    
+                    <div className="persuasive-action-card" onClick={handleNavigateToClients}>
+                      <div className="persuasive-action-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M8 10h8M8 14h6M8 6h2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <h3>Add Clients</h3>
+                      <p>Import your customer database to start tracking service calls</p>
+                      <button className="persuasive-action-btn" onClick={(e) => {
+                        e.stopPropagation();
+                        handleNavigateToClients();
+                      }}>Add Clients</button>
                     </div>
-                    <h3>Add Clients</h3>
-                    <p>Import your customer database to start tracking service calls</p>
-                    <button className="persuasive-action-btn" onClick={(e) => {
-                      e.stopPropagation();
-                      handleNavigateToClients();
-                    }}>Add Clients</button>
                   </div>
-                </div>
+                )}
                 
                 <div className="persuasive-action-card persuasive-action-card-wide">
                   <div className="persuasive-action-icon">

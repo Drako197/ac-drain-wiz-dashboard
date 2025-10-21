@@ -6,7 +6,7 @@ const Toast = ({ id, message, type = 'info', index = 0, onClose }) => {
 
   useEffect(() => {
     // Stagger the auto-close timing based on index
-    const baseDelay = 8000; // 8 seconds base
+    const baseDelay = 5000; // 5 seconds base
     const staggerDelay = index * 500; // 500ms additional delay per toast
     const totalDelay = baseDelay + staggerDelay;
     

@@ -1815,8 +1815,24 @@
     gap: 12px;
   }
   
+  /* Override absolute positioning for skip buttons layout on mobile */
+  .content-actions.has-skip-buttons {
+    justify-content: flex-start; /* Reset from space-between */
+    position: static; /* Reset from relative */
+  }
+  
+  .content-actions.has-skip-buttons .btn-next {
+    position: static; /* Reset from absolute */
+    left: auto; /* Reset from 50% */
+    transform: none; /* Reset from translateX(-50%) */
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%; /* Make it full width like other buttons */
+  }
+  
   .btn-primary,
-  .btn-back {
+  .btn-back,
+  .btn-skip {
     width: 100%;
   }
   
