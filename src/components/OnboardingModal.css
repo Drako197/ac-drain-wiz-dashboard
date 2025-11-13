@@ -469,19 +469,20 @@
 
 
 .content-image {
-    flex: 1;
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px; /* Reduced from 40px */
-    min-height: 200px; /* Reduced from 400px */
+    min-height: 136px; /* Reduced by 20% from 170px (32% total reduction from original 200px) */
 }
 
 .content-image img {
+    width: auto;
+    height: auto;
     max-width: 100%;
-    max-height: 100%;
     border-radius: 16px;
-    object-fit: cover;
+    object-fit: contain;
     box-shadow: 0 8px 32px #0000001a;
 }
 
@@ -1207,8 +1208,15 @@
   }
 
   .content-image {
-    min-height: 150px; /* Further reduced for mobile */
+    flex: 0 0 auto;
+    min-height: 102px; /* Reduced by 20% from 128px for mobile (32% total reduction from original 150px) */
     margin-bottom: 16px; /* Reduced from 20px */
+  }
+
+  .content-image img {
+    width: 380px;
+    max-width: 100%;
+    height: auto;
   }
 
   .content-actions {
